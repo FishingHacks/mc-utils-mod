@@ -46,12 +46,6 @@ public class MainScreen extends Screen {
     public static final Component QUIT = Component.translatable("menu.quit");
     @Nullable
     private SplashRenderer splash;
-    private static final int buttonHeight = // the 4 button rows (singleplayer, multiplayer, mods, quit/options)
-        Button.DEFAULT_HEIGHT * 4 +
-            // the spacing between the first 3 rows
-            2 * 4 +
-            // the spacing between the last 2 rows
-            8;
 
     public MainScreen() {
         super(TITLE);

@@ -87,12 +87,6 @@ public class GuiDropdown<T> extends AbstractWidget {
             Arrays.asList(validValues));
     }
 
-    public static <T extends Enum<T>> GuiDropdown<T> fromEnum(T value, T[] values) {
-        return new GuiDropdown<>(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT, Component.empty(), value,
-            v -> Component.literal(v.name()), (a, b) -> {
-        }, Arrays.stream(values).toList());
-    }
-
     @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
         if (super.isMouseOver(mouseX, mouseY)) return true;

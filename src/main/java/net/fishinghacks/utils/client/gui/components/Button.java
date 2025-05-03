@@ -42,7 +42,7 @@ public class Button extends AbstractButton {
         renderString(guiGraphics, Minecraft.getInstance().font, Colors.WHITE.get());
     }
 
-    public void render(RenderType typ, GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void render(RenderType typ, GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if(!visible) return;
         isHovered = guiGraphics.containsPointInScissor(mouseX, mouseY) && mouseX >= getX() && mouseX < getRight() && mouseY >= getY() && mouseY < getBottom();
 

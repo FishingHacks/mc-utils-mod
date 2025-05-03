@@ -45,11 +45,6 @@ public class GenericCache<K, V> {
         this(type, Duration.ofSeconds(120));
     }
 
-    /// NOTE: Does *not* close the resource
-    public void remove(K key) {
-        cache.invalidate(key);
-    }
-
     private static void onRemove(RemovalNotification<Object, Object> objectObjectRemovalNotification) {
         Object key = objectObjectRemovalNotification.getKey();
         Object value = objectObjectRemovalNotification.getValue();

@@ -180,7 +180,7 @@ public class GuiOverlayManager {
     private static void renderConnectedServerOverlay(GuiGraphics graphics, int mouseX, int mouseY, float partialTick,
                                                      int screenWidth) {
         serviceServerSettings.setX(screenWidth - 2 - serviceServerSettings.getWidth());
-        serviceServerSettings.render(RenderType.guiOverlay(), graphics, mouseX, mouseY, partialTick);
+        serviceServerSettings.render(RenderType.guiOverlay(), graphics, mouseX, mouseY);
         Component message = ClientConnectionHandler.getInstance().getFormattedStatus();
         Font font = Minecraft.getInstance().font;
         int width = font.width(message);

@@ -170,14 +170,6 @@ public class Connection extends SimpleChannelInboundHandler<Packet<?>> {
         pingSent = false;
     }
 
-    public void flushChannel() {
-        if (this.isConnected()) {
-            this.flush();
-        } else {
-            this.pendingActions.add(Connection::flush);
-        }
-    }
-
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);

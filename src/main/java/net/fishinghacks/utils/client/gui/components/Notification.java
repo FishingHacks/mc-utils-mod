@@ -120,8 +120,8 @@ public class Notification extends UnfocusableWidget {
             Colors.WHITE.get());
         guiGraphics.disableScissor();
 
-        closeButton.render(overlay, guiGraphics, mouseX, mouseY, partialTick);
-        for (var btn : buttons) btn.render(overlay, guiGraphics, mouseX, mouseY, partialTick);
+        closeButton.render(overlay, guiGraphics, mouseX, mouseY);
+        for (var btn : buttons) btn.render(overlay, guiGraphics, mouseX, mouseY);
     }
 
     @Override

@@ -48,7 +48,7 @@ public class Server {
     public void run() {
         if (!Configs.serverConfig.serverEnabled.get()) return;
         LOGGER.info("Running utils service server");
-        channel = startTCPListener(null, Configs.serverConfig.serverPort.get());
+        channel = startTCPListener(Configs.serverConfig.serverPort.get());
     }
 
     public void close() {
@@ -110,8 +110,8 @@ public class Server {
         server.schedule(server.wrapRunnable(runnable));
     }
 
-    private ChannelFuture startTCPListener(@Nullable InetAddress address, int port) {
-        if (address == null) address = (new InetSocketAddress(port)).getAddress();
+    private ChannelFuture startTCPListener(int port) {
+        InetAddress address = (new InetSocketAddress(port)).getAddress();
 
         Class<? extends ServerSocketChannel> channelClass;
         EventLoopGroup eventLoopGroup;
