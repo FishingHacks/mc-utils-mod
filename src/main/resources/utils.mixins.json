@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.fishinghacks.utils.mixins",
+  "compatibilityLevel": "JAVA_21",
+  "plugin": "net.fishinghacks.utils.mixins.MixinPlugin",
+  "mixins": [],
+  "client": [
+    "client.PlayerInfoMixin",
+    "client.StringUtilMixin",
+    "client.MinecraftMixin",
+    "client.ContainerEventHandlerMixin",
+    "client.PauseScreenMixin",
+    "client.E4MCQuiclimeSessionMixin"
+  ],
+  "server": [
+    "server.ServerConnectionListenerMixin"
+  ]
+}
