@@ -2,7 +2,6 @@ package net.fishinghacks.utils.client.cosmetics;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.fishinghacks.utils.common.Utils;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Vector3f;

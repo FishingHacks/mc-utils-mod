@@ -36,7 +36,7 @@ public abstract class Config {
         onLoad();
     }
 
-    // Note: Initially I copied a system from Mekanism where you save the config in a seperate thread to avoid freezes or it not saving(?) on slower systems.
+    // Note: Initially I copied a system from Mekanism where you save the config in a separate thread to avoid freezes or it not saving(?) on slower systems.
     // When I did that, however, the server was unable to exit (It stopped but then didn't exit). I have no idea why this is happening, but saving on the mainthread seems to work.
     public final void save() {
         getModConfigSpec().save();

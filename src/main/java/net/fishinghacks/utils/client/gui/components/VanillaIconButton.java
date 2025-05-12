@@ -13,9 +13,9 @@ public class VanillaIconButton extends Button {
         private final ResourceLocation icon;
         private int iconWidth;
         private int iconHeight;
-        public static int DEFAULT_HEIGHT = Button.DEFAULT_HEIGHT;
+        public static final int DEFAULT_HEIGHT = Button.DEFAULT_HEIGHT;
         @SuppressWarnings("SuspiciousNameCombination")
-        public static int DEFAULT_WIDTH = Button.DEFAULT_HEIGHT;
+        public static final int DEFAULT_WIDTH = Button.DEFAULT_HEIGHT;
 
         @SuppressWarnings("SuspiciousNameCombination")
         public VanillaIconButton(int x, int y, ResourceLocation icon, OnPress onPress, CreateNarration createNarration) {

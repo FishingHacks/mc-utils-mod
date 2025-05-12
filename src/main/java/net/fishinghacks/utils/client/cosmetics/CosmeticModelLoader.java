@@ -125,7 +125,6 @@ public class CosmeticModelLoader {
         String id = process(object.get("id"), JsonElement::getAsString, "id was not of type string", "");
         String invertAxis = process(object.get("invertAxis"), JsonElement::getAsString,
             "invertAxis was not of type string", "");
-        // x axis is "inverted" by default? i think?
         boolean invertX = invertAxis.contains("x");
         boolean invertY = invertAxis.contains("y");
         boolean invertZ = invertAxis.contains("z");
@@ -386,7 +385,7 @@ public class CosmeticModelLoader {
         }
     }
 
-    public static record Polygon(ModelPart.Vertex[] vertices, Vector3f normal) {
+    public record Polygon(ModelPart.Vertex[] vertices, Vector3f normal) {
         public Polygon(ModelPart.Vertex[] vertices, float u1, float v1, float u2, float v2, Direction direction) {
             this(vertices, direction.step());
             vertices[0] = vertices[0].remap(u2, v1);

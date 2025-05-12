@@ -4,7 +4,6 @@ import net.fishinghacks.utils.client.modules.ModuleCategory;
 import net.fishinghacks.utils.client.modules.ModuleManager;
 import net.fishinghacks.utils.client.modules.RenderableTextModule;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.network.chat.Component;
 
 import java.util.List;
