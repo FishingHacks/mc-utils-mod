@@ -11,8 +11,8 @@
     "client.MinecraftMixin",
     "client.ContainerEventHandlerMixin",
     "client.PauseScreenMixin",
-    "client.E4MCQuiclimeSessionMixin"
     "client.E4MCQuiclimeSessionMixin",
+    "client.PlayerRendererMixin",
     "client.TitleScreenMixin"
   ],
   "server": [

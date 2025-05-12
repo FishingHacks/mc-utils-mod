@@ -1,7 +1,9 @@
 package net.fishinghacks.utils.client.gui;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import net.fishinghacks.utils.client.cosmetics.CosmeticModelHandler;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ElytraModel;
@@ -54,6 +56,12 @@ public class DisplayPlayerEntityRenderer extends LivingEntityRenderer<LivingEnti
             final var vertexConsumer = bufferSource.getBuffer(renderType);
             final var overlay = OverlayTexture.pack(OverlayTexture.u(0f), OverlayTexture.v(false));
             model.renderToBuffer(pose, vertexConsumer, light, overlay);
+
+            var handler = CosmeticModelHandler.fromProfile(entity.gameProfile);
+            for (var model : handler.models) {
+                VertexConsumer consumer = bufferSource.getBuffer(RenderType.entityCutoutNoCull(model.texture()));
+                model.render(pose, consumer, light, overlay, this.model);
+            }
         }
 
         if (!entity.showElytra) {
