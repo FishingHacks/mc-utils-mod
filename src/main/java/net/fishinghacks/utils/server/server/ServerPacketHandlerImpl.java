@@ -29,7 +29,7 @@ public record ServerPacketHandlerImpl(Server server, Path cosmeticsDirectory) im
             conn.send(new InviteFailedPacket());
             return;
         }
-        receiver.send(new InviteNotificationPacket(slug, invitedPlayer, false),
+        receiver.send(new InviteNotificationPacket(slug, invitingPlayer, false),
             Connection.SendListener.onFailure(InviteFailedPacket::new));
     }
 

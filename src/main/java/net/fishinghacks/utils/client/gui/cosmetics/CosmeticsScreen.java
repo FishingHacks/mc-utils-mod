@@ -148,7 +148,8 @@ public class CosmeticsScreen extends BlackScreen {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
-        if(cosmeticsList.isMouseOver(mouseX, mouseY) && cosmeticsList.mouseScrolled(mouseX, mouseY, scrollX, scrollY)) return true;
+        if (cosmeticsList.isMouseOver(mouseX, mouseY) && cosmeticsList.mouseScrolled(mouseX, mouseY, scrollX, scrollY))
+            return true;
         return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
     }
 
@@ -216,11 +217,11 @@ public class CosmeticsScreen extends BlackScreen {
         for (var entry : fetchedList) {
             int x = boxes.get(i).getX() + 3;
             int y = boxes.get(i).getY() + 3;
+            ++i;
             if (!guiGraphics.containsPointInScissor(x, y) && !guiGraphics.containsPointInScissor(x + previewWidth,
                 y + previewHeight)) continue;
             entry.blit(guiGraphics, x, y, previewWidth, previewHeight);
             guiGraphics.drawString(font, entry.title, x, y + previewHeight + 4, Colors.WHITE.get());
-            ++i;
         }
         guiGraphics.disableScissor();
     }

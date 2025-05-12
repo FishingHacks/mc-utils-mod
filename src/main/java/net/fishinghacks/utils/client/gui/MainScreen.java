@@ -1,5 +1,6 @@
 package net.fishinghacks.utils.client.gui;
 
+import net.fishinghacks.utils.client.connection.ClientConnectionHandler;
 import net.fishinghacks.utils.client.gui.cosmetics.CosmeticsScreen;
 import net.fishinghacks.utils.common.Colors;
 import net.fishinghacks.utils.common.config.Configs;
@@ -46,6 +47,8 @@ public class MainScreen extends Screen {
     public static final Component QUIT = Component.translatable("menu.quit");
     @Nullable
     private SplashRenderer splash;
+    @Nullable
+    private IconButton cosmeticButton;
 
     public MainScreen() {
         super(TITLE);
@@ -73,7 +76,7 @@ public class MainScreen extends Screen {
             minecraft.setScreen(screen);
         }).pos(x, y).width(180).build()).getHeight() + 4;
 
-        this.addRenderableWidget(
+        cosmeticButton = this.addRenderableWidget(
             new IconButton.Builder(Icons.COSMETICS).onPress(btn -> this.minecraft.setScreen(new CosmeticsScreen(this)))
                 .y(y).x(x - 4 - IconButton.DEFAULT_WIDTH).build());
         y += this.addRenderableWidget(
@@ -96,6 +99,7 @@ public class MainScreen extends Screen {
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         assert minecraft != null;
+        if(cosmeticButton != null)cosmeticButton.active = cosmeticButton.visible = ClientConnectionHandler.getInstance().isConnected();
         this.renderPanorama(guiGraphics, partialTick);
         renderLogo(guiGraphics, width);
         if (splash != null && !minecraft.options.hideSplashTexts().get() && Configs.clientConfig.SHOW_SPLASH.get())

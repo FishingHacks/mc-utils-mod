@@ -69,20 +69,16 @@ public class CapeHandler {
         });
     }
 
-    public boolean hasCape() {
-        return this.hasCape;
-    }
-
     public PlayerSkin getSkin(PlayerSkin skin) {
-        if(!hasCape) return skin;
+        if (!hasCape) return skin;
         ResourceLocation cape = getCape();
-        if(cape == null) return skin;
+        if (cape == null) return skin;
         return new PlayerSkin(skin.texture(), skin.textureUrl(), cape, cape, skin.model(), skin.secure());
     }
 
     @Nullable
     public ResourceLocation getCape() {
-        if(!hasCape) return null;
+        if (!hasCape) return null;
         if (!this.isAnimated) return Utils.id("capes/" + this.uuid);
         final long time = System.currentTimeMillis();
         if (time > this.lastFrameTime + 100L) {

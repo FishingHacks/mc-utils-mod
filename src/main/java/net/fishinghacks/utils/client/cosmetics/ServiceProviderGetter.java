@@ -6,16 +6,16 @@ import net.fishinghacks.utils.client.connection.ClientConnectionHandler;
 import net.fishinghacks.utils.common.connection.packets.GetCosmeticForPlayer;
 import net.fishinghacks.utils.common.connection.packets.GetCosmeticForPlayerReply;
 import net.fishinghacks.utils.common.connection.packets.Packets;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public class ServiceProviderGetter {
-    @Nullable
+    @NotNull
     public static CompletableFuture<NativeImage> get(UUID id) {
         var conn = ClientConnectionHandler.getInstance().getConnection();
-        if(conn == null || !conn.isConnected()) return null;
+        if(conn == null || !conn.isConnected()) return CompletableFuture.failedFuture(new Exception("No connection"));
         CompletableFuture<GetCosmeticForPlayerReply> future = new CompletableFuture<>();
         ClientConnectionHandler.getInstance().waitForPacket(Packets.GET_PLAYER_COSMETIC_REPLY, packet -> {
             if(packet.isEmpty()) future.completeExceptionally(new Exception("connection closed"));

@@ -6,9 +6,9 @@ package net.fishinghacks.utils.client.cosmetics;
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.platform.NativeImage;
 import net.fishinghacks.utils.client.caching.DownloadTextureCache;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import java.io.IOException;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
@@ -33,6 +33,7 @@ public enum CapeProvider {
         };
     }
 
+    @NotNull
     public CompletableFuture<NativeImage> get(GameProfile profile) {
         return switch (this) {
             case ServiceProvider -> ServiceProviderGetter.get(profile.getId());
@@ -42,7 +43,7 @@ public enum CapeProvider {
                     yield DownloadTextureCache.capeGallery.getOrLoad(
                         "014fe5e6a44df115dfeeb631cd4ccce0843de3f5beaad15f7f98d31af7e6ef94");
                 }
-                yield CompletableFuture.failedFuture(new IOException("No cape found"));
+                yield CompletableFuture.failedFuture(new Exception("No builtin cape found"));
             }
             case Optifine -> DownloadTextureCache.capeGallery.getOrLoad(profile.getName());
             case MinecraftCapes -> MinecraftCapesGetter.get(profile.getId().toString().replaceAll("-", ""));

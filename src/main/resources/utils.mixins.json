@@ -12,6 +12,8 @@
     "client.ContainerEventHandlerMixin",
     "client.PauseScreenMixin",
     "client.E4MCQuiclimeSessionMixin"
+    "client.E4MCQuiclimeSessionMixin",
+    "client.TitleScreenMixin"
   ],
   "server": [
     "server.ServerConnectionListenerMixin"
