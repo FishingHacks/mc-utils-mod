@@ -5,6 +5,8 @@ import net.fishinghacks.utils.client.connection.ClientConnectionHandler;
 import net.fishinghacks.utils.client.gui.Icons;
 import net.fishinghacks.utils.client.gui.PauseMenuScreen;
 import net.fishinghacks.utils.client.gui.components.VanillaIconButton;
+import net.fishinghacks.utils.client.gui.cosmetics.CosmeticsScreen;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.PauseScreen;
@@ -35,6 +37,9 @@ public class PauseScreenMixin extends Screen {
         inviteButton = addRenderableWidget(
             new VanillaIconButton(posX, posY, Icons.INVITE, PauseMenuScreen::invitePlayer, Supplier::get));
         inviteButton.active = inviteButton.visible = false;
+        addRenderableWidget(new VanillaIconButton(width / 2 - 104 - VanillaIconButton.DEFAULT_WIDTH, posY, Icons.INVITE,
+            ignored -> Minecraft.getInstance().setScreen(new CosmeticsScreen(Minecraft.getInstance().screen)),
+            Supplier::get));
     }
 
     @Inject(method = "render", at = @At("HEAD"))

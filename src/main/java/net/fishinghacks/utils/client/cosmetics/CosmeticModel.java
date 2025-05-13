@@ -6,7 +6,7 @@ import net.minecraft.client.model.PlayerModel;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Vector3f;
 
-public record CosmeticModel(CosmeticModelPart root, ResourceLocation texture) {
+public record CosmeticModel(CosmeticModelPart root, ResourceLocation texture, String id) {
     public void render(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay,
                        PlayerModel playerModel) {
         this.root.resetPose();

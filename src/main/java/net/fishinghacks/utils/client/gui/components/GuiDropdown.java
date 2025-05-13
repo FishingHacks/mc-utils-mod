@@ -13,6 +13,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.navigation.CommonInputs;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
+import net.neoforged.neoforge.common.TranslatableEnum;
 import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nullable;
@@ -85,6 +86,10 @@ public class GuiDropdown<T> extends AbstractWidget {
     public GuiDropdown(T value, Function<T, Component> valueStringifier, T[] validValues) {
         this(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT, Component.empty(), value, valueStringifier, null,
             Arrays.asList(validValues));
+    }
+
+    public static  <T extends TranslatableEnum> GuiDropdown<T> fromTranslatableEnum(T value, T[] validValues) {
+        return new GuiDropdown<>(value, T::getTranslatedName, validValues);
     }
 
     @Override

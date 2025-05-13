@@ -6,10 +6,13 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
+import javax.annotation.Nullable;
+
 public abstract class BlackScreen extends Screen {
+    @Nullable
     protected final Screen parent;
 
-    protected BlackScreen(Component title, Screen parent) {
+    protected BlackScreen(Component title, @Nullable Screen parent) {
         super(title);
         this.parent = parent;
     }

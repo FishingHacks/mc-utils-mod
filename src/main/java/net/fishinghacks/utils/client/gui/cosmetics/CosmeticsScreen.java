@@ -3,13 +3,18 @@ package net.fishinghacks.utils.client.gui.cosmetics;
 import com.mojang.blaze3d.platform.Lighting;
 import net.fishinghacks.utils.client.caching.FutureStateHolder;
 import net.fishinghacks.utils.client.connection.ClientConnectionHandler;
+import net.fishinghacks.utils.client.cosmetics.CosmeticModelHandler;
 import net.fishinghacks.utils.client.gui.BlackScreen;
 import net.fishinghacks.utils.client.gui.DisplayPlayerEntityRenderer;
 import net.fishinghacks.utils.client.gui.PlaceholderEntity;
 import net.fishinghacks.utils.client.gui.components.*;
 import net.fishinghacks.utils.common.Colors;
 import net.fishinghacks.utils.common.Translation;
+import net.fishinghacks.utils.common.connection.packets.AddModelPacket;
+import net.fishinghacks.utils.common.connection.packets.RemoveModelPacket;
 import net.fishinghacks.utils.common.connection.packets.SetCapePacket;
+import net.fishinghacks.utils.common.connection.packets.SetModelsPacket;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.StringWidget;
@@ -52,9 +57,9 @@ public class CosmeticsScreen extends BlackScreen {
     private double xOff = 0;
     private double yOff = (double) playerHeight / 2;
     private boolean isDragging = false;
-    private List<MinecraftCapesGallery.FetchedEntry> fetchedList = List.of();
+    private List<CosmeticsEntry> fetchedList = List.of();
     @Nullable
-    private FutureStateHolder<MinecraftCapesGallery> mccGallery = null;
+    private FutureStateHolder<Fetcher> fetcher = null;
     private int page = 1;
     private boolean hasPrev = false;
     private boolean hasNext = true;
@@ -66,10 +71,21 @@ public class CosmeticsScreen extends BlackScreen {
     private int previewWidth;
     private int previewHeight;
     private int headerWidth;
+    private CosmeticScreenType type = CosmeticScreenType.ServerCapes;
+    private StringWidget title;
 
-    public CosmeticsScreen(Screen parent) {
+    public CosmeticsScreen(@Nullable Screen parent) {
         super(Component.empty(), parent);
         fetch(1);
+    }
+
+    private Component getTitleComponent() {
+        if (fetcher == null || fetcher.getState().isDone()) return Translation.CosmeticGuiTitle.get();
+        var comp = Translation.CosmeticGuiTitle.get().copy().append("    ");
+        if (fetcher.getState().didError())
+            comp = comp.append(Translation.CosmeticGuiErrored.get().copy().withStyle(ChatFormatting.RED));
+        else comp = comp.append(Translation.CosmeticGuiLoading.get());
+        return comp;
     }
 
     @Override
@@ -87,13 +103,17 @@ public class CosmeticsScreen extends BlackScreen {
             boxY);
         addRenderableOnly(new Box(new Spacer(playerBoxWidth, boxHeight), new Box.Borders())).setPosition(playerBoxX,
             boxY);
-        addRenderableOnly(
-            new StringWidget(boxX + 10, headerY, headerWidth, headerHeight, Translation.CosmeticGuiTitle.get(),
-                font).alignLeft());
+        title = addRenderableOnly(
+            new StringWidget(boxX + 10, headerY, headerWidth, headerHeight, getTitleComponent(), font).alignLeft());
         addRenderableWidget(
             Button.Builder.cube("<").pos(boxX - 4 - Button.CUBE_WIDTH, headerY).onPress(ignored -> onClose()).build());
         addRenderableWidget(Button.Builder.big(Translation.CosmeticGuiClear.get()).pos(playerBoxX + 4, boxY + 4)
-            .width(playerBoxWidth - 4).onPress(ignored -> applyCape(null)).build());
+            .width(playerBoxWidth - 4).onPress(ignored -> applyCosmetic(null)).build());
+        var dropdown = addRenderableWidget(GuiDropdown.fromTranslatableEnum(type, CosmeticScreenType.values()));
+        dropdown.setSize(Button.BIG_WIDTH, GuiDropdown.DEFAULT_HEIGHT);
+        dropdown.setPosition(playerBoxX - 6 - Button.BIG_WIDTH,
+            headerY + (headerHeight - GuiDropdown.DEFAULT_HEIGHT) / 2);
+        dropdown.onValueChange((i, type) -> this.setType(type));
 
         addPageSelector();
         addElytraSwitch();
@@ -104,11 +124,11 @@ public class CosmeticsScreen extends BlackScreen {
         LinearLayout pageSelector = new LinearLayout(boxX + (headerWidth - 2 * Button.CUBE_WIDTH - 8 - 20) / 2,
             headerY + (headerHeight - Button.DEFAULT_HEIGHT) / 2, LinearLayout.Orientation.HORIZONTAL).spacing(4);
         this.prevButton = pageSelector.addChild(
-            Button.Builder.cube("<").active(false).onPress(ignored -> fetch(page - 1)).build());
+            Button.Builder.cube("<").active(fetcher == null).onPress(ignored -> fetch(page - 1)).build());
         this.pageWidget = pageSelector.addChild(
             new StringWidget(20, Button.DEFAULT_HEIGHT, Component.literal("" + page), font).alignCenter());
         this.nextButton = pageSelector.addChild(
-            Button.Builder.cube(">").active(true).onPress(ignored -> fetch(page + 1)).build());
+            Button.Builder.cube(">").active(fetcher == null).onPress(ignored -> fetch(page + 1)).build());
         pageSelector.arrangeElements();
         pageSelector.visitWidgets(this::addRenderableWidget);
     }
@@ -136,7 +156,7 @@ public class CosmeticsScreen extends BlackScreen {
             LinearLayout column = LinearLayout.horizontal().spacing(10);
             for (int j = 0; j < 4; ++j) {
                 final int id = i * 4 + j;
-                var box = new CosmeticsBox(ignored -> applyCape(id), 0, 0, previewWidth + 6, previewHeight + 20);
+                var box = new CosmeticsBox(ignored -> applyCosmetic(id), 0, 0, previewWidth + 6, previewHeight + 20);
                 column.addChild(box);
                 boxes.add(box);
             }
@@ -148,6 +168,13 @@ public class CosmeticsScreen extends BlackScreen {
         addRenderableWidget(cosmeticsList);
     }
 
+    private void setType(CosmeticScreenType newType) {
+        this.type = newType;
+        nextButton.active = false;
+        prevButton.active = false;
+        fetch(1);
+    }
+
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         if (cosmeticsList.isMouseOver(mouseX, mouseY) && cosmeticsList.mouseScrolled(mouseX, mouseY, scrollX, scrollY))
@@ -155,49 +182,74 @@ public class CosmeticsScreen extends BlackScreen {
         return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
     }
 
+    private void updateFetchedList(List<CosmeticsEntry> list) {
+        fetchedList.forEach(CosmeticsEntry::close);
+        fetchedList = list;
+    }
+
     private void fetch(int page) {
         if (page < 1) return;
-        if (mccGallery != null) mccGallery.future().cancel(true);
-        mccGallery = new FutureStateHolder<>(MinecraftCapesGallery.fetchPage(page));
+        if (fetcher != null) fetcher.future().cancel(true);
+        if (nextButton != null) nextButton.active = false;
+        if (prevButton != null) prevButton.active = false;
+        updateFetchedList(List.of());
+        fetcher = new FutureStateHolder<>(switch (type) {
+            case MinecraftCapes -> MinecraftCapesGallery.fetchPage(page);
+            case ServerCapes -> ServerCosmetics.fetchCapes(page);
+            case ServerModels -> ServerCosmetics.fetchModels(page);
+        });
+        if (title != null) title.setMessage(getTitleComponent());
     }
 
     private void update() {
-        if (mccGallery == null) return;
-        if (mccGallery.getState().isProcessing()) return;
-        if (mccGallery.getState().didError()) {
-            mccGallery = null;
-            fetchedList.forEach(MinecraftCapesGallery.FetchedEntry::close);
-            fetchedList = List.of();
+        if (fetcher == null) return;
+        if (fetcher.getState().isProcessing()) return;
+        if (title != null) title.setMessage(getTitleComponent());
+        if (fetcher.getState().didError()) {
+            fetcher = null;
+            updateFetchedList(List.of());
             return;
         }
-        var value = mccGallery.getState().getValue();
+        var value = fetcher.getState().getValue();
         if (value.isEmpty()) return;
         cosmeticsList.setScrollOffset(0);
-        MinecraftCapesGallery gallery = value.get();
-        pageWidget.setMessage(Component.literal("" + gallery.current_page));
-        page = gallery.current_page;
-        hasNext = gallery.hasNextPage;
-        hasPrev = gallery.hasPrevPage;
-        fetchedList.forEach(MinecraftCapesGallery.FetchedEntry::close);
-        fetchedList = gallery.getFetched();
-        mccGallery = null;
+        Fetcher gallery = value.get();
+        pageWidget.setMessage(Component.literal("" + gallery.currentPage()));
+        page = gallery.currentPage();
+        hasNext = gallery.hasNext();
+        hasPrev = gallery.hasPrev();
+        updateFetchedList(gallery.getFetched());
+        fetcher = null;
     }
 
     private void setSlim(boolean slim) {
         this.renderer.setSlim(slim);
     }
 
-    private void applyCape(@Nullable Integer id) {
+    private void applyCosmetic(@Nullable Integer id) {
         var conn = ClientConnectionHandler.getInstance().getConnection();
         if (conn == null) return;
-        MinecraftCapesGallery.FetchedEntry entry;
+        CosmeticsEntry entry;
         try {
             if (id != null) entry = fetchedList.get(id);
             else entry = null;
         } catch (IndexOutOfBoundsException ignored) {
             return;
         }
-        conn.send(new SetCapePacket(entry != null ? entry.hash : null, true));
+        switch (type) {
+            case MinecraftCapes -> conn.send(new SetCapePacket(entry != null ? entry.hash : null, true));
+            case ServerCapes -> conn.send(new SetCapePacket(entry != null ? entry.hash : null, false));
+            case ServerModels -> {
+                if (entry == null) conn.send(new SetModelsPacket(List.of()));
+                else {
+                    boolean isSet = CosmeticModelHandler.fromProfile(
+                            Minecraft.getInstance().getGameProfile()).models.stream()
+                        .anyMatch(model -> model.id().equals(entry.hash));
+                    if (isSet) conn.send(new RemoveModelPacket(entry.hash));
+                    else conn.send(new AddModelPacket(entry.hash));
+                }
+            }
+        }
     }
 
     @Override
@@ -232,7 +284,7 @@ public class CosmeticsScreen extends BlackScreen {
     @Override
     public void removed() {
         super.removed();
-        fetchedList.forEach(MinecraftCapesGallery.FetchedEntry::close);
+        fetchedList.forEach(CosmeticsEntry::close);
     }
 
     @Override

@@ -23,14 +23,15 @@ public final class ServiceServerDownloader implements Downloader {
     public CompletableFuture<byte[]> download(Executor ignored) {
         var inst = ClientConnectionHandler.getInstance();
         var conn = inst.getConnection();
-        if (!inst.isConnected() || conn == null) return CompletableFuture.failedFuture(new IOException("No connection"));
+        if (!inst.isConnected() || conn == null)
+            return CompletableFuture.failedFuture(new IOException("No connection"));
 
         CompletableFuture<byte[]> future = new CompletableFuture<>();
         inst.waitForPacket(Packets.COSMETIC_REPLY, packet -> {
-            if(packet.isEmpty()) future.completeExceptionally(new IOException("connection closed early"));
+            if (packet.isEmpty()) future.completeExceptionally(new IOException("connection closed early"));
             else if (packet.get().b64Data().isEmpty()) future.completeExceptionally(new IOException("no such texture"));
             else future.complete(Base64.decodeBase64(packet.get().b64Data()));
-        }, packet -> name.equals(packet.name()));
+        }, packet -> packet.cosmeticType() == type && name.equals(packet.name()));
         conn.send(new CosmeticRequestPacket(type, name));
         return future;
     }

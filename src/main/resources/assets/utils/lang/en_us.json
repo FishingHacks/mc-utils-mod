@@ -6,7 +6,10 @@
   "utils.cmd.reload_cosmetics.reloaded.all": "Reloaded all cosmetics",
   "utils.cmd.reload_cosmetics.reloaded.player": "Reloaded cosmetics for `%s` (%s)",
   "utils.cmd.reload_cosmetics.reloaded.uuid": "Reloaded cosmetics for %s",
-
+  "utils.cmd.invite.not_connected": "Not connected to a service server",
+  "utils.cmd.invite.not_shared": "World was not previously opened to lan",
+  "utils.cmd.invite.e4mc_missing": "E4MC is not installed",
+  "utils.cmd.invite.invited": "invited %s!",
   "utils.gui.clickui.title": "ClickUI",
   "utils.gui.dragui.title": "DragUI",
   "utils.gui.config.cmd_prefix": "Command prefix",
@@ -14,13 +17,15 @@
   "utils.gui.cosmetics.cape": "Cape",
   "utils.gui.cosmetics.elytra": "Elytra",
   "utils.gui.cosmetics.clear": "Clear Cosmetics",
-
+  "utils.gui.cosmetics.type.mccapes": "MinecraftCapes",
+  "utils.gui.cosmetics.type.server_capes": "Server Capes",
+  "utils.gui.cosmetics.type.server_models": "Server Models",
+  "utils.gui.cosmetics.loading": "Loading cosmetics...",
+  "utils.gui.cosmetics.errored": "Error: Failed to load cosmetics",
   "utils.module_category.ui": "GUI",
   "utils.module_category.misc": "Misc",
-
   "key.clickui.open": "Open the ClickUI",
   "config.module.fps.colored": "Colored FPS",
-
   "utils.configuration.x": "X",
   "utils.configuration.y": "Y",
   "utils.configuration._active_mods": "Active Mods",
@@ -38,9 +43,7 @@
   "utils.configuration.show_panorama.tooltip": "Whether to show the panorama or a dark background",
   "utils.configuration.autoconnect": "Autoconnect to last server",
   "utils.configuration.autoconnect.tooltip": "Automatically tries to connect to the last server you've connected to when launching the game",
-
   "options.chat.delay_instant": "Chat Delay",
-
   "utils.invite.failed": "Failed to send the invite",
   "utils.invite": "%s invited you to join their world!",
   "utils.invite.trusted": "%s asked you to join the server!",

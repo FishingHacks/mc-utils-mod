@@ -37,7 +37,7 @@ public class Server {
 
     public Server(DedicatedServer server) {
         this.server = server;
-        Path cosmeticsDirectory = server.getServerDirectory().resolve("models");
+        Path cosmeticsDirectory = server.getServerDirectory().resolve("cosmetics");
         try {
             FileUtil.createDirectoriesSafe(cosmeticsDirectory);
         } catch (IOException ignored) {

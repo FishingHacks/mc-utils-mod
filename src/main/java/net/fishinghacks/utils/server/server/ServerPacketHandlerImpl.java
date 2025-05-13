@@ -6,13 +6,12 @@ import net.fishinghacks.utils.common.config.CosmeticMapConfigValue;
 import net.fishinghacks.utils.common.connection.Connection;
 import net.fishinghacks.utils.common.connection.packets.*;
 import net.fishinghacks.utils.server.UtilsServer;
-import org.apache.commons.codec.binary.Base64;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
@@ -53,11 +52,10 @@ public record ServerPacketHandlerImpl(Server server, Path cosmeticsDirectory) im
             case ModelPreview, ModelData, ModelTexture -> ModelsListPacket::new;
         };
         String extension = type.extension();
-        try (var cosmetics = Files.list(cosmeticsDirectory.resolve(type.subdirectory()))
-            .filter(v -> v.endsWith(extension))) {
-            conn.send(packetCreator.apply(
-                cosmetics.map(Path::getFileName).map(Path::toString).filter(v -> v.length() > extension.length())
-                    .map(p -> p.substring(0, p.length() - extension.length())).toList()));
+        try (var cosmetics = Files.list(cosmeticsDirectory.resolve(type.subdirectory()))) {
+            conn.send(packetCreator.apply(cosmetics.map(Path::getFileName).map(Path::toString)
+                .filter(v -> v.length() > extension.length() && v.endsWith(extension))
+                .map(p -> p.substring(0, p.length() - extension.length())).toList()));
         } catch (IOException e) {
             conn.send(packetCreator.apply(List.of()));
         }
@@ -71,7 +69,7 @@ public record ServerPacketHandlerImpl(Server server, Path cosmeticsDirectory) im
         }
         Path path = cosmeticType.getPath(cosmeticsDirectory, name);
         try {
-            String base64 = Arrays.toString(Base64.encodeBase64(Files.readAllBytes(path)));
+            String base64 = Base64.getEncoder().encodeToString(Files.readAllBytes(path));
             conn.send(new CosmeticReplyPacket(cosmeticType, name, base64));
         } catch (IOException e) {
             conn.send(new CosmeticReplyPacket(cosmeticType, name, ""));

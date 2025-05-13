@@ -16,7 +16,7 @@ public class ServiceServerType implements CacheType<String, NativeImage> {
 
     @Override
     public String getFolderName() {
-        return "service_server." + type.subdirectory();
+        return "service_server." + type.cacheDirectory();
     }
 
     @Override

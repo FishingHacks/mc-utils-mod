@@ -13,10 +13,11 @@ public class CommandManager {
     static final HashMap<String, DotCommand> commands = new HashMap<>();
 
     static {
-        register(new SayCommand(), new HelpCommand(), new ReloadCosmeticsCommand(), new ConfigCommand());
+        register(new SayCommand(), new HelpCommand(), new ReloadCosmeticsCommand(), new ConfigCommand(),
+            new CosmeticsCommand(), new InviteCommand());
     }
 
-    public static void register(DotCommand ...cmds) {
+    public static void register(DotCommand... cmds) {
         for (DotCommand cmd : cmds) {
             CommandManager.commands.put(cmd.getName(), cmd);
         }
@@ -24,8 +25,8 @@ public class CommandManager {
 
     public static void run(String cmd, String args) {
         DotCommand command = commands.get(cmd);
-        if (command == null)
-            Minecraft.getInstance().getChatListener().handleSystemMessage(Component.translatable("cmd.invalid", cmd).withStyle(ChatFormatting.DARK_RED), false);
+        if (command == null) Minecraft.getInstance().getChatListener()
+            .handleSystemMessage(Component.translatable("cmd.invalid", cmd).withStyle(ChatFormatting.DARK_RED), false);
         else {
             try {
                 command.run(args, Minecraft.getInstance().getChatListener());
@@ -33,15 +34,17 @@ public class CommandManager {
                 ChatListener listener = Minecraft.getInstance().getChatListener();
                 listener.handleSystemMessage(Component.literal("Error: " + e.getMessage()), false);
                 var el = e.getStackTrace()[0];
-                if (el != null)
-                    listener.handleSystemMessage(Component.literal("At: " + el.getClassName() + "." + el.getMethodName() + "(" + el.getFileName() + ":" + el.getLineNumber() + ")"), false);
+                if (el != null) listener.handleSystemMessage(Component.literal(
+                        "At: " + el.getClassName() + "." + el.getMethodName() + "(" + el.getFileName() + ":" + el.getLineNumber() + ")"),
+                    false);
 
                 Throwable t = e.getCause();
                 while (t != null) {
                     listener.handleSystemMessage(Component.literal("Caused by: " + e.getMessage()), false);
                     el = t.getStackTrace()[0];
-                    if (el != null)
-                        listener.handleSystemMessage(Component.literal("At: " + el.getClassName() + "." + el.getMethodName() + "(" + el.getFileName() + ":" + el.getLineNumber() + ")"), false);
+                    if (el != null) listener.handleSystemMessage(Component.literal(
+                            "At: " + el.getClassName() + "." + el.getMethodName() + "(" + el.getFileName() + ":" + el.getLineNumber() + ")"),
+                        false);
 
                     t = t.getCause();
                 }

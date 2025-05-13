@@ -21,7 +21,7 @@ public class InputPopupScreen extends OverlayScreen {
     private final String initialValue;
     private final int titleWidth;
 
-    protected InputPopupScreen(Screen parent, Component title, @Nullable Component hint, Consumer<String> consumer,
+    protected InputPopupScreen(@Nullable Screen parent, Component title, @Nullable Component hint, Consumer<String> consumer,
                                String value) {
         super(title, parent, 250, 80);
         this.consumer = consumer;

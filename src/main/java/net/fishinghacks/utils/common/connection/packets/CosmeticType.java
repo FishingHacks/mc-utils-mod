@@ -19,6 +19,15 @@ public enum CosmeticType {
         };
     }
 
+    public String cacheDirectory() {
+        return switch (this) {
+            case Cape -> "capes";
+            case ModelTexture -> "models";
+            case ModelPreview -> "model_previews";
+            case ModelData -> "model_data";
+        };
+    }
+
     public String extension() {
         return switch (this) {
             case Cape, ModelTexture -> ".png";

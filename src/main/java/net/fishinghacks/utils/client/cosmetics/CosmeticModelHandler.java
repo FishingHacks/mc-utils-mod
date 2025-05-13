@@ -6,9 +6,7 @@ import com.mojang.blaze3d.platform.NativeImage;
 import net.fishinghacks.utils.client.caching.DownloadTextureCache;
 import net.fishinghacks.utils.client.connection.ClientConnectionHandler;
 import net.fishinghacks.utils.common.Utils;
-import net.fishinghacks.utils.common.connection.packets.CosmeticType;
-import net.fishinghacks.utils.common.connection.packets.CosmeticsListRequestPacket;
-import net.fishinghacks.utils.common.connection.packets.Packets;
+import net.fishinghacks.utils.common.connection.packets.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -46,15 +44,16 @@ public class CosmeticModelHandler {
         models = new ArrayList<>();
         var conn = ClientConnectionHandler.getInstance().getConnection();
         if (conn == null || !ClientConnectionHandler.getInstance().isConnected()) return;
-        ClientConnectionHandler.getInstance().waitForPacket(Packets.LIST_MODELS, cosmetics -> {
+        ClientConnectionHandler.getInstance().waitForPacket(Packets.GET_PLAYER_COSMETIC_REPLY, cosmetics -> {
             if (cosmetics.isEmpty()) return;
-            cosmetics.get().models()
-                .forEach(name -> ClientConnectionHandler.getInstance().waitForPacket(Packets.COSMETIC_REPLY, v -> {
+            cosmetics.get().models().forEach(name -> {
+                ClientConnectionHandler.getInstance().waitForPacket(Packets.COSMETIC_REPLY, v -> {
                     if (v.isEmpty()) return;
                     onCosmeticDataReceived(name, Base64.decodeBase64(v.get().b64Data()));
-                }, v -> v.cosmeticType() == CosmeticType.ModelData && name.equals(v.name())));
-        });
-        conn.send(new CosmeticsListRequestPacket(CosmeticType.ModelData));
+                }, v -> v.cosmeticType() == CosmeticType.ModelData && name.equals(v.name()));
+                conn.send(new CosmeticRequestPacket(CosmeticType.ModelData, name));
+            });
+        }); conn.send(new GetCosmeticForPlayer(profile.getId()));
     }
 
     private void onCosmeticDataReceived(String name, byte[] data) {
@@ -68,7 +67,7 @@ public class CosmeticModelHandler {
                     newImage.copyFrom(image);
                     Minecraft.getInstance().getTextureManager()
                         .register(location, new DynamicTexture(location::toString, newImage));
-                    models.add(new CosmeticModel(model, location));
+                    models.add(new CosmeticModel(model, location, name));
                 });
             });
 

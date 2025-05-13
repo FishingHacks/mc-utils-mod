@@ -43,4 +43,8 @@ public class FutureState<T> {
     public boolean isProcessing() {
         return !didError && result == null;
     }
+
+    public boolean isDone() {
+        return !didError && result != null;
+    }
 }

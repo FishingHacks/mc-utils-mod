@@ -7,10 +7,12 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 
+import javax.annotation.Nullable;
+
 public class PopupScreen extends OverlayScreen {
     public final Component message;
 
-    protected PopupScreen(Screen parent, Component message) {
+    protected PopupScreen(@Nullable Screen parent, Component message) {
         super(Component.empty(), parent, 250, 80);
         this.message = message;
     }

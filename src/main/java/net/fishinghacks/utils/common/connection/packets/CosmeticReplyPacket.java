@@ -12,4 +12,10 @@ public record CosmeticReplyPacket(CosmeticType cosmeticType, String name,
     public PacketType<CosmeticReplyPacket> type() {
         return Packets.COSMETIC_REPLY;
     }
+
+    @Override
+    public String toString() {
+        return "CosmeticReplyPacket{" + "cosmeticType=" + cosmeticType + ", name='" + name + '\'' + ", b64Data='... " +
+            "(" + b64Data.length() + " characters)'" + '}';
+    }
 }

@@ -87,7 +87,7 @@ public class ServiceServerSettingsPopup extends OverlayScreen {
             if (address == null) return;
             ClientConnectionHandler.getInstance().connect(address);
             var history = Configs.clientConfig.SERVICE_SERVER_HISTORY.get();
-            List<String> newHistory = new ArrayList<>(history);
+            List<String> newHistory = new ArrayList<>();
             for (var v : history) {
                 if (!v.equals(ipInput.getValue())) newHistory.add(v);
             }

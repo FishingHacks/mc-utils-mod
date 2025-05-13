@@ -7,17 +7,19 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
 public abstract class OverlayScreen extends Screen {
+    @Nullable
     protected final Screen parent;
     protected int overlayWidth;
     protected int overlayHeight;
     protected int x;
     protected int y;
 
-    protected OverlayScreen(Component title, Screen parent, int width, int height) {
+    protected OverlayScreen(Component title, @Nullable Screen parent, int width, int height) {
         super(title);
         this.parent = parent;
         this.overlayWidth = width;
@@ -28,7 +30,7 @@ public abstract class OverlayScreen extends Screen {
     protected void init() {
         x = (width - overlayWidth) / 2;
         y = (height - overlayHeight) / 2;
-        parent.init(Minecraft.getInstance(), width, height);
+        if(parent != null) parent.init(Minecraft.getInstance(), width, height);
         super.init();
     }
 

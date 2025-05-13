@@ -9,6 +9,10 @@ import java.util.function.Supplier;
 public enum Translation implements Supplier<Component> {
     ClickUITitle("utils.gui.clickui.title"),
     DragUITitle("utils.gui.dragui.title"),
+    CmdInviteNotConnected("utils.cmd.invite.not_connected"),
+    CmdInviteNotShared("utils.cmd.invite.not_shared"),
+    CmdInviteE4MCMissing("utils.cmd.invite.e4mc_missing"),
+    CmdInviteInvited("utils.cmd.invite.invited"),
     CmdSayHelp("utils.cmd.say.help"),
     CosmeticReloadAll("utils.cmd.reload_cosmetics.reloaded.all"),
     CosmeticReloadPlayer("utils.cmd.reload_cosmetics.reloaded.player"),
@@ -36,6 +40,11 @@ public enum Translation implements Supplier<Component> {
     CosmeticGuiCape("utils.gui.cosmetics.cape"),
     CosmeticGuiElytra("utils.gui.cosmetics.elytra"),
     CosmeticGuiClear("utils.gui.cosmetics.clear"),
+    CosmeticGuiTypeMCCapes("utils.gui.cosmetics.type.mccapes"),
+    CosmeticGuiTypeServerCapes("utils.gui.cosmetics.type.server_capes"),
+    CosmeticGuiTypeServerModels("utils.gui.cosmetics.type.server_models"),
+    CosmeticGuiLoading("utils.gui.cosmetics.loading"),
+    CosmeticGuiErrored("utils.gui.cosmetics.errored"),
     ;
 
     private final String key;

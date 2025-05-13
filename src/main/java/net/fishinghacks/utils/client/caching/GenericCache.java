@@ -6,6 +6,7 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.cache.RemovalNotification;
 import com.mojang.logging.LogUtils;
 import net.fishinghacks.utils.client.UtilsClient;
+import net.fishinghacks.utils.common.Utils;
 import net.minecraft.FileUtil;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.Util;
@@ -36,7 +37,10 @@ public class GenericCache<K, V> {
             .build(new CacheLoader<>() {
                 @Override
                 public CompletableFuture<V> load(K key) {
-                    return GenericCache.this.load(key).thenCompose(type::process);
+                    return GenericCache.this.load(key).thenCompose(type::process).exceptionallyCompose(e -> {
+                        Utils.getLOGGER().info("Failed to load {}", key, e);
+                        return CompletableFuture.failedStage(e);
+                    });
                 }
             });
     }

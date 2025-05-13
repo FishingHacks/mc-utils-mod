@@ -5,6 +5,7 @@ import net.fishinghacks.utils.client.E4MCStore;
 import net.fishinghacks.utils.client.connection.ClientConnectionHandler;
 import net.fishinghacks.utils.client.gui.components.Button;
 import net.fishinghacks.utils.client.gui.components.IconButton;
+import net.fishinghacks.utils.client.gui.cosmetics.CosmeticsScreen;
 import net.fishinghacks.utils.client.gui.mcsettings.McSettingsScreen;
 import net.fishinghacks.utils.common.Translation;
 import net.fishinghacks.utils.common.connection.Connection;
@@ -96,7 +97,7 @@ public class PauseMenuScreen extends Screen {
         }
 
         Button lanButton;
-        row.addChild(openScreen(OPTIONS, () -> new McSettingsScreen(this, minecraft.options)));
+        Button optionsButton = row.addChild(openScreen(OPTIONS, () -> new McSettingsScreen(this, minecraft.options)));
         if (this.minecraft.hasSingleplayerServer() && this.minecraft.getSingleplayerServer() != null && !this.minecraft.getSingleplayerServer()
             .isPublished()) lanButton = row.addChild(openScreen(SHARE_TO_LAN, () -> new ShareToLanScreen(this)));
         else lanButton = row.addChild(openScreen(PLAYER_REPORTING, () -> new SocialInteractionsScreen(this)));
@@ -114,6 +115,11 @@ public class PauseMenuScreen extends Screen {
         inviteButton = addRenderableWidget(
             new IconButton.Builder(Icons.INVITE).pos(lanButton.getRight() + 4, lanButton.getY())
                 .onPress(PauseMenuScreen::invitePlayer).build());
+        addRenderableWidget(
+            new IconButton.Builder(Icons.COSMETICS).pos(optionsButton.getX() - 4 - IconButton.DEFAULT_HEIGHT,
+                    lanButton.getY()).onPress(
+                    ignored -> Minecraft.getInstance().setScreen(new CosmeticsScreen(Minecraft.getInstance().screen)))
+                .build());
     }
 
     @Override

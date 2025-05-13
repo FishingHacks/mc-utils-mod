@@ -66,7 +66,7 @@ public class Connection extends SimpleChannelInboundHandler<Packet<?>> {
     }
 
     public void setupPipeline(ChannelPipeline pipeline) {
-        pipeline.addLast("splitter", new LineBasedFrameDecoder(0xffff)).addLast(new FlowControlHandler())
+        pipeline.addLast("splitter", new LineBasedFrameDecoder(0xffffff /* 16 MiB is the max size */)).addLast(new FlowControlHandler())
             .addLast("decoder", new PacketDecoder()).addLast("encoder", new PacketEncoder())
             .addLast("packet_handler", this);
     }

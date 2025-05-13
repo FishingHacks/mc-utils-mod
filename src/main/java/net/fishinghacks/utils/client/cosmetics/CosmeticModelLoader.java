@@ -5,12 +5,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.fishinghacks.utils.common.Utils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
@@ -19,7 +16,6 @@ import oshi.util.tuples.Pair;
 
 import javax.annotation.Nullable;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 import java.util.function.Function;
@@ -84,20 +80,6 @@ south: [2depth + width, depth, 2depth + 2width, depth + height]
 */
 
 public class CosmeticModelLoader {
-    public static Optional<CosmeticModelPart> loadModel(ResourceLocation location) throws InvalidModelException {
-        var resource = Minecraft.getInstance().getResourceManager().getResource(location);
-        if (resource.isEmpty()) return Optional.empty();
-        JsonObject obj;
-        try (var data = resource.get().openAsReader()) {
-            obj = new Gson().fromJson(data, JsonElement.class).getAsJsonObject();
-        } catch (IOException e) {
-            return Optional.empty();
-        } catch (Exception e) {
-            throw new InvalidModelException("Failed to parse json: " + e);
-        }
-        return Optional.of(loadModel(obj));
-    }
-
     public static CosmeticModelPart loadModel(byte[] bytes) throws InvalidModelException {
         JsonObject obj;
         try {
@@ -327,7 +309,6 @@ public class CosmeticModelLoader {
 
             int i = 0;
             int[] uvs = uv.down;
-            Utils.getLOGGER().info("{} {}", mirrorU, mirrorV);
             polygons[i++] = new Polygon(
                 mirrorV ? new ModelPart.Vertex[]{vertex1, vertex2, vertex6, vertex5} : new ModelPart.Vertex[]{vertex8,
                     vertex7, vertex3, vertex4}, (float) (mirrorU ? uvs[2] : uvs[0]) / textureWidth,
