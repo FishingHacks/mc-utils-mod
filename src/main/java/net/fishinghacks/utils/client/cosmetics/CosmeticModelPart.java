@@ -21,12 +21,15 @@ public class CosmeticModelPart {
     public float zScale = 1.0F;
     private final List<CosmeticModelLoader.Cube> cubes;
     private final Map<String, CosmeticModelPart> children;
+    public final CosmeticAttachment attachment;
 
     private PartPose initialPose;
 
-    public CosmeticModelPart(List<CosmeticModelLoader.Cube> cubes, Map<String, CosmeticModelPart> children) {
+    public CosmeticModelPart(List<CosmeticModelLoader.Cube> cubes, Map<String, CosmeticModelPart> children,
+                             CosmeticAttachment attachment) {
         this.cubes = cubes;
         this.children = children;
+        this.attachment = attachment;
     }
 
 

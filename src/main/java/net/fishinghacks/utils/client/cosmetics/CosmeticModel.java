@@ -10,8 +10,16 @@ public record CosmeticModel(CosmeticModelPart root, ResourceLocation texture, St
     public void render(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay,
                        PlayerModel playerModel) {
         this.root.resetPose();
-        this.root.offsetPos(new Vector3f(playerModel.head.x, playerModel.head.y, playerModel.head.z));
-        this.root.offsetRotation(new Vector3f(playerModel.head.xRot, playerModel.head.yRot, playerModel.head.zRot));
+        var attachTo = switch (root.attachment) {
+            case Head -> playerModel.head;
+            case LeftArm -> playerModel.leftArm;
+            case RightArm -> playerModel.rightArm;
+            case LeftLeg -> playerModel.leftLeg;
+            case RightLeg -> playerModel.rightLeg;
+            case Body -> playerModel.body;
+        };
+        this.root.offsetPos(new Vector3f(attachTo.x, attachTo.y, attachTo.z));
+        this.root.offsetRotation(new Vector3f(attachTo.xRot, attachTo.yRot, attachTo.zRot));
         this.root.render(poseStack, buffer, packedLight, packedOverlay, -1);
     }
 }

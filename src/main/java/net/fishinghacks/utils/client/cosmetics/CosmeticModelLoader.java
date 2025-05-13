@@ -104,6 +104,9 @@ public class CosmeticModelLoader {
         if (needsId && !object.has("id")) {
             throw new InvalidModelException("part that requires an id does no have one.");
         }
+        CosmeticAttachment attachment = CosmeticAttachment.fromString(
+            process(object.get("attachTo"), JsonElement::getAsString,
+                "attachTo was not of type string", "head"));
         String id = process(object.get("id"), JsonElement::getAsString, "id was not of type string", "");
         String invertAxis = process(object.get("invertAxis"), JsonElement::getAsString,
             "invertAxis was not of type string", "");
@@ -167,7 +170,7 @@ public class CosmeticModelLoader {
             var modelPart = loadModel(model, true, textureWidth, textureHeight);
             models.put(modelPart.getB(), modelPart.getA());
         }
-        CosmeticModelPart part = new CosmeticModelPart(bakedCubes, models);
+        CosmeticModelPart part = new CosmeticModelPart(bakedCubes, models, attachment);
         part.setInitialPose(PartPose.offsetAndRotation(translation[0], translation[1], translation[2],
             (float) rotate[0] * Mth.DEG_TO_RAD, (float) rotate[1] * Mth.DEG_TO_RAD,
             (float) rotate[2] * Mth.DEG_TO_RAD));
