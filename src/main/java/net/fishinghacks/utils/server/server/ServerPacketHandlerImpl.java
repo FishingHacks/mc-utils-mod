@@ -15,6 +15,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
 
 public record ServerPacketHandlerImpl(Server server, Path cosmeticsDirectory) implements ServerPacketHandler {
     @Override
@@ -46,47 +47,78 @@ public record ServerPacketHandlerImpl(Server server, Path cosmeticsDirectory) im
     }
 
     @Override
-    public void handleListCosmetics(Connection conn) {
-        try (var cosmetics = Files.list(cosmeticsDirectory)) {
-            conn.send(new CosmeticsListPacket(cosmetics.map(p -> p.getFileName().toString()).toList()));
+    public void handleListCosmetics(CosmeticType type, Connection conn) {
+        Function<List<String>, ? extends Packet<PacketHandler>> packetCreator = switch (type) {
+            case Cape -> CapesListPacket::new;
+            case ModelPreview, ModelData, ModelTexture -> ModelsListPacket::new;
+        };
+        String extension = type.extension();
+        try (var cosmetics = Files.list(cosmeticsDirectory.resolve(type.subdirectory()))
+            .filter(v -> v.endsWith(extension))) {
+            conn.send(packetCreator.apply(
+                cosmetics.map(Path::getFileName).map(Path::toString).filter(v -> v.length() > extension.length())
+                    .map(p -> p.substring(0, p.length() - extension.length())).toList()));
         } catch (IOException e) {
-            conn.send(new CosmeticsListPacket(List.of()));
+            conn.send(packetCreator.apply(List.of()));
         }
     }
 
     @Override
-    public void handleGetCosmetic(Connection conn, String name) {
+    public void handleGetCosmetic(CosmeticType cosmeticType, String name, Connection conn) {
         if (CommonUtil.isInvalidFilename(name)) {
-            conn.send(new CosmeticReplyPacket(name, ""));
+            conn.send(new CosmeticReplyPacket(cosmeticType, name, ""));
             return;
         }
+        Path path = cosmeticType.getPath(cosmeticsDirectory, name);
         try {
-            String base64 = Arrays.toString(Base64.encodeBase64(Files.readAllBytes(cosmeticsDirectory.resolve(name))));
-            conn.send(new CosmeticReplyPacket(name, base64));
+            String base64 = Arrays.toString(Base64.encodeBase64(Files.readAllBytes(path)));
+            conn.send(new CosmeticReplyPacket(cosmeticType, name, base64));
         } catch (IOException e) {
-            conn.send(new CosmeticReplyPacket(name, ""));
+            conn.send(new CosmeticReplyPacket(cosmeticType, name, ""));
         }
     }
 
-    @Override
-    public void handleSetCosmetic(Connection conn, @Nullable String capeName, boolean isMCCapes) {
-        if (conn.getPlayerId() == null) return;
+    private void modifyPlayerCosmetics(UUID id,
+                                       Function<CosmeticMapConfigValue.PlayerCosmetics,
+                                           CosmeticMapConfigValue.PlayerCosmetics> modify) {
         server.schedule(() -> {
-            Configs.serverConfig.cosmeticMap.getValue().compute(conn.getPlayerId(), (ignored, cosmetics) -> {
-                if (cosmetics == null) cosmetics = new CosmeticMapConfigValue.PlayerCosmetics();
-                return cosmetics.updateCape(capeName, isMCCapes);
-            });
+            Configs.serverConfig.cosmeticMap.getValue().compute(id, (ignored, cosmetics) -> modify.apply(
+                cosmetics == null ? new CosmeticMapConfigValue.PlayerCosmetics() : cosmetics));
             Configs.serverConfig.cosmeticMap.updated();
-            assert UtilsServer.getServer() != null;
-            UtilsServer.getServer().broadcast(new ReloadCosmeticForPlayer(conn.getPlayerId()));
+            if (UtilsServer.getServer() != null) UtilsServer.getServer().broadcast(new ReloadCosmeticForPlayer(id));
         });
+    }
+
+    @Override
+    public void handleSetCape(Connection conn, @Nullable String capeName, boolean isMCCapes) {
+        if (conn.getPlayerId() == null) return;
+        modifyPlayerCosmetics(conn.getPlayerId(), cosmetics -> cosmetics.updateCape(capeName, isMCCapes));
+    }
+
+    @Override
+    public void handleSetModels(Connection conn, List<String> models) {
+        if (conn.getPlayerId() == null) return;
+        modifyPlayerCosmetics(conn.getPlayerId(), cosmetics -> cosmetics.setModels(models));
+    }
+
+    @Override
+    public void handleAddModel(Connection conn, String model) {
+        if (conn.getPlayerId() == null) return;
+        modifyPlayerCosmetics(conn.getPlayerId(), cosmetics -> cosmetics.addModel(model));
+    }
+
+    @Override
+    public void handleRemoveModel(Connection conn, String model) {
+        if (conn.getPlayerId() == null) return;
+        modifyPlayerCosmetics(conn.getPlayerId(), cosmetics -> cosmetics.removeModel(model));
     }
 
     @Override
     public void handleGetCosmeticForPlayer(UUID playerId, Connection conn) {
         var value = Configs.serverConfig.cosmeticMap.getValue().get(playerId);
-        if (value != null) conn.send(new GetCosmeticForPlayerReply(playerId, value.cape, value.capeIsMCCapes));
-        else conn.send(new GetCosmeticForPlayerReply(playerId));
+        if (value != null) conn.send(
+            new GetCosmeticForPlayerReply(playerId, value.cape, value.capeIsMCCapes, value.models.stream().toList()));
+        else conn.send(new GetCosmeticForPlayerReply(playerId, null, false, List.of()));
     }
 
     @Override

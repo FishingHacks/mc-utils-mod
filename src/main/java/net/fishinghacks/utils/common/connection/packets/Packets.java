@@ -42,7 +42,8 @@ public class Packets {
         GetNameReplyPacket.class);
     public static final PacketType<CosmeticsListRequestPacket> LIST_REQUEST = register("list_cosmetics_request",
         CosmeticsListRequestPacket.class);
-    public static final PacketType<CosmeticsListPacket> LIST = register("cosmetics_list", CosmeticsListPacket.class);
+    public static final PacketType<CapesListPacket> LIST_CAPES = register("capes_list", CapesListPacket.class);
+    public static final PacketType<ModelsListPacket> LIST_MODELS = register("models_list", ModelsListPacket.class);
     public static final PacketType<CosmeticRequestPacket> COSMETIC_REQUEST = register("cosmetic_request",
         CosmeticRequestPacket.class);
     public static final PacketType<CosmeticReplyPacket> COSMETIC_REPLY = register("cosmetic_reply",
@@ -51,7 +52,10 @@ public class Packets {
         GetCosmeticForPlayer.class);
     public static final PacketType<GetCosmeticForPlayerReply> GET_PLAYER_COSMETIC_REPLY = register(
         "get_player_cosmetic_reply", GetCosmeticForPlayerReply.class);
-    public static final PacketType<SetCosmeticPacket> SET_COSMETIC = register("set_cosmetic", SetCosmeticPacket.class);
+    public static final PacketType<SetCapePacket> SET_CAPE = register("set_cape", SetCapePacket.class);
+    public static final PacketType<SetModelsPacket> SET_MODELS = register("set_models", SetModelsPacket.class);
+    public static final PacketType<AddModelPacket> ADD_MODEL = register("add_model", AddModelPacket.class);
+    public static final PacketType<RemoveModelPacket> REMOVE_MODEL = register("remove_model", RemoveModelPacket.class);
     public static final PacketType<ReloadCosmeticForPlayer> RELOAD_COSMETIC = register("reload_cosmetic",
         ReloadCosmeticForPlayer.class);
 }

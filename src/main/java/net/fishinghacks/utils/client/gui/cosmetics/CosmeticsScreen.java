@@ -9,7 +9,7 @@ import net.fishinghacks.utils.client.gui.PlaceholderEntity;
 import net.fishinghacks.utils.client.gui.components.*;
 import net.fishinghacks.utils.common.Colors;
 import net.fishinghacks.utils.common.Translation;
-import net.fishinghacks.utils.common.connection.packets.SetCosmeticPacket;
+import net.fishinghacks.utils.common.connection.packets.SetCapePacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.StringWidget;
@@ -92,6 +92,8 @@ public class CosmeticsScreen extends BlackScreen {
                 font).alignLeft());
         addRenderableWidget(
             Button.Builder.cube("<").pos(boxX - 4 - Button.CUBE_WIDTH, headerY).onPress(ignored -> onClose()).build());
+        addRenderableWidget(Button.Builder.big(Translation.CosmeticGuiClear.get()).pos(playerBoxX + 4, boxY + 4)
+            .width(playerBoxWidth - 4).onPress(ignored -> applyCape(null)).build());
 
         addPageSelector();
         addElytraSwitch();
@@ -185,16 +187,17 @@ public class CosmeticsScreen extends BlackScreen {
         this.renderer.setSlim(slim);
     }
 
-    private void applyCape(int id) {
+    private void applyCape(@Nullable Integer id) {
         var conn = ClientConnectionHandler.getInstance().getConnection();
         if (conn == null) return;
         MinecraftCapesGallery.FetchedEntry entry;
         try {
-            entry = fetchedList.get(id);
+            if (id != null) entry = fetchedList.get(id);
+            else entry = null;
         } catch (IndexOutOfBoundsException ignored) {
             return;
         }
-        conn.send(new SetCosmeticPacket(entry.hash, true));
+        conn.send(new SetCapePacket(entry != null ? entry.hash : null, true));
     }
 
     @Override

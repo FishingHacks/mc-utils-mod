@@ -13,6 +13,7 @@
   "utils.gui.cosmetics.title": "Cosmetics",
   "utils.gui.cosmetics.cape": "Cape",
   "utils.gui.cosmetics.elytra": "Elytra",
+  "utils.gui.cosmetics.clear": "Clear Cosmetics",
 
   "utils.module_category.ui": "GUI",
   "utils.module_category.misc": "Misc",

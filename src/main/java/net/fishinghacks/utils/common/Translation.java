@@ -35,6 +35,7 @@ public enum Translation implements Supplier<Component> {
     CosmeticGuiTitle("utils.gui.cosmetics.title"),
     CosmeticGuiCape("utils.gui.cosmetics.cape"),
     CosmeticGuiElytra("utils.gui.cosmetics.elytra"),
+    CosmeticGuiClear("utils.gui.cosmetics.clear"),
     ;
 
     private final String key;

@@ -2,10 +2,10 @@ package net.fishinghacks.utils.common.connection.packets;
 
 import net.fishinghacks.utils.common.connection.Connection;
 
-public record CosmeticRequestPacket(String cosmeticName) implements Packet<ServerPacketHandler> {
+public record CosmeticRequestPacket(CosmeticType cosmeticType, String cosmeticName) implements Packet<ServerPacketHandler> {
     @Override
     public void handle(Connection conn, ServerPacketHandler handler) {
-        handler.handleGetCosmetic(conn, cosmeticName);
+        handler.handleGetCosmetic(cosmeticType, cosmeticName, conn);
     }
 
     @Override

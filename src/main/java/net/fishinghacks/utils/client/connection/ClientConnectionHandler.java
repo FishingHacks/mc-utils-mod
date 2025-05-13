@@ -8,6 +8,7 @@ import io.netty.channel.epoll.Epoll;
 import io.netty.channel.epoll.EpollSocketChannel;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import net.fishinghacks.utils.client.cosmetics.CosmeticHandler;
 import net.fishinghacks.utils.client.gui.PopupScreen;
 import net.fishinghacks.utils.client.gui.ServiceServerSettingsPopup;
 import net.fishinghacks.utils.common.Translation;
@@ -219,10 +220,15 @@ public class ClientConnectionHandler {
             }
 
             this.connection = conn;
-            conn.runOnceConnected(ignored -> name = getIp());
             conn.send(new LoginPacket(Minecraft.getInstance().getGameProfile().getName(),
                 Minecraft.getInstance().getGameProfile().getId()));
             conn.send(new GetNamePacket());
+            conn.runOnceConnected(ignored -> {
+                synchronized (this) {
+                    name = getIp();
+                }
+                CosmeticHandler.reloadCosmetics();
+            });
         }
     }
 
@@ -237,6 +243,7 @@ public class ClientConnectionHandler {
         instance.connection = null;
         for(var waiter : getInstance().packetWaiters) waiter.run(null);
         getInstance().packetWaiters.clear();
+        CosmeticHandler.reloadCosmetics();
     }
 
     public static void openSettingsScreen() {

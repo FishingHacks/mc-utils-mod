@@ -1,7 +1,7 @@
 package net.fishinghacks.utils.client.connection;
 
 import net.fishinghacks.utils.client.UtilsClient;
-import net.fishinghacks.utils.client.cosmetics.CapeHandler;
+import net.fishinghacks.utils.client.cosmetics.CosmeticHandler;
 import net.fishinghacks.utils.client.gui.GuiOverlayManager;
 import net.fishinghacks.utils.client.gui.components.Notification;
 import net.fishinghacks.utils.common.CommonUtil;
@@ -79,7 +79,7 @@ public class ClientPacketHandlerImpl implements ClientPacketHandler {
 
     @Override
     public void reloadCosmeticForPlayer(UUID player) {
-        Minecraft.getInstance().schedule(() -> CapeHandler.removeProfile(player));
+        Minecraft.getInstance().schedule(() -> CosmeticHandler.reloadCosmeticsForPlayer(player));
     }
 
     @Override

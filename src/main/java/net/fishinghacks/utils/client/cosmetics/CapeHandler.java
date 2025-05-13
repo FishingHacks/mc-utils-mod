@@ -31,7 +31,7 @@ public class CapeHandler {
         return new CapeHandler(profile);
     }
 
-    public static void removeProfile(UUID uuid) {
+    static void removeProfile(UUID uuid) {
         CapeHandler handler = CapeHandler.instances.remove(uuid);
         TextureManager manager = Minecraft.getInstance().getTextureManager();
         if (handler.isAnimated) {
@@ -42,7 +42,7 @@ public class CapeHandler {
         }
     }
 
-    public static void removeAllProfiles() {
+    static void removeAllProfiles() {
         CapeHandler.instances.clear();
     }
 

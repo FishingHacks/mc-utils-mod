@@ -23,9 +23,9 @@ public class ServiceProviderGetter {
         }, packet -> packet.player().equals(id));
         conn.send(new GetCosmeticForPlayer(id));
         return future.thenCompose(packet -> {
-            if(packet.cosmeticName() == null) throw new RuntimeException("Player does not have a cosmetic");
-            if(packet.isMCCapes()) return DownloadTextureCache.capeGallery.getOrLoad(packet.cosmeticName());
-            else return DownloadTextureCache.serviceServer.getOrLoad(packet.cosmeticName());
+            if(packet.capeName() == null) throw new RuntimeException("Player does not have a cosmetic");
+            if(packet.isMCCapes()) return DownloadTextureCache.capeGallery.getOrLoad(packet.capeName());
+            else return DownloadTextureCache.serviceServerCapes.getOrLoad(packet.capeName());
         });
     }
 }

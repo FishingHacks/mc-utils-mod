@@ -15,6 +15,7 @@ public record ConfigContext(String modId, Screen parent, ModConfigSpec modSpec,
                             List<String> keylist) {
 
     public static ConfigContext top(String modId, Screen parent, ModConfig modConfig) {
+        //noinspection deprecation
         return new ConfigContext(modId, parent, (ModConfigSpec) modConfig.getSpec(), ((ModConfigSpec) modConfig.getSpec()).getValues().entrySet(), ((ModConfigSpec) modConfig.getSpec()).getSpec().valueMap(), List.of());
     }
 

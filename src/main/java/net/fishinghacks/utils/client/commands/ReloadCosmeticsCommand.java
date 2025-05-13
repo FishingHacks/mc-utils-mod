@@ -1,8 +1,8 @@
 package net.fishinghacks.utils.client.commands;
 
 import com.mojang.authlib.GameProfile;
+import net.fishinghacks.utils.client.cosmetics.CosmeticHandler;
 import net.fishinghacks.utils.common.Translation;
-import net.fishinghacks.utils.client.cosmetics.CapeHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ServerData;
@@ -23,14 +23,14 @@ public class ReloadCosmeticsCommand extends DotCommand {
     public void run(String args, ChatListener listener) {
         if (args.isEmpty()) {
             // it is fine to do this because the rendering logic will try to get the profile, resulting in a "reload".
-            CapeHandler.removeAllProfiles();
+            CosmeticHandler.reloadCosmetics();
             listener.handleSystemMessage(Translation.CosmeticReloadAll.get(), false);
             return;
         }
         try {
             UUID uuid = UUID.fromString(args);
             // see above
-            CapeHandler.removeProfile(uuid);
+            CosmeticHandler.reloadCosmeticsForPlayer(uuid);
             listener.handleSystemMessage(Translation.CosmeticReloadUUID.with(uuid), false);
             return;
         } catch (IllegalArgumentException ignored) {
@@ -48,7 +48,7 @@ public class ReloadCosmeticsCommand extends DotCommand {
             }
             GameProfile profile = player.get();
             // see above
-            CapeHandler.removeProfile(profile.getId());
+            CosmeticHandler.reloadCosmeticsForPlayer(profile.getId());
             listener.handleSystemMessage(Translation.CosmeticReloadPlayer.with(profile.getName(), profile.getId()), false);
             return;
         }
@@ -64,7 +64,7 @@ public class ReloadCosmeticsCommand extends DotCommand {
         }
         GameProfile profile = player.get();
         // see above
-        CapeHandler.removeProfile(profile.getId());
+        CosmeticHandler.reloadCosmeticsForPlayer(profile.getId());
         listener.handleSystemMessage(Translation.CosmeticReloadPlayer.with(profile.getName(), profile.getId()), false);
     }
 }

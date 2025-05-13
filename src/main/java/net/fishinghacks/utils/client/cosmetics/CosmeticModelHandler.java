@@ -1,18 +1,25 @@
 package net.fishinghacks.utils.client.cosmetics;
 
+import com.google.common.hash.Hashing;
 import com.mojang.authlib.GameProfile;
+import com.mojang.blaze3d.platform.NativeImage;
+import net.fishinghacks.utils.client.caching.DownloadTextureCache;
+import net.fishinghacks.utils.client.connection.ClientConnectionHandler;
 import net.fishinghacks.utils.common.Utils;
+import net.fishinghacks.utils.common.connection.packets.CosmeticType;
+import net.fishinghacks.utils.common.connection.packets.CosmeticsListRequestPacket;
+import net.fishinghacks.utils.common.connection.packets.Packets;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.resources.ResourceLocation;
+import org.apache.commons.codec.binary.Base64;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class CosmeticModelHandler {
     public final UUID id;
-    public List<CosmeticModel> models;
+    public final ArrayList<CosmeticModel> models;
+    private boolean isClosed = false;
 
     private static final HashMap<UUID, CosmeticModelHandler> instances = new HashMap<>();
 
@@ -22,26 +29,51 @@ public class CosmeticModelHandler {
         return new CosmeticModelHandler(profile);
     }
 
-    public static void removeProfile(UUID uuid) {
+    static void removeProfile(UUID uuid) {
         CosmeticModelHandler handler = CosmeticModelHandler.instances.remove(uuid);
-        // todo: actually remove textures (don't have to yet cuz its part of the texture pack)
+        handler.isClosed = true;
         TextureManager manager = Minecraft.getInstance().getTextureManager();
+        handler.models.forEach(model -> manager.release(model.texture()));
     }
 
-    public static void removeAllProfiles() {
+    static void removeAllProfiles() {
         CosmeticModelHandler.instances.clear();
     }
 
     public CosmeticModelHandler(GameProfile profile) {
         this.id = profile.getId();
         instances.put(id, this);
+        models = new ArrayList<>();
+        var conn = ClientConnectionHandler.getInstance().getConnection();
+        if (conn == null || !ClientConnectionHandler.getInstance().isConnected()) return;
+        ClientConnectionHandler.getInstance().waitForPacket(Packets.LIST_MODELS, cosmetics -> {
+            if (cosmetics.isEmpty()) return;
+            cosmetics.get().models()
+                .forEach(name -> ClientConnectionHandler.getInstance().waitForPacket(Packets.COSMETIC_REPLY, v -> {
+                    if (v.isEmpty()) return;
+                    onCosmeticDataReceived(name, Base64.decodeBase64(v.get().b64Data()));
+                }, v -> v.cosmeticType() == CosmeticType.ModelData && name.equals(v.name())));
+        });
+        conn.send(new CosmeticsListRequestPacket(CosmeticType.ModelData));
+    }
 
+    private void onCosmeticDataReceived(String name, byte[] data) {
         try {
-            var root = CosmeticModelLoader.loadModel(Utils.id("cosmetics/axolotl.jpm"));
-            models = root.map(modelPart -> List.of(new CosmeticModel(modelPart, ResourceLocation.withDefaultNamespace("textures/entity/axolotl/axolotl_blue.png"))))
-                .orElseGet(List::of);
-        } catch (Exception ignored) {
-            models = List.of();
+            var model = CosmeticModelLoader.loadModel(data);
+            DownloadTextureCache.serviceServerModels.getOrLoad(name).thenAccept(image -> {
+                var location = Utils.id("models_textures/" + Hashing.sha256().hashBytes(name.getBytes()));
+                Minecraft.getInstance().schedule(() -> {
+                    if (isClosed) return;
+                    NativeImage newImage = new NativeImage(image.getWidth(), image.getHeight(), true);
+                    newImage.copyFrom(image);
+                    Minecraft.getInstance().getTextureManager()
+                        .register(location, new DynamicTexture(location::toString, newImage));
+                    models.add(new CosmeticModel(model, location));
+                });
+            });
+
+        } catch (Exception e) {
+            Utils.getLOGGER().info("Failed to load model {}", name, e);
         }
     }
 }

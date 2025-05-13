@@ -5,9 +5,7 @@ import com.google.gson.JsonObject;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class CosmeticMapConfigValue {
     private final ModConfigSpec.ConfigValue<String> internalValue;
@@ -47,11 +45,31 @@ public class CosmeticMapConfigValue {
     public static class PlayerCosmetics {
         public @Nullable String cape;
         public boolean capeIsMCCapes = false;
+        public HashSet<String> models = new HashSet<>();
 
         public PlayerCosmetics updateCape(@Nullable String cape, boolean capeIsMCCapes) {
             this.cape = cape;
             this.capeIsMCCapes = capeIsMCCapes;
             return this;
+        }
+
+        public PlayerCosmetics addModel(String model) {
+            models.add(model);
+            return this;
+        }
+
+        public PlayerCosmetics removeModel(String model) {
+            models.remove(model);
+            return this;
+        }
+
+        public PlayerCosmetics setModels(HashSet<String> models) {
+            this.models = models;
+            return this;
+        }
+
+        public PlayerCosmetics setModels(List<String> models) {
+            return setModels(new HashSet<>(models));
         }
     }
 }

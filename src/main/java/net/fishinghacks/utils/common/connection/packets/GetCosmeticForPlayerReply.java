@@ -3,13 +3,10 @@ package net.fishinghacks.utils.common.connection.packets;
 import net.fishinghacks.utils.common.connection.Connection;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.UUID;
 
-public record GetCosmeticForPlayerReply(UUID player, @Nullable String cosmeticName, boolean isMCCapes) implements Packet<PacketHandler> {
-    public GetCosmeticForPlayerReply(UUID player) {
-        this(player, null, false);
-    }
-
+public record GetCosmeticForPlayerReply(UUID player, @Nullable String capeName, boolean isMCCapes, List<String> models) implements Packet<PacketHandler> {
     @Override
     public void handle(Connection conn, PacketHandler handler) {
     }

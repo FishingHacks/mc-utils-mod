@@ -2,16 +2,21 @@ package net.fishinghacks.utils.client.caching;
 
 import com.google.common.hash.Hashing;
 import com.mojang.blaze3d.platform.NativeImage;
+import net.fishinghacks.utils.common.connection.packets.CosmeticType;
 
 import java.nio.file.Path;
 import java.util.concurrent.CompletableFuture;
 
 public class ServiceServerType implements CacheType<String, NativeImage> {
-    public static final ServiceServerType instance = new ServiceServerType();
+    private final CosmeticType type;
+
+    public ServiceServerType(CosmeticType type) {
+        this.type = type;
+    }
 
     @Override
     public String getFolderName() {
-        return "service_server";
+        return "service_server." + type.subdirectory();
     }
 
     @Override
@@ -25,7 +30,7 @@ public class ServiceServerType implements CacheType<String, NativeImage> {
 
     @Override
     public Downloader getDownloader(String key) {
-        return new ServiceServerDownloader(key);
+        return new ServiceServerDownloader(key, type);
     }
 
     @Override
