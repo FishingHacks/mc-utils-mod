@@ -11,7 +11,7 @@ public enum CosmeticAttachment {
             case "right_leg" -> CosmeticAttachment.RightLeg;
             case "left_arm" -> CosmeticAttachment.LeftArm;
             case "right_arm" -> CosmeticAttachment.RightArm;
-            default -> throw new IllegalStateException("invalid value for attachTo: " + value);
+            default -> throw new CosmeticModelLoader.InvalidModelException("invalid value for attachTo: " + value);
         };
     }
 }
