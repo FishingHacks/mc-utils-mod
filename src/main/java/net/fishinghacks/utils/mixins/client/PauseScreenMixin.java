@@ -25,6 +25,7 @@ public class PauseScreenMixin extends Screen {
     @Shadow
     private Button disconnectButton;
     private Button inviteButton;
+    private Button cosmeticsButton;
 
     protected PauseScreenMixin(Component title) {
         super(title);
@@ -37,7 +38,7 @@ public class PauseScreenMixin extends Screen {
         inviteButton = addRenderableWidget(
             new VanillaIconButton(posX, posY, Icons.INVITE, PauseMenuScreen::invitePlayer, Supplier::get));
         inviteButton.active = inviteButton.visible = false;
-        addRenderableWidget(new VanillaIconButton(width / 2 - 104 - VanillaIconButton.DEFAULT_WIDTH, posY, Icons.INVITE,
+        cosmeticsButton = addRenderableWidget(new VanillaIconButton(width / 2 - 104 - VanillaIconButton.DEFAULT_WIDTH, posY, Icons.INVITE,
             ignored -> Minecraft.getInstance().setScreen(new CosmeticsScreen(Minecraft.getInstance().screen)),
             Supplier::get));
     }
@@ -46,5 +47,6 @@ public class PauseScreenMixin extends Screen {
     public void render(GuiGraphics graphics, int ignored0, int ignored1, float ignored2, CallbackInfo ci) {
         inviteButton.active = inviteButton.visible = ClientConnectionHandler.getInstance()
             .isConnected() && E4MCStore.hasLink();
+        cosmeticsButton.active = cosmeticsButton.visible = ClientConnectionHandler.getInstance().isConnected();
     }
 }

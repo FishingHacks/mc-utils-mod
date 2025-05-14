@@ -54,6 +54,7 @@ public class PauseMenuScreen extends Screen {
     public static final int BUTTONS_WIDTH = Button.SMALL_WIDTH * 2 + 4;
 
     private Button inviteButton;
+    private Button cosmeticsButton;
     private final boolean showPauseMenu;
 
     public PauseMenuScreen(boolean showPauseMenu) {
@@ -115,7 +116,7 @@ public class PauseMenuScreen extends Screen {
         inviteButton = addRenderableWidget(
             new IconButton.Builder(Icons.INVITE).pos(lanButton.getRight() + 4, lanButton.getY())
                 .onPress(PauseMenuScreen::invitePlayer).build());
-        addRenderableWidget(
+        cosmeticsButton = addRenderableWidget(
             new IconButton.Builder(Icons.COSMETICS).pos(optionsButton.getX() - 4 - IconButton.DEFAULT_HEIGHT,
                     lanButton.getY()).onPress(
                     ignored -> Minecraft.getInstance().setScreen(new CosmeticsScreen(Minecraft.getInstance().screen)))
@@ -126,6 +127,7 @@ public class PauseMenuScreen extends Screen {
     public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         inviteButton.active = inviteButton.visible = ClientConnectionHandler.getInstance()
             .isConnected() && E4MCStore.hasLink();
+        cosmeticsButton.active = cosmeticsButton.visible = ClientConnectionHandler.getInstance().isConnected();
 
         super.render(guiGraphics, mouseX, mouseY, partialTick);
     }

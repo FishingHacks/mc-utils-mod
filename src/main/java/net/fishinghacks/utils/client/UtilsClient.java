@@ -59,7 +59,7 @@ public class UtilsClient {
                 if (Minecraft.getInstance().screen instanceof DragUI) return;
                 ModuleManager.enabledModules.forEach(mod -> {
                     if (ModuleManager.modules.get(mod) instanceof RenderableModule module)
-                        module.renderPreview(guiGraphics, partialTick);
+                        module.render(guiGraphics, partialTick);
                 });
             });
             event.registerAboveAll(Utils.id("notifications"), ((guiGraphics, deltaTracker) -> GuiOverlayManager.renderNotifications(guiGraphics, -1, -1, deltaTracker.getGameTimeDeltaPartialTick(true))));
