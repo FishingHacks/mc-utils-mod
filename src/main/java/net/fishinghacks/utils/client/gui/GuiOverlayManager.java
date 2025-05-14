@@ -9,11 +9,14 @@ import net.fishinghacks.utils.client.gui.components.Notification;
 import net.fishinghacks.utils.client.gui.mcsettings.McSettingsScreen;
 import net.fishinghacks.utils.common.Colors;
 import net.fishinghacks.utils.common.Translation;
+import net.fishinghacks.utils.common.config.Configs;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.toasts.SystemToast;
+import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
@@ -25,6 +28,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ScreenEvent;
+import net.neoforged.neoforge.client.event.ToastAddEvent;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -132,7 +136,7 @@ public class GuiOverlayManager {
     }
 
     public static Notification addNotification(Component message, List<Notification.NotifyButton> buttons) {
-        return addNotification(message, buttons, Duration.ofSeconds(7));
+        return addNotification(message, buttons, Duration.ofSeconds(15));
     }
 
     public static Notification addNotification(Component message, List<Notification.NotifyButton> buttons,
@@ -185,6 +189,12 @@ public class GuiOverlayManager {
         Font font = Minecraft.getInstance().font;
         int width = font.width(message);
         graphics.drawString(font, message, screenWidth - 2 - width, serviceServerTextY, Colors.WHITE.get());
+    }
+
+    @SubscribeEvent
+    public static void onToast(ToastAddEvent event) {
+        if (!Configs.clientConfig.REPLACE_SYSTEM_TOASTS.get()) return;
+        if (event.getToast() instanceof SystemToast) event.setCanceled(true);
     }
 
     public record Overlay(AbstractWidget owner, Render render, ScreenRectangle rectangle) {

@@ -2,6 +2,7 @@ package net.fishinghacks.utils.client.gui.components;
 
 import net.fishinghacks.utils.client.gui.GuiOverlayManager;
 import net.fishinghacks.utils.common.Colors;
+import net.fishinghacks.utils.common.Utils;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -10,6 +11,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.time.Duration;
 import java.util.List;
@@ -21,26 +23,40 @@ public class Notification extends UnfocusableWidget {
     public static final int buttonPadding = 2;
     public static final int textPadding = 2;
 
-    private final long startMillis;
+    private long startMillis;
+    private long lastRenderMillis = Util.getMillis();
     private final long durationMillis;
     private final Button closeButton = Button.Builder.cube('×').size(12, 12).onPress(ignored -> close()).build();
     private final List<Button> buttons;
     private int textWidth;
     private int textHeight;
     private int textOffsetY;
+    private @Nullable Consumer<Notification> onClose;
+
+    public static int getHeight(Component message, int width, boolean hasButtons) {
+        width = width - 2 - textPadding * 2 - buttonPadding * 2 - Button.CUBE_WIDTH;
+        int height = Minecraft.getInstance().font.wordWrapHeight(message, width);
+        height += textPadding * 2 + 6;
+        if (hasButtons) height += buttonPadding * 2 + Button.DEFAULT_HEIGHT;
+        return height;
+    }
 
     public Notification(Component message, List<NotifyButton> buttons, long durationMillis) {
-        super(0, 0, DEFAULT_WIDTH, buttons.isEmpty() ? DEFAULT_HEIGHT : DEFAULT_HEIGHT + Button.DEFAULT_HEIGHT + 2 * buttonPadding,
-            message);
+        super(0, 0, DEFAULT_WIDTH, getHeight(message, DEFAULT_WIDTH, !buttons.isEmpty()), message);
         this.startMillis = Util.getMillis();
         this.durationMillis = durationMillis;
         this.buttons = buttons.stream()
-            .map(btn -> Button.Builder.normal(btn.name).height(Button.DEFAULT_HEIGHT - 2).onPress(btn.onClick).build()).toList();
+            .map(btn -> Button.Builder.normal(btn.name).height(Button.DEFAULT_HEIGHT - 2).onPress(btn.onClick).build())
+            .toList();
         repositionWidgets();
     }
 
     public Notification(Component message, List<NotifyButton> buttons, Duration duration) {
         this(message, buttons, duration.toMillis());
+    }
+
+    public void onClose(@Nullable Consumer<Notification> onClose) {
+        this.onClose = onClose;
     }
 
     @Override
@@ -80,7 +96,7 @@ public class Notification extends UnfocusableWidget {
         int width = getWidth();
         closeButton.setX(getRight() - 1 - buttonPadding - closeButton.getWidth());
         closeButton.setY(y + 2 + buttonPadding);
-        textWidth = width - 2 - textPadding * 2 - buttonPadding * 2 - closeButton.getHeight();
+        textWidth = width - 2 - textPadding * 2 - buttonPadding * 2 - closeButton.getWidth();
         textHeight = getHeight() - 3 - textPadding * 2;
         if (!buttons.isEmpty()) {
             textHeight -= 2 * buttonPadding + Button.DEFAULT_HEIGHT;
@@ -106,12 +122,16 @@ public class Notification extends UnfocusableWidget {
 
     @Override
     protected void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        if (isHovered) startMillis += Util.getMillis() - lastRenderMillis;
+        lastRenderMillis = Util.getMillis();
+
         RenderType overlay = RenderType.guiOverlay();
         guiGraphics.fill(overlay, getX(), getY(), getRight(), getBottom(), Colors.DARK.get());
         guiGraphics.fill(overlay, getX() + 1, getY() + 1, getRight() - 1, getBottom() - 1, Colors.BG_DARK.get());
         int millisSinceStart = (int) Math.min(Util.getMillis() - startMillis, durationMillis);
         int progress = millisSinceStart * getWidth() / (int) durationMillis;
-        guiGraphics.fill(overlay, getX(), getY(), getX() + progress, getY() + 2, Colors.DARK_HIGHLIGHT.get());
+        guiGraphics.fill(overlay, getX(), getY(), getX() + progress, getY() + 2,
+            isHovered ? Colors.GRAY.get() : Colors.DARK_HIGHLIGHT.get());
 
         int textX = getX() + 1 + textPadding;
         int textY = getY() + 2 + textPadding;
@@ -133,6 +153,8 @@ public class Notification extends UnfocusableWidget {
 
     public void close() {
         GuiOverlayManager.removeNotification(this);
+        var onClose = this.onClose;
+        if (onClose != null) onClose.accept(this);
     }
 
     @Override

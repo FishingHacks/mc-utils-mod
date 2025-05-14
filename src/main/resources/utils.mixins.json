@@ -18,7 +18,8 @@
     "client.CameraMixin",
     "client.GameRendererMixin",
     "client.MouseHandlerMixin",
-    "client.CameraInvoker"
+    "client.CameraInvoker",
+    "client.SystemToastMixin"
   ],
   "server": [
     "server.ServerConnectionListenerMixin"

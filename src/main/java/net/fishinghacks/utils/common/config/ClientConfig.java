@@ -13,6 +13,7 @@ public class ClientConfig extends Config {
 
     public final CachedValue<String> CMD_PREFIX;
     public final CachedValue<Boolean> CUSTOM_MENUS;
+    public final CachedValue<Boolean> REPLACE_SYSTEM_TOASTS;
     public final CachedValue<Boolean> SHOW_SPLASH;
     public final CachedValue<Boolean> SHOW_PANORAMA;
     public final CachedValue<List<? extends String>> ENABLED_MODULES;
@@ -26,6 +27,7 @@ public class ClientConfig extends Config {
             .define("cmd_prefix", ".", s -> s instanceof String str && str.length() == 1));
 
         CUSTOM_MENUS = CachedValue.wrap(this, builder.define("custom_menus", false));
+        REPLACE_SYSTEM_TOASTS = CachedValue.wrap(this, builder.define("replace_system_toasts", false));
         SHOW_SPLASH = CachedValue.wrap(this, builder.define("show_splash", true));
         SHOW_PANORAMA = CachedValue.wrap(this, builder.define("show_panorama", true));
 

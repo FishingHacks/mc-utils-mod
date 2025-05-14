@@ -63,6 +63,14 @@ public enum Translation implements Supplier<Component> {
     CosmeticGuiTypeServerModels("utils.gui.cosmetics.type.server_models"),
     CosmeticGuiLoading("utils.gui.cosmetics.loading"),
     CosmeticGuiErrored("utils.gui.cosmetics.errored"),
+    Lmb("utils.common.lmb"),
+    Rmb("utils.common.rmb"),
+    Facing("utils.common.facing"),
+    North("utils.common.facing.north"),
+    South("utils.common.facing.south"),
+    West("utils.common.facing.west"),
+    East("utils.common.facing.east"),
+    ServerDisplayPrefix("utils.configuration.server_display.prefix"),
     ;
 
     private final String key;
