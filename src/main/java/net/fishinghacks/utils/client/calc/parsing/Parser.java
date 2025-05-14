@@ -23,11 +23,6 @@ public class Parser {
         this(new Tokenizer(content));
     }
 
-    public @Nullable TokenType peekType() throws MathException {
-        peek();
-        return peekedToken != null ? peekedToken.type() : null;
-    }
-
     public @Nullable Token peek() throws MathException {
         if (peekedToken != null) return peekedToken;
         return peekedToken = tokenizer.getNext().orElse(null);

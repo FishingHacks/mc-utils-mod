@@ -13,7 +13,12 @@
     "client.PauseScreenMixin",
     "client.E4MCQuiclimeSessionMixin",
     "client.PlayerRendererMixin",
-    "client.TitleScreenMixin"
+    "client.TitleScreenMixin",
+    "client.LightTextureMixin",
+    "client.CameraMixin",
+    "client.GameRendererMixin",
+    "client.MouseHandlerMixin",
+    "client.CameraInvoker"
   ],
   "server": [
     "server.ServerConnectionListenerMixin"

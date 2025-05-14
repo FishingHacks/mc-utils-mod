@@ -16,6 +16,7 @@ import net.fishinghacks.utils.common.config.Configs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.client.telemetry.events.WorldUnloadEvent;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -27,6 +28,8 @@ import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
+import net.neoforged.neoforge.event.level.LevelEvent;
 
 import java.nio.file.Path;
 import java.util.function.Supplier;
@@ -73,6 +76,12 @@ public class UtilsClient {
             if (ClickUi.CLICK_UI_MAPPING.get().consumeClick())
                 Minecraft.getInstance().setScreen(new ClickUi(Minecraft.getInstance().screen));
             ClientConnectionHandler.getInstance().tick();
+        }
+
+        @SubscribeEvent
+        public static void onWorldUnload(LevelEvent.Unload ignored) {
+            ModuleManager.disableModule("freezecam");
+            ModuleManager.disableModule("freecam");
         }
     }
 
