@@ -5,8 +5,8 @@ import java.util.Optional;
 public enum TokenType {
     Plus, Minus, Multiply, Divide, Remainder, Number, Power, Identifier, ParenLeft, ParenRight, Comma;
 
-    public static Optional<TokenType> fromSingleCharacter(char characer) {
-        return Optional.ofNullable(switch (characer) {
+    public static Optional<TokenType> fromSingleCharacter(char character) {
+        return Optional.ofNullable(switch (character) {
             case '+' -> TokenType.Plus;
             case '-' -> TokenType.Minus;
             case '*' -> TokenType.Multiply;

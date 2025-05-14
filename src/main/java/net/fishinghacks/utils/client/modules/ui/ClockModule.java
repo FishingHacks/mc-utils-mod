@@ -4,22 +4,14 @@ import net.fishinghacks.utils.client.modules.ModuleCategory;
 import net.fishinghacks.utils.client.modules.RenderableTextModule;
 import net.fishinghacks.utils.common.config.CachedValue;
 import net.fishinghacks.utils.common.config.Config;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.neoforged.neoforge.common.ModConfigSpec;
-import org.checkerframework.checker.units.qual.C;
 
 import java.time.LocalDateTime;
-import java.time.chrono.ChronoLocalDate;
-import java.time.chrono.ChronoLocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.TextStyle;
 import java.time.temporal.ChronoField;
-import java.time.temporal.TemporalField;
 import java.util.List;
 
 public class ClockModule extends RenderableTextModule {

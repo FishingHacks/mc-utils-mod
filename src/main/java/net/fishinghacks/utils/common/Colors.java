@@ -35,9 +35,6 @@ public enum Colors {
     Colors(int r, int g, int b) {
         this(ARGB.color(r, g, b));
     }
-    Colors(int a, int r, int g, int b) {
-        this(ARGB.color(a, r, g, b));
-    }
     Colors(int color) {
         this.color = (color & 0xffffff) | 0xff000000;
     }

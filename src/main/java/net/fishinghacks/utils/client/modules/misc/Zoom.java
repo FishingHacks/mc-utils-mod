@@ -2,9 +2,6 @@ package net.fishinghacks.utils.client.modules.misc;
 
 import net.fishinghacks.utils.client.modules.Module;
 import net.fishinghacks.utils.client.modules.ModuleCategory;
-import net.fishinghacks.utils.client.modules.ModuleManager;
-import net.minecraft.client.CameraType;
-import net.minecraft.client.Minecraft;
 import net.neoforged.neoforge.client.event.InputEvent;
 
 public class Zoom extends Module {

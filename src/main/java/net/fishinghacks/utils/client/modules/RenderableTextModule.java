@@ -10,7 +10,6 @@ import net.minecraft.network.chat.Component;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.joml.Vector2i;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public abstract class RenderableTextModule extends RenderableModule {

@@ -2,7 +2,6 @@ package net.fishinghacks.utils.client.gui.components;
 
 import net.fishinghacks.utils.client.gui.GuiOverlayManager;
 import net.fishinghacks.utils.common.Colors;
-import net.fishinghacks.utils.common.Utils;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;

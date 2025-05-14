@@ -9,9 +9,9 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public record CalcContext(Vec3 playerPos, long time, int playerHealth, HashMap<String, LiteralValue> localVariables) {
-    public static HashMap<String, MathFunction> builtinFunctions = new HashMap<>();
-    public static HashMap<String, LiteralValue> builtinVariables = new HashMap<>();
-    public static HashMap<String, CustomFunction> customFunctions = new HashMap<>();
+    public static final HashMap<String, MathFunction> builtinFunctions = new HashMap<>();
+    public static final HashMap<String, LiteralValue> builtinVariables = new HashMap<>();
+    public static final HashMap<String, CustomFunction> customFunctions = new HashMap<>();
     public static final int ITEMS_PER_STACK = 64;
     // 3*9*64
     public static final int ITEMS_PER_SHULKERBOX = 1728;
