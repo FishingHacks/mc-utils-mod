@@ -30,8 +30,9 @@ public class TitleScreenMixin extends Screen {
         cosmeticButton.visible = cosmeticButton.active = ClientConnectionHandler.getInstance().isConnected();
     }
 
-    @Inject(method = "createTestWorldButton", at = @At("HEAD"))
-    public void createTestWorldButton(int y, int rowHeight, CallbackInfoReturnable<Integer> ci) {
+    @Inject(method = "createNormalMenuOptions", at = @At("RETURN"))
+    public void createNormalMenuOptions(int ignored0, int rowHeight, CallbackInfoReturnable<Integer> ci) {
+        int y = ci.getReturnValue();
         int x = this.width / 2 - 100 - 4 - VanillaIconButton.DEFAULT_WIDTH;
         cosmeticButton = addRenderableWidget(new VanillaIconButton(x, y + rowHeight, Icons.COSMETICS,
             ignored -> Minecraft.getInstance().setScreen(new CosmeticsScreen(this)), Supplier::get));

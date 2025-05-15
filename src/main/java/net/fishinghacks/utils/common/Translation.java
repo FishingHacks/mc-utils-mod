@@ -13,7 +13,6 @@ public enum Translation implements Supplier<Component> {
     CmdInviteNotShared("utils.cmd.invite.not_shared"),
     CmdInviteE4MCMissing("utils.cmd.invite.e4mc_missing"),
     CmdInviteInvited("utils.cmd.invite.invited"),
-    CmdSayHelp("utils.cmd.say.help"),
     CmdCalcResult("utils.cmd.calc.result"),
     CmdCalcInvalidSubcommand("utils.cmd.calc.invalid_subcommand"),
     CmdCalcInvalidBlockid("utils.cmd.calc.invalid_blockid"),
@@ -71,6 +70,9 @@ public enum Translation implements Supplier<Component> {
     West("utils.common.facing.west"),
     East("utils.common.facing.east"),
     ServerDisplayPrefix("utils.configuration.server_display.prefix"),
+    SuffixDev("utils.suffix.dev"),
+    SuffixTranslator("utils.suffix.translator"),
+    SuffixBetaTester("utils.suffix.beta_tester"),
     ;
 
     private final String key;

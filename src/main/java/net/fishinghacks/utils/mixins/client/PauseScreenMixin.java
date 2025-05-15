@@ -38,9 +38,10 @@ public class PauseScreenMixin extends Screen {
         inviteButton = addRenderableWidget(
             new VanillaIconButton(posX, posY, Icons.INVITE, PauseMenuScreen::invitePlayer, Supplier::get));
         inviteButton.active = inviteButton.visible = false;
-        cosmeticsButton = addRenderableWidget(new VanillaIconButton(width / 2 - 104 - VanillaIconButton.DEFAULT_WIDTH, posY, Icons.INVITE,
-            ignored -> Minecraft.getInstance().setScreen(new CosmeticsScreen(Minecraft.getInstance().screen)),
-            Supplier::get));
+        cosmeticsButton = addRenderableWidget(
+            new VanillaIconButton(width / 2 - 104 - VanillaIconButton.DEFAULT_WIDTH, posY, Icons.COSMETICS,
+                ignored -> Minecraft.getInstance().setScreen(new CosmeticsScreen(Minecraft.getInstance().screen)),
+                Supplier::get));
     }
 
     @Inject(method = "render", at = @At("HEAD"))

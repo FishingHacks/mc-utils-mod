@@ -1,6 +1,7 @@
 package net.fishinghacks.utils.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.fishinghacks.utils.client.gui.components.Button;
 import net.fishinghacks.utils.common.Colors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -18,6 +19,7 @@ public abstract class OverlayScreen extends Screen {
     protected int overlayHeight;
     protected int x;
     protected int y;
+    protected Button closeButton;
 
     protected OverlayScreen(Component title, @Nullable Screen parent, int width, int height) {
         super(title);
@@ -26,11 +28,17 @@ public abstract class OverlayScreen extends Screen {
         this.overlayHeight = height;
     }
 
+    protected void addCloseButton() {
+        addRenderableWidget(
+            Button.Builder.cube('<').pos(x - 6 - Button.CUBE_WIDTH, y - 2).onPress(ignored -> onClose()).build());
+    }
+
     @Override
     protected void init() {
         x = (width - overlayWidth) / 2;
         y = (height - overlayHeight) / 2;
-        if(parent != null) parent.init(Minecraft.getInstance(), width, height);
+        if (parent != null) parent.init(Minecraft.getInstance(), width, height);
+        addCloseButton();
         super.init();
     }
 
@@ -71,10 +79,10 @@ public abstract class OverlayScreen extends Screen {
     @Override
     public void renderBackground(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         assert minecraft != null;
-        if(parent != null) parent.render(guiGraphics, -1, -1, partialTick);
+        if (parent != null) parent.render(guiGraphics, -1, -1, partialTick);
         guiGraphics.flush();
-        RenderSystem.getDevice().createCommandEncoder().clearDepthTexture(
-            Objects.requireNonNull(this.minecraft.getMainRenderTarget().getDepthTexture()), 1.0);
+        RenderSystem.getDevice().createCommandEncoder()
+            .clearDepthTexture(Objects.requireNonNull(this.minecraft.getMainRenderTarget().getDepthTexture()), 1.0);
         renderTransparentBackground(guiGraphics);
         guiGraphics.fill(x - 2, y - 2, getRight() + 2, getBottom() + 2, Colors.DARK.get());
         guiGraphics.fill(x, y, getRight(), getBottom(), Colors.BG_DARK.get());

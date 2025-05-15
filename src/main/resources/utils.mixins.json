@@ -19,7 +19,8 @@
     "client.GameRendererMixin",
     "client.MouseHandlerMixin",
     "client.CameraInvoker",
-    "client.SystemToastMixin"
+    "client.SystemToastMixin",
+    "client.TabOverlayMixin"
   ],
   "server": [
     "server.ServerConnectionListenerMixin"

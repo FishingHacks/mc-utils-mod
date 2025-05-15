@@ -22,8 +22,15 @@ public class CapeHandler {
     long lastFrameTime = 0;
     boolean hasCape = false;
     boolean isAnimated = false;
+    @Nullable
+    public String serviceProviderCapeId = null;
+    public boolean isServiceProviderCape = false;
 
     private static final HashMap<UUID, CapeHandler> instances = new HashMap<>();
+
+    public static @Nullable CapeHandler fromId(UUID id) {
+        return instances.get(id);
+    }
 
     public static CapeHandler fromProfile(GameProfile profile) {
         CapeHandler inst = instances.get(profile.getId());

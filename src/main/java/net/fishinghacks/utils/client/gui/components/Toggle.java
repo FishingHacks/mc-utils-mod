@@ -15,9 +15,11 @@ public class Toggle extends AbstractWidget {
     public static final int DEFAULT_HEIGHT = 12;
     public static final int DEFAULT_WIDTH = 24;
     private boolean checked;
-    @Nullable OnChange onChange;
+    @Nullable
+    OnChange onChange;
 
-    protected Toggle(int x, int y, int width, int height, Component message, @Nullable OnChange onChange, boolean checked) {
+    protected Toggle(int x, int y, int width, int height, Component message, @Nullable OnChange onChange,
+                     boolean checked) {
         super(x, y, width, height, message);
         this.checked = checked;
         this.onChange = onChange;
@@ -38,7 +40,7 @@ public class Toggle extends AbstractWidget {
     @Override
     public void onClick(double mouseX, double mouseY, int button) {
         this.setChecked(!checked);
-        if(onChange != null) onChange.onChange(this, this.checked);
+        if (onChange != null) onChange.onChange(this, this.checked);
         super.onClick(mouseX, mouseY, button);
     }
 
@@ -48,7 +50,7 @@ public class Toggle extends AbstractWidget {
             if (CommonInputs.selected(keyCode)) {
                 this.playDownSound(Minecraft.getInstance().getSoundManager());
                 this.setChecked(!this.checked);
-                if(onChange != null) onChange.onChange(this, this.checked);
+                if (onChange != null) onChange.onChange(this, this.checked);
                 return true;
             } else {
                 return false;
@@ -67,10 +69,10 @@ public class Toggle extends AbstractWidget {
         int halfWidth = width / 2;
 
         guiGraphics.fill(x, y, x + width, y + height, Colors.BLACK.get());
-        if(checked) {
-            int color = Colors.SECONDARY.get();
+        if (checked) {
+            int color = Colors.PRIMARY.get();
             if (isFocused() || isHovered())
-                color = Colors.SECONDARY_LIGHT.get();
+                color = Colors.SECONDARY.get();
             if (!isActive())
                 color = Colors.SECONDARY_DARK.get();
             guiGraphics.fill(x, y, x + width - 1, y + height - 1, color);
@@ -105,7 +107,8 @@ public class Toggle extends AbstractWidget {
         protected boolean active = true;
         protected boolean checked = false;
         protected Component message;
-        @Nullable protected OnChange onChange = null;
+        @Nullable
+        protected OnChange onChange = null;
 
         public Builder(Component message) {
             this.message = message;
@@ -125,6 +128,7 @@ public class Toggle extends AbstractWidget {
             this.active = active;
             return this;
         }
+
         public Builder pos(int x, int y) {
             this.x = x;
             this.y = y;

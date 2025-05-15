@@ -24,6 +24,13 @@ public class ServiceProviderGetter {
         conn.send(new GetCosmeticForPlayer(id));
         return future.thenCompose(packet -> {
             if(packet.capeName() == null) throw new RuntimeException("Player does not have a cosmetic");
+            var handler = CapeHandler.fromId(id);
+
+            if(handler != null) {
+                handler.isServiceProviderCape = !packet.isMCCapes();
+                handler.serviceProviderCapeId = packet.capeName();
+            }
+
             if(packet.isMCCapes()) return DownloadTextureCache.capeGallery.getOrLoad(packet.capeName());
             else return DownloadTextureCache.serviceServerCapes.getOrLoad(packet.capeName());
         });

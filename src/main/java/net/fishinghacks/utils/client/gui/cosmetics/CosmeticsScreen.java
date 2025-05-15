@@ -3,6 +3,7 @@ package net.fishinghacks.utils.client.gui.cosmetics;
 import com.mojang.blaze3d.platform.Lighting;
 import net.fishinghacks.utils.client.caching.FutureStateHolder;
 import net.fishinghacks.utils.client.connection.ClientConnectionHandler;
+import net.fishinghacks.utils.client.cosmetics.CapeHandler;
 import net.fishinghacks.utils.client.cosmetics.CosmeticModelHandler;
 import net.fishinghacks.utils.client.gui.BlackScreen;
 import net.fishinghacks.utils.client.gui.DisplayPlayerEntityRenderer;
@@ -66,7 +67,7 @@ public class CosmeticsScreen extends BlackScreen {
     private Button nextButton = null;
     private Button prevButton = null;
     private StringWidget pageWidget = null;
-    private final List<Box> boxes = new ArrayList<>();
+    private final List<CosmeticsBox> boxes = new ArrayList<>();
     private ScrollableList cosmeticsList;
     private int previewWidth;
     private int previewHeight;
@@ -108,7 +109,7 @@ public class CosmeticsScreen extends BlackScreen {
         addRenderableWidget(
             Button.Builder.cube("<").pos(boxX - 4 - Button.CUBE_WIDTH, headerY).onPress(ignored -> onClose()).build());
         addRenderableWidget(Button.Builder.big(Translation.CosmeticGuiClear.get()).pos(playerBoxX + 4, boxY + 4)
-            .width(playerBoxWidth - 4).onPress(ignored -> applyCosmetic(null)).build());
+            .width(playerBoxWidth - 4).onPress(ignored -> applyCosmetic(null, true)).build());
         var dropdown = addRenderableWidget(GuiDropdown.fromTranslatableEnum(type, CosmeticScreenType.values()));
         dropdown.setSize(Button.BIG_WIDTH, GuiDropdown.DEFAULT_HEIGHT);
         dropdown.setPosition(playerBoxX - 6 - Button.BIG_WIDTH,
@@ -156,7 +157,8 @@ public class CosmeticsScreen extends BlackScreen {
             LinearLayout column = LinearLayout.horizontal().spacing(10);
             for (int j = 0; j < 4; ++j) {
                 final int id = i * 4 + j;
-                var box = new CosmeticsBox(ignored -> applyCosmetic(id), 0, 0, previewWidth + 6, previewHeight + 20);
+                var box = new CosmeticsBox((setActive) -> applyCosmetic(id, setActive), 0, 0, previewWidth + 6,
+                    previewHeight + 20);
                 column.addChild(box);
                 boxes.add(box);
             }
@@ -173,6 +175,27 @@ public class CosmeticsScreen extends BlackScreen {
         nextButton.active = false;
         prevButton.active = false;
         fetch(1);
+    }
+
+    protected boolean isSelected(CosmeticsEntry e) {
+        switch (type) {
+            case MinecraftCapes -> {
+                var profile = CapeHandler.fromProfile(Minecraft.getInstance().getGameProfile());
+                if (!profile.isServiceProviderCape && profile.serviceProviderCapeId != null)
+                    return profile.serviceProviderCapeId.equals(e.hash);
+            }
+            case ServerCapes -> {
+                var profile = CapeHandler.fromProfile(Minecraft.getInstance().getGameProfile());
+                if (profile.isServiceProviderCape && profile.serviceProviderCapeId != null)
+                    return profile.serviceProviderCapeId.equals(e.hash);
+            }
+            case ServerModels -> {
+                var profile = CosmeticModelHandler.fromProfile(Minecraft.getInstance().getGameProfile());
+                for (var model : profile.models) if (model.id().equals(e.hash)) return true;
+                return false;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -226,7 +249,7 @@ public class CosmeticsScreen extends BlackScreen {
         this.renderer.setSlim(slim);
     }
 
-    private void applyCosmetic(@Nullable Integer id) {
+    private void applyCosmetic(@Nullable Integer id, boolean setActive) {
         var conn = ClientConnectionHandler.getInstance().getConnection();
         if (conn == null) return;
         CosmeticsEntry entry;
@@ -237,8 +260,8 @@ public class CosmeticsScreen extends BlackScreen {
             return;
         }
         switch (type) {
-            case MinecraftCapes -> conn.send(new SetCapePacket(entry != null ? entry.hash : null, true));
-            case ServerCapes -> conn.send(new SetCapePacket(entry != null ? entry.hash : null, false));
+            case MinecraftCapes -> conn.send(new SetCapePacket(entry != null && setActive ? entry.hash : null, true));
+            case ServerCapes -> conn.send(new SetCapePacket(entry != null && setActive ? entry.hash : null, false));
             case ServerModels -> {
                 if (entry == null) conn.send(new SetModelsPacket(List.of()));
                 else {
@@ -270,13 +293,17 @@ public class CosmeticsScreen extends BlackScreen {
         guiGraphics.enableScissor(cosmeticsList.getX(), cosmeticsList.getY(), cosmeticsList.getRight(),
             cosmeticsList.getBottom());
         for (var entry : fetchedList) {
+            boolean selected = isSelected(entry);
+            boxes.get(i).setSelected(selected);
             int x = boxes.get(i).getX() + 3;
             int y = boxes.get(i).getY() + 3;
             ++i;
             if (!guiGraphics.containsPointInScissor(x, y) && !guiGraphics.containsPointInScissor(x + previewWidth,
                 y + previewHeight)) continue;
             entry.blit(guiGraphics, x, y, previewWidth, previewHeight);
-            guiGraphics.drawString(font, entry.title, x, y + previewHeight + 4, Colors.WHITE.get());
+            if (selected) guiGraphics.drawString(font, Component.literal(entry.title).withStyle(ChatFormatting.BOLD), x,
+                y + previewHeight + 4, Colors.WHITE.get());
+            else guiGraphics.drawString(font, entry.title, x, y + previewHeight + 4, Colors.WHITE.get());
         }
         guiGraphics.disableScissor();
     }

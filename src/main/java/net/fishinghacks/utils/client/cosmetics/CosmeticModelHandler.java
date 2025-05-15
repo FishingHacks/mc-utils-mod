@@ -53,14 +53,15 @@ public class CosmeticModelHandler {
                 }, v -> v.cosmeticType() == CosmeticType.ModelData && name.equals(v.name()));
                 conn.send(new CosmeticRequestPacket(CosmeticType.ModelData, name));
             });
-        }); conn.send(new GetCosmeticForPlayer(profile.getId()));
+        });
+        conn.send(new GetCosmeticForPlayer(profile.getId()));
     }
 
     private void onCosmeticDataReceived(String name, byte[] data) {
         try {
             var model = CosmeticModelLoader.loadModel(data);
             DownloadTextureCache.serviceServerModels.getOrLoad(name).thenAccept(image -> {
-                var location = Utils.id("models_textures/" + Hashing.sha256().hashBytes(name.getBytes()));
+                var location = Utils.id("models_textures/" + id + "/" + Hashing.sha256().hashBytes(data));
                 Minecraft.getInstance().schedule(() -> {
                     if (isClosed) return;
                     NativeImage newImage = new NativeImage(image.getWidth(), image.getHeight(), true);

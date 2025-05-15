@@ -1,8 +1,8 @@
 package net.fishinghacks.utils.client.gui.cosmetics;
 
 import net.fishinghacks.utils.client.gui.components.Box;
-import net.fishinghacks.utils.client.gui.components.Button;
 import net.fishinghacks.utils.client.gui.components.DummyAbstractWidget;
+import net.fishinghacks.utils.common.Colors;
 import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -13,17 +13,19 @@ import javax.annotation.Nullable;
 import java.util.function.Consumer;
 
 public class CosmeticsBox extends Box {
-    public final Button button;
+    private boolean isSelected;
+    private final Consumer<Boolean> onPress;
 
-    public CosmeticsBox(Consumer<Button> onPress, int x, int y, int width, int height) {
+    public CosmeticsBox(Consumer<Boolean> onPress, int x, int y, int width, int height) {
         super(new DummyAbstractWidget());
         this.setRectangle(width, height, x, y);
-        this.button = Button.Builder.cube("✔").onPress(onPress).build();
+        this.onPress = onPress;
+        this.active = true;
     }
 
     @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
-        return getRectangle().containsPoint((int) mouseX, (int) mouseY);
+        return this.active && this.visible && mouseX >= this.getX() && mouseY >= this.getY() && mouseX < this.getRight() && mouseY < this.getBottom();
     }
 
     @Override
@@ -31,35 +33,33 @@ public class CosmeticsBox extends Box {
         consumer.accept(this);
     }
 
+    public void setSelected(boolean selected) {
+        this.isSelected = selected;
+        this.borderColor = isSelected ? Colors.SECONDARY_DARK.get() : DEFAULT_BORDER_COLOR;
+    }
+
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        return this.button.mouseClicked(mouseX, mouseY, button);
+    public void onClick(double mouseX, double mouseY, int button) {
+        onPress.accept(!isSelected);
     }
 
     @Override
     public void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        button.setPosition(getRight() - Button.CUBE_WIDTH - 3, getBottom() - Button.DEFAULT_HEIGHT - 3);
         super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
-        button.render(guiGraphics, mouseX, mouseY, partialTick);
     }
 
+    @Nullable
     @Override
-    public boolean isFocused() {
-        return button.isFocused();
+    public ComponentPath nextFocusPath(@NotNull FocusNavigationEvent ignored) {
+        if (!this.active || !this.visible) {
+            return null;
+        } else {
+            return !this.isFocused() ? ComponentPath.leaf(this) : null;
+        }
     }
 
-    @Override
-    public void setFocused(boolean focused) {
-        button.setFocused(focused);
-    }
-
-    @Override
-    public @Nullable ComponentPath nextFocusPath(@NotNull FocusNavigationEvent ev) {
-        return !this.isFocused() ? ComponentPath.leaf(this) : null;
-    }
-
-    @Override
-    public @Nullable ComponentPath getCurrentFocusPath() {
+    @Nullable
+    public ComponentPath getCurrentFocusPath() {
         return this.isFocused() ? ComponentPath.leaf(this) : null;
     }
 }

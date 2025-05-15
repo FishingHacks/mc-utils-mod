@@ -33,4 +33,8 @@ public class PopupScreen extends OverlayScreen {
     public static void popup(Component message) {
         Minecraft.getInstance().setScreen(new PopupScreen(Minecraft.getInstance().screen, message));
     }
+
+    @Override
+    protected void addCloseButton() {
+    }
 }

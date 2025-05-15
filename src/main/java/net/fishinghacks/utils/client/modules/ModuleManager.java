@@ -17,7 +17,7 @@ public class ModuleManager {
             new KeystrokeMod(), new ClockModule(), new ServerDisplayModule());
 
         // -- MISC --
-        addModule(new AllowBlockedKeys(), new Fullbright(), new Freezecam(), new Freecam(), new Zoom());
+        addModule(new AllowBlockedKeys(), new Fullbright(), new Freezecam(), new Freecam(), new Zoom(), new Tablist());
     }
 
     public static void addModule(Module... modules) {
