@@ -1,0 +1,31 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.fishinghacks.utils.mixin",
+  "refmap": "${mod_id}.refmap.json",
+  "compatibilityLevel": "JAVA_18",
+  "mixins": [],
+  "client": [
+    "client.PlayerInfoMixin",
+    "client.StringUtilMixin",
+    "client.MinecraftMixin",
+    "client.ContainerEventHandlerMixin",
+    "client.PauseScreenMixin",
+    "client.PlayerRendererMixin",
+    "client.TitleScreenMixin",
+    "client.LightTextureMixin",
+    "client.CameraMixin",
+    "client.GameRendererMixin",
+    "client.MouseHandlerMixin",
+    "client.CameraInvoker",
+    "client.SystemToastMixin",
+    "client.TabOverlayMixin"
+  ],
+  "server": [
+    "server.ServerConnectionListenerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
+
