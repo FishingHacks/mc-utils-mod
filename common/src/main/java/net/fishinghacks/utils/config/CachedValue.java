@@ -2,7 +2,7 @@ package net.fishinghacks.utils.config;
 
 import net.fishinghacks.utils.platform.services.ConfigValue;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;

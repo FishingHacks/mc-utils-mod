@@ -19,16 +19,15 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.util.StringUtil;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 @FieldsAreNonnullByDefault
-@ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class Input extends AbstractWidget {
     private static final long CURSOR_BLINK_INTERVAL_MS = 300L;
@@ -78,7 +77,7 @@ public class Input extends AbstractWidget {
         return this.value;
     }
 
-    public void setResponder(Consumer<String> responder) {
+    public void setResponder(@Nullable Consumer<String> responder) {
         this.responder = responder;
     }
 
@@ -328,7 +327,7 @@ public class Input extends AbstractWidget {
     }
 
     @Override
-    public void playDownSound(SoundManager p_279245_) {
+    public void playDownSound(@NotNull SoundManager soundManager) {
     }
 
     public void setMaxLength(int length) {
@@ -403,7 +402,7 @@ public class Input extends AbstractWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int i, int i1, float v) {
+    protected void renderWidget(@NotNull GuiGraphics guiGraphics, int i, int i1, float v) {
         if (!isVisible()) return;
         int color = Colors.DARK.get();
         if (isFocused()) color = Colors.DARK_HIGHLIGHT.get();

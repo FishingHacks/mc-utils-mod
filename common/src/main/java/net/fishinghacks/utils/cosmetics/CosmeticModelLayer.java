@@ -10,10 +10,8 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.PlayerRenderState;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
-@ParametersAreNonnullByDefault
 public class CosmeticModelLayer extends RenderLayer<PlayerRenderState, PlayerModel> {
     public static GameProfile lastPlayer;
 
@@ -22,8 +20,8 @@ public class CosmeticModelLayer extends RenderLayer<PlayerRenderState, PlayerMod
     }
 
     @Override
-    public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight,
-                       PlayerRenderState playerRenderState, float v, float v1) {
+    public void render(@NotNull PoseStack poseStack, @NotNull MultiBufferSource multiBufferSource, int packedLight,
+                       @NotNull PlayerRenderState playerRenderState, float v, float v1) {
         var handler = CosmeticModelHandler.fromProfile(lastPlayer);
         int packedOverlay = LivingEntityRenderer.getOverlayCoords(playerRenderState, 0f);
         for (var model : handler.models) {

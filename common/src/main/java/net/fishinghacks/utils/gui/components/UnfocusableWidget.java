@@ -6,7 +6,7 @@ import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class UnfocusableWidget extends AbstractWidget {
     public UnfocusableWidget(int x, int y, int width, int height, Component message) {

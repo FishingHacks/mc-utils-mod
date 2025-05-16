@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(MouseHandler.class)
 public class MouseHandlerMixin {
-    @Redirect(method = "turnPlayer", at = @At(value = "INVOKE", target = "turn"))
+    @Redirect(method = "turnPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;turn(DD)V"))
     public void turn(LocalPlayer player, double y, double x) {
         if (!Freecam.isEnabled) {
             player.turn(y, x);

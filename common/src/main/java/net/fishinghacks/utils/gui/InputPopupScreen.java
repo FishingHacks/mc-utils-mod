@@ -10,7 +10,7 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
 
 public class InputPopupScreen extends OverlayScreen {
@@ -56,12 +56,6 @@ public class InputPopupScreen extends OverlayScreen {
         if (input != null) consumer.accept(input.getValue());
         onClose();
     }
-
-    @Override
-    public void onClose() {
-        super.onClose();
-    }
-
 
     public static void open(Component message, Component hint, Consumer<String> consumer, String value) {
         Minecraft.getInstance()

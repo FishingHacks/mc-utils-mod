@@ -1,8 +1,8 @@
 package net.fishinghacks.utils.connection.packets;
 
 import net.fishinghacks.utils.connection.Connection;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 

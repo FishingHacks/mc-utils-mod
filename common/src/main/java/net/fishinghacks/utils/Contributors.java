@@ -1,10 +1,6 @@
 package net.fishinghacks.utils;
 
 import net.minecraft.network.chat.Component;
-// NOTE: the line below the comment should be the *exact* same. if it is not, that means the ide fucked up and you
-// will likely get a compilation error.
-// import net.fishinghacks.utils.Translation;
-import net.fishinghacks.utils.Translation;
 
 import java.util.HashMap;
 import java.util.Map;

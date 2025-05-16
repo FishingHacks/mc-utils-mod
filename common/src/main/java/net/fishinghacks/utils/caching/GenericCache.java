@@ -9,9 +9,9 @@ import net.fishinghacks.utils.Constants;
 import net.minecraft.FileUtil;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.Util;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
@@ -21,7 +21,6 @@ import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-@ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class GenericCache<K, V> {
     private static final Logger LOGGER = LogUtils.getLogger();
@@ -35,7 +34,7 @@ public class GenericCache<K, V> {
         cache = CacheBuilder.newBuilder().expireAfterAccess(expiresAfter).removalListener(GenericCache::onRemove)
             .build(new CacheLoader<>() {
                 @Override
-                public CompletableFuture<V> load(K key) {
+                public CompletableFuture<V> load(@NotNull K key) {
                     return GenericCache.this.load(key).thenCompose(type::process).exceptionallyCompose(e -> {
                         LOGGER.info("Failed to load {}", key, e);
                         return CompletableFuture.failedStage(e);

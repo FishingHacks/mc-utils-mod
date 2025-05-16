@@ -7,6 +7,7 @@ import net.fishinghacks.utils.calc.exprs.Expression;
 import net.fishinghacks.utils.calc.exprs.LiteralValue;
 import net.fishinghacks.utils.calc.parsing.Parser;
 import net.fishinghacks.utils.Translation;
+import net.fishinghacks.utils.mixin.client.IngredientAccessor;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
@@ -25,7 +26,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import oshi.util.tuples.Pair;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.*;
 
 public class CalcCommand extends ArgDotCommand {
@@ -197,8 +199,7 @@ public class CalcCommand extends ArgDotCommand {
                 var recipe = recipes.getRecipes().getFirst();
                 var requirements = recipe.craftingRequirements();
                 assert requirements.isPresent();
-                calculateCraft(recipe.resultItems(EMPTY).getFirst(), requirements.orElse(List.of()), amount,
-                    listener);
+                calculateCraft(recipe.resultItems(EMPTY).getFirst(), requirements.orElse(List.of()), amount, listener);
             }
             default -> listener.handleSystemMessage(
                 Translation.CmdCalcInvalidSubcommand.with(args[0]).withStyle(ChatFormatting.RED), false);
@@ -214,6 +215,7 @@ public class CalcCommand extends ArgDotCommand {
         return copyable(LiteralValue.doubleToString(value));
     }
 
+
     private void calculateCraft(ItemStack result, List<Ingredient> requirements, int amount, ChatListener listener) {
         int numCrafts = Math.ceilDiv(amount, result.getCount());
         amount = result.getCount() * numCrafts;
@@ -223,26 +225,29 @@ public class CalcCommand extends ArgDotCommand {
         List<List<Holder<Item>>> extras = new ArrayList<>();
 
         for (Ingredient ingredient : requirements) {
-
-            if (ingredient.values.size() == 1)
-                items.compute(ingredient.values.get(0).value(), (i1, count) -> count == null ? 1 : count + 1);
-            else ingredient.values.unwrap().map(key -> tags.compute(key,
-                (i1, count) -> count == null ? new Pair<>(1, ingredient.values) : new Pair<>(count.getA() + 1,
-                    count.getB())), extras::add);
+            final var values = ((IngredientAccessor) (Object) ingredient).getValues();
+            if (values.size() == 1) items.compute(values.get(0).value(), (i1, count) -> count == null ? 1 : count + 1);
+            else values.unwrap().map(key -> tags.compute(key,
+                    (i1, count) -> count == null ? new Pair<>(1, values) : new Pair<>(count.getA() + 1, count.getB())),
+                extras::add);
         }
         listener.handleSystemMessage(
             Translation.CmdCalcCraftResult.with(result.getItemName().copy().withStyle(ChatFormatting.AQUA),
                 number(amount)), false);
 
+        //todo: figure out what's broken here? items, tags and extras are clearly changed on the lines above (for loop)
+        //noinspection RedundantOperationOnEmptyContainer
         items.forEach((item, count) -> listener.handleSystemMessage(
             craftEntry(item.getName().copy().withStyle(ChatFormatting.AQUA), count * numCrafts), false));
 
+        //noinspection RedundantOperationOnEmptyContainer
         tags.forEach((tag, count) -> listener.handleSystemMessage(craftEntry(
                 addList(count.getB().stream().map(Holder::value).toList(),
                     Component.literal("#" + tag.location()).withStyle(ChatFormatting.DARK_AQUA)),
                 numCrafts * count.getA()),
             false));
 
+        //noinspection RedundantOperationOnEmptyContainer
         extras.forEach(v -> listener.handleSystemMessage(craftEntry(addList(v.stream().map(Holder::value).toList(),
             Translation.CmdCalcCraftMultiple.with().withStyle(ChatFormatting.DARK_AQUA)), numCrafts), false));
     }

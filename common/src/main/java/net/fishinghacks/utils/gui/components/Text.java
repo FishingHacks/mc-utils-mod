@@ -3,15 +3,12 @@ package net.fishinghacks.utils.gui.components;
 import net.fishinghacks.utils.Colors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class Text extends UnfocusableWidget {
     final float scale;
@@ -127,11 +124,6 @@ public class Text extends UnfocusableWidget {
             Colors.WHITE.get());
         guiGraphics.pose().popPose();
         guiGraphics.disableScissor();
-    }
-
-    @Override
-    public @Nullable ComponentPath nextFocusPath(@NotNull FocusNavigationEvent ignored) {
-        return null;
     }
 
     public static class Builder {

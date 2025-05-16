@@ -29,5 +29,5 @@ public interface IConfigBuilder {
 
     IConfigBuilder exitSection();
 
-    public IConfig build();
+    IConfig build();
 }

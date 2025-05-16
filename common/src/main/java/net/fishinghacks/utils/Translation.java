@@ -7,12 +7,12 @@ import net.minecraft.network.chat.MutableComponent;
 import java.util.function.Supplier;
 
 public enum Translation implements Supplier<Component> {
-    ClickUITitle("utils.gui.clickui.title"), DragUITitle("utils.gui.dragui.title"), CmdInviteNotConnected(
-        "utils.cmd.invite.not_connected"), CmdInviteNotShared("utils.cmd.invite.not_shared"), CmdInviteE4MCMissing(
-        "utils.cmd.invite.e4mc_missing"), CmdInviteInvited("utils.cmd.invite.invited"), CmdCalcResult(
-        "utils.cmd.calc.result"), CmdCalcInvalidSubcommand("utils.cmd.calc.invalid_subcommand"), CmdCalcInvalidBlockid(
-        "utils.cmd.calc.invalid_blockid"), CmdCalcOverworld("utils.cmd.calc.overworld"), CmdCalcNether(
-        "utils.cmd.calc.nether"), CmdCalcNetherOverworldUsage(
+    ClickUITitle("utils.gui.clickui.title"), DragUITitle("utils.gui.dragui.title"), CmdInvalid(
+        "utils.cmd.invalid"), CmdInviteNotConnected("utils.cmd.invite.not_connected"), CmdInviteNotShared(
+        "utils.cmd.invite.not_shared"), CmdInviteE4MCMissing("utils.cmd.invite.e4mc_missing"), CmdInviteInvited(
+        "utils.cmd.invite.invited"), CmdCalcResult("utils.cmd.calc.result"), CmdCalcInvalidSubcommand(
+        "utils.cmd.calc.invalid_subcommand"), CmdCalcInvalidBlockid("utils.cmd.calc.invalid_blockid"), CmdCalcOverworld(
+        "utils.cmd.calc.overworld"), CmdCalcNether("utils.cmd.calc.nether"), CmdCalcNetherOverworldUsage(
         "utils.cmd.calc.nether_overworld_usage"), CmdCalcParseIntFailed(
         "utils.cmd.calc.failed_to_parse_int"), CmdCalcParseCustomFuncRemoved(
         "utils.cmd.calc.remove_custom_func"), CmdCalcCustomAddUsage(

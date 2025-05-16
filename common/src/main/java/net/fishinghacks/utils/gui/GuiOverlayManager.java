@@ -26,13 +26,11 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@ParametersAreNonnullByDefault
 @FieldsAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class GuiOverlayManager {
@@ -48,7 +46,7 @@ public class GuiOverlayManager {
         return overlay;
     }
 
-    public static void setOverlay(Overlay overlay) {
+    public static void setOverlay(@Nullable Overlay overlay) {
         GuiOverlayManager.overlay = overlay;
     }
 
@@ -75,6 +73,7 @@ public class GuiOverlayManager {
     private static boolean firstRender = true;
 
     public static boolean renderPre(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, Screen screen) {
+        if(mouseX == -1 && mouseY == -1) return false;
         if (firstRender) {
             firstRender = false;
             Constants.onFirstGuiRender();

@@ -8,9 +8,8 @@ import java.nio.file.Path;
 import java.util.concurrent.CompletableFuture;
 
 public enum TextureCacheType implements CacheType<String, NativeImage> {
-    CapesGallery("capes_gallery", "https://api.minecraftcapes.net/api/gallery/%s/preview/map"), MinecraftCapes(
-        "minecraft_capes", "https://api.minecraftcapes.net/profile/%s"), Optifine("optifine_capes",
-        "http://s.optifine.net/capes/%s.png");
+    CapesGallery("capes_gallery", "https://api.minecraftcapes.net/api/gallery/%s/preview/map"), Optifine(
+        "optifine_capes", "http://s.optifine.net/capes/%s.png");
 
     public final String name;
     private final String urlFormat;

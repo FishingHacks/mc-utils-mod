@@ -1,5 +1,7 @@
 package net.fishinghacks.utils.platform;
 
+import net.fishinghacks.utils.config.ConfigBuilderImpl;
+import net.fishinghacks.utils.platform.services.IConfigBuilder;
 import net.fishinghacks.utils.platform.services.IPlatformHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
@@ -14,7 +16,6 @@ public class FabricPlatformHelper implements IPlatformHelper {
 
     @Override
     public boolean isModLoaded(String modId) {
-
         return FabricLoader.getInstance().isModLoaded(modId);
     }
 
@@ -32,5 +33,15 @@ public class FabricPlatformHelper implements IPlatformHelper {
     @Override
     public boolean hasModlistScreen() {
         return false;
+    }
+
+    @Override
+    public IConfigBuilder createConfigBuilder() {
+        return new ConfigBuilderImpl();
+    }
+
+    // TODO: *actual* Config
+    @Override
+    public void openConfigScreen() {
     }
 }

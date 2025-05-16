@@ -2,11 +2,18 @@
   "required": true,
   "minVersion": "0.8",
   "package": "net.fishinghacks.utils.mixin",
+  "plugin": "net.fishinghacks.utils.mixin.MixinPlugin",
   "refmap": "${mod_id}.refmap.json",
   "compatibilityLevel": "JAVA_21",
-  "mixins": [],
+  "mixins": [
+  ],
   "client": [
-    "MixinTitleScreen"
+    "ClientPacketListenerMixin",
+    "CommandsMixin",
+    "E4MCQuiclimeSessionMixin",
+    "GameRendererMixin",
+    "MouseHandlerMixin",
+    "ToastManagerMixin"
   ],
   "server": [],
   "injectors": {

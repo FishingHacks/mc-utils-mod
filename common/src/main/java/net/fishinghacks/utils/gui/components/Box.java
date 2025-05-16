@@ -12,12 +12,10 @@ import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.Consumer;
 
 @FieldsAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-@ParametersAreNonnullByDefault
 public class Box extends UnfocusableWidget {
     public static final int DEFAULT_BORDER_SIZE = 2;
     public static final int DEFAULT_BORDER_COLOR = Colors.DARK.get();
@@ -228,7 +226,7 @@ public class Box extends UnfocusableWidget {
     }
 
     @Override
-    protected void updateWidgetNarration(NarrationElementOutput ignored) {
+    protected void updateWidgetNarration(@NotNull NarrationElementOutput ignored) {
     }
 
     private void rearrangeElements() {

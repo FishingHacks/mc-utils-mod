@@ -26,10 +26,9 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-@ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 @FieldsAreNonnullByDefault
 public class MainScreen extends Screen {
@@ -70,19 +69,20 @@ public class MainScreen extends Screen {
         y += this.addRenderableWidget(
             new Button.Builder(SINGLEPLAYER).onPress(btn -> this.minecraft.setScreen(new SelectWorldScreen(this)))
                 .pos(x, y).width(180).build()).getHeight() + 4;
+
+        if (!Services.PLATFORM.hasModlistScreen()) cosmeticButton = this.addRenderableWidget(buildCosmeticButton(x, y));
         y += this.addRenderableWidget(new Button.Builder(MULTIPLAYER).onPress(btn -> {
             Screen screen = this.minecraft.options.skipMultiplayerWarning ? new JoinMultiplayerScreen(
                 this) : new SafetyScreen(this);
             minecraft.setScreen(screen);
         }).pos(x, y).width(180).build()).getHeight() + 4;
 
-        cosmeticButton = this.addRenderableWidget(
-            new IconButton.Builder(Icons.COSMETICS).onPress(btn -> this.minecraft.setScreen(new CosmeticsScreen(this)))
-                .y(y).x(x - 4 - IconButton.DEFAULT_WIDTH).build());
-        if (Services.PLATFORM.hasModlistScreen()) y += this.addRenderableWidget(
-                new Button.Builder(Translation.Mods.get()).onPress(
+        if (Services.PLATFORM.hasModlistScreen()) {
+            cosmeticButton = this.addRenderableWidget(buildCosmeticButton(x, y));
+            y += this.addRenderableWidget(new Button.Builder(Translation.Mods.get()).onPress(
                     btn -> Services.PLATFORM.openModlistScreen(this.minecraft, this)).pos(x, y).width(180).build())
-            .getHeight() + 8;
+                .getHeight() + 8;
+        }
 
         this.addRenderableWidget(new Button.Builder(OPTIONS).onPress(
                 btn -> this.minecraft.setScreen(new McSettingsScreen(this, this.minecraft.options))).pos(x, y).width(88)
@@ -97,8 +97,15 @@ public class MainScreen extends Screen {
             .x(x + 184).build());
     }
 
+    protected IconButton buildCosmeticButton(int x, int y) {
+        assert minecraft != null;
+        return new IconButton.Builder(Icons.COSMETICS).onPress(
+                btn -> this.minecraft.setScreen(new CosmeticsScreen(this))).y(y).x(x - 4 - IconButton.DEFAULT_WIDTH)
+            .build();
+    }
+
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         assert minecraft != null;
         if (cosmeticButton != null)
             cosmeticButton.active = cosmeticButton.visible = ClientConnectionHandler.getInstance().isConnected();
@@ -121,13 +128,13 @@ public class MainScreen extends Screen {
     }
 
     @Override
-    protected void renderPanorama(GuiGraphics guiGraphics, float partialTick) {
+    protected void renderPanorama(@NotNull GuiGraphics guiGraphics, float partialTick) {
         if (Configs.clientConfig.SHOW_PANORAMA.get()) super.renderPanorama(guiGraphics, partialTick);
         else guiGraphics.fill(0, 0, width, height, Colors.BG_DARK.get());
     }
 
     @Override
-    public void renderBackground(GuiGraphics ignored0, int ignored1, int ignored2, float ignored3) {
+    public void renderBackground(@NotNull GuiGraphics ignored0, int ignored1, int ignored2, float ignored3) {
     }
 
     @Override

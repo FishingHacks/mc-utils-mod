@@ -5,7 +5,6 @@ import link.e4mc.QuiclimeSession;
 import net.fishinghacks.utils.WrappingLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
@@ -16,7 +15,6 @@ import org.spongepowered.asm.mixin.Shadow;
 @Mixin(QuiclimeSession.class)
 public class E4MCQuiclimeSessionMixin {
     @Shadow
-    @Final
     @Mutable
     private static final Logger LOGGER = new WrappingLogger(LoggerFactory.getLogger(E4mcClient.MOD_ID));
 }

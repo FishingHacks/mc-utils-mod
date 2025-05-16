@@ -20,9 +20,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.PlayerModelPart;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
-@ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class DisplayPlayerEntityRenderer extends LivingEntityRenderer<LivingEntity, PlayerRenderState, PlayerModel> {
     final EntityRendererProvider.Context context;

@@ -1,5 +1,6 @@
 package net.fishinghacks.utils.commands;
 
+import net.fishinghacks.utils.Translation;
 import net.fishinghacks.utils.config.Configs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -25,7 +26,7 @@ public class CommandManager {
     public static void run(String cmd, String args) {
         DotCommand command = commands.get(cmd);
         if (command == null) Minecraft.getInstance().getChatListener()
-            .handleSystemMessage(Component.translatable("cmd.invalid", cmd).withStyle(ChatFormatting.DARK_RED), false);
+            .handleSystemMessage(Translation.CmdInvalid.with(cmd).withStyle(ChatFormatting.DARK_RED), false);
         else {
             try {
                 command.run(args, Minecraft.getInstance().getChatListener());

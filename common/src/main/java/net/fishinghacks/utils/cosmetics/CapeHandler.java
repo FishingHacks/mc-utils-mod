@@ -10,7 +10,8 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.resources.ResourceLocation;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -24,6 +25,8 @@ public class CapeHandler {
     @Nullable
     public String serviceProviderCapeId = null;
     public boolean isServiceProviderCape = false;
+    @Nullable
+    private CapeProvider currentProvider;
 
     private static final HashMap<UUID, CapeHandler> instances = new HashMap<>();
 
@@ -61,13 +64,14 @@ public class CapeHandler {
 
     private void tryGetForProvider(GameProfile profile, @Nullable CapeProvider provider) {
         if (provider == null) return;
+        currentProvider = provider;
         provider.get(profile).exceptionally(ignored -> {
-            tryGetForProvider(profile, provider.next());
+            if (currentProvider == provider) tryGetForProvider(profile, provider.next());
             return null;
         }).thenAccept(image -> {
             if (image == null || (image.getWidth() == 0 && image.getHeight() == 0)) {
                 if (image != null) image.close();
-                tryGetForProvider(profile, provider.next());
+                if (currentProvider == provider) tryGetForProvider(profile, provider.next());
                 return;
             }
             boolean animated = image.getHeight() > image.getWidth() / 2 * 3;

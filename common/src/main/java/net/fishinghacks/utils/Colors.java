@@ -2,8 +2,7 @@ package net.fishinghacks.utils;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.util.ARGB;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public enum Colors {
     WHITE(ChatFormatting.WHITE),

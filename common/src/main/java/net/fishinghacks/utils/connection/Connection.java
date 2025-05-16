@@ -7,9 +7,9 @@ import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.flow.FlowControlHandler;
 import io.netty.handler.timeout.ReadTimeoutException;
 import net.fishinghacks.utils.connection.packets.*;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
-import javax.annotation.Nullable;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.time.Duration;
@@ -128,6 +128,7 @@ public class Connection extends SimpleChannelInboundHandler<Packet<?>> {
         } else pendingActions.add(conn -> conn.sendPacket(packet, listener, flush));
     }
 
+    @SuppressWarnings("resource")
     public void sendPacket(Packet<?> packet, @Nullable SendListener listener, boolean flush) {
         if (channel.eventLoop().inEventLoop()) this.doSendPacket(packet, listener, flush);
         else channel.eventLoop().execute(() -> doSendPacket(packet, listener, flush));
@@ -182,6 +183,7 @@ public class Connection extends SimpleChannelInboundHandler<Packet<?>> {
         this.lastPing = Instant.now();
     }
 
+    @SuppressWarnings("resource")
     private void flush() {
         if (this.channel.eventLoop().inEventLoop()) {
             this.channel.flush();

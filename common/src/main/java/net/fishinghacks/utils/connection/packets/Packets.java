@@ -1,9 +1,9 @@
 package net.fishinghacks.utils.connection.packets;
 
 import com.mojang.logging.LogUtils;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
 
 public class Packets {

@@ -8,11 +8,10 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
 
-@ParametersAreNonnullByDefault
 public class Button extends AbstractButton {
     public static final int SMALL_WIDTH = 90;
     public static final int DEFAULT_WIDTH = 120;
@@ -31,7 +30,7 @@ public class Button extends AbstractButton {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int p_282682_, int p_281714_, float p_282542_) {
+    protected void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         int color = Colors.DARK.get();
         if (isFocused() || isHovered())
             color = Colors.DARK_HIGHLIGHT.get();
@@ -62,7 +61,7 @@ public class Button extends AbstractButton {
     }
 
     @Override
-    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
+    protected void updateWidgetNarration(@NotNull NarrationElementOutput narrationElementOutput) {
         this.defaultButtonNarrationText(narrationElementOutput);
     }
 

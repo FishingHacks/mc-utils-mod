@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 @Mixin(PlayerTabOverlay.class)
@@ -35,7 +35,7 @@ public class TabOverlayMixin {
         if (role != null) name.append(" ").append(role.display);
     }
 
-    @Redirect(method = "render", at = @At(value = "INVOKE", target = "split"))
+    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Font;split(Lnet/minecraft/network/chat/FormattedText;I)Ljava/util/List;"))
     public List<FormattedCharSequence> split(Font font, FormattedText component, int maxWidth) {
         if (!Tablist.isEnabled) return font.split(component, maxWidth);
         if (component == header && !Tablist.showHeader) return List.of();

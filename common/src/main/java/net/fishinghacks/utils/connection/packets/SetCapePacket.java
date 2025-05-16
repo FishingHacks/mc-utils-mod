@@ -1,8 +1,7 @@
 package net.fishinghacks.utils.connection.packets;
 
 import net.fishinghacks.utils.connection.Connection;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public record SetCapePacket(@Nullable String cosmeticName, @Nullable Boolean isMCCapes) implements Packet<ServerPacketHandler> {
     @Override

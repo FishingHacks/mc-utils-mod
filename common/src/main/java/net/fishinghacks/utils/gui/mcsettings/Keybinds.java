@@ -23,13 +23,11 @@ import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-@ParametersAreNonnullByDefault
 public class Keybinds implements OptionSubscreen {
     private static final int VERT_PADDING = 3;
     private static final int HORZ_PADDING = 7;
@@ -223,7 +221,7 @@ public class Keybinds implements OptionSubscreen {
         }
 
         @Override
-        public @Nullable ComponentPath nextFocusPath(FocusNavigationEvent ignored) {
+        public @Nullable ComponentPath nextFocusPath(@NotNull FocusNavigationEvent ignored) {
             return null;
         }
 
@@ -233,7 +231,7 @@ public class Keybinds implements OptionSubscreen {
         }
 
         @Override
-        public void visitWidgets(Consumer<AbstractWidget> consumer) {
+        public void visitWidgets(@NotNull Consumer<AbstractWidget> consumer) {
             super.visitWidgets(consumer);
             consumer.accept(changeButton);
             consumer.accept(resetButton);
@@ -250,7 +248,7 @@ public class Keybinds implements OptionSubscreen {
         }
 
         @Override
-        protected void updateWidgetNarration(NarrationElementOutput ignored) {
+        protected void updateWidgetNarration(@NotNull NarrationElementOutput ignored) {
         }
     }
 }

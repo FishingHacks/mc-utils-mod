@@ -7,28 +7,33 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.HashMap;
 
 @Mixin(SystemToast.class)
 public class SystemToastMixin {
-    private static final HashMap<SystemToast.SystemToastId, Notification> notifications = new HashMap<>();
+    @Unique
+    private static final HashMap<SystemToast.SystemToastId, Notification> utils_mod_multiloader$notifications =
+        new HashMap<>();
 
-    @Inject(method = "<init>", at = @At("HEAD"))
-    private static void addOrUpdate(SystemToast.SystemToastId id, Component title, @Nullable Component message,
-                                    CallbackInfo ignored) {
+    @Inject(method = "<init>(Lnet/minecraft/client/gui/components/toasts/SystemToast$SystemToastId;Lnet" +
+        "/minecraft/network/chat/Component;Lnet/minecraft/network/chat/Component;)V", at = @At("RETURN"))
+    private void addOrUpdate(SystemToast.SystemToastId id, Component title, @Nullable Component message,
+                             CallbackInfo ignored) {
         if (!Configs.clientConfig.REPLACE_SYSTEM_TOASTS.get()) return;
-        if (notifications.get(id) != null) notifications.get(id).close();
+        if (utils_mod_multiloader$notifications.get(id) != null) utils_mod_multiloader$notifications.get(id).close();
 
         Component comp = message == null ? title : Component.empty().append(title).append(": ").append(message);
         var notification = GuiOverlayManager.addNotification(comp);
-        notifications.put(id, notification);
-        notification.onClose(n -> notifications.remove(id, n));
+        utils_mod_multiloader$notifications.put(id, notification);
+        notification.onClose(n -> utils_mod_multiloader$notifications.remove(id, n));
     }
 
     @Inject(method = "multiline", at = @At("HEAD"))
@@ -37,7 +42,7 @@ public class SystemToastMixin {
         if (!Configs.clientConfig.REPLACE_SYSTEM_TOASTS.get()) return;
         Component comp = message == null ? title : Component.empty().append(title).append(": ").append(message);
         var notification = GuiOverlayManager.addNotification(comp);
-        notifications.put(id, notification);
-        notification.onClose(n -> notifications.remove(id, n));
+        utils_mod_multiloader$notifications.put(id, notification);
+        notification.onClose(n -> utils_mod_multiloader$notifications.remove(id, n));
     }
 }
