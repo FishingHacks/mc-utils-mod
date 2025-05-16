@@ -1,7 +1,6 @@
 package net.fishinghacks.utils;
 
 import net.fabricmc.api.DedicatedServerModInitializer;
-import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fishinghacks.utils.config.Configs;
 import net.fishinghacks.utils.server.Server;
