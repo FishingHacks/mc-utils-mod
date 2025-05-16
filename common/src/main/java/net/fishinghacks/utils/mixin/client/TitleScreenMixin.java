@@ -4,7 +4,7 @@ import net.fishinghacks.utils.connection.ClientConnectionHandler;
 import net.fishinghacks.utils.gui.Icons;
 import net.fishinghacks.utils.gui.components.VanillaIconButton;
 import net.fishinghacks.utils.gui.cosmetics.CosmeticsScreen;
-import net.fishinghacks.utils.platform.Services;
+import net.fishinghacks.utils.platform.ClientServices;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -38,7 +38,7 @@ public class TitleScreenMixin extends Screen {
         int y = ci.getReturnValue();
         int x = this.width / 2 - 100 - 4 - VanillaIconButton.DEFAULT_WIDTH;
         utils_mod_multiloader$cosmeticButton = addRenderableWidget(
-            new VanillaIconButton(x, Services.PLATFORM.hasModlistScreen() ? y + rowHeight : y, Icons.COSMETICS,
+            new VanillaIconButton(x, ClientServices.PLATFORM.hasModlistScreen() ? y + rowHeight : y, Icons.COSMETICS,
                 ignored -> Minecraft.getInstance().setScreen(new CosmeticsScreen(this)), Supplier::get));
     }
 }

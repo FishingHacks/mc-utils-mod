@@ -10,7 +10,7 @@ import net.fishinghacks.utils.gui.mcsettings.McSettingsScreen;
 import net.fishinghacks.utils.Translation;
 import net.fishinghacks.utils.connection.Connection;
 import net.fishinghacks.utils.connection.packets.InvitePacket;
-import net.fishinghacks.utils.platform.Services;
+import net.fishinghacks.utils.platform.ClientServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
@@ -102,8 +102,8 @@ public class PauseMenuScreen extends Screen {
             .isPublished()) lanButton = row.addChild(openScreen(SHARE_TO_LAN, () -> new ShareToLanScreen(this)));
         else lanButton = row.addChild(openScreen(PLAYER_REPORTING, () -> new SocialInteractionsScreen(this)));
 
-        if (Services.PLATFORM.hasModlistScreen()) row.addChild(new Button.Builder(Translation.Mods.get()).onPress(
-                ignored -> Services.PLATFORM.openModlistScreen(minecraft, this)).width((BUTTONS_WIDTH - 4) / 2).build(), 2)
+        if (ClientServices.PLATFORM.hasModlistScreen()) row.addChild(new Button.Builder(Translation.Mods.get()).onPress(
+                ignored -> ClientServices.PLATFORM.openModlistScreen(minecraft, this)).width((BUTTONS_WIDTH - 4) / 2).build(), 2)
             .setWidth(BUTTONS_WIDTH);
 
         Component component = this.minecraft.isLocalServer() ? RETURN_TO_MENU : CommonComponents.GUI_DISCONNECT;

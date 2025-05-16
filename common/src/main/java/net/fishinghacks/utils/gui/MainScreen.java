@@ -8,7 +8,7 @@ import net.fishinghacks.utils.gui.components.IconButton;
 import net.fishinghacks.utils.gui.cosmetics.CosmeticsScreen;
 import net.fishinghacks.utils.gui.mcsettings.McSettingsScreen;
 import net.fishinghacks.utils.Colors;
-import net.fishinghacks.utils.platform.Services;
+import net.fishinghacks.utils.platform.ClientServices;
 import net.minecraft.FieldsAreNonnullByDefault;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.SharedConstants;
@@ -70,17 +70,17 @@ public class MainScreen extends Screen {
             new Button.Builder(SINGLEPLAYER).onPress(btn -> this.minecraft.setScreen(new SelectWorldScreen(this)))
                 .pos(x, y).width(180).build()).getHeight() + 4;
 
-        if (!Services.PLATFORM.hasModlistScreen()) cosmeticButton = this.addRenderableWidget(buildCosmeticButton(x, y));
+        if (!ClientServices.PLATFORM.hasModlistScreen()) cosmeticButton = this.addRenderableWidget(buildCosmeticButton(x, y));
         y += this.addRenderableWidget(new Button.Builder(MULTIPLAYER).onPress(btn -> {
             Screen screen = this.minecraft.options.skipMultiplayerWarning ? new JoinMultiplayerScreen(
                 this) : new SafetyScreen(this);
             minecraft.setScreen(screen);
         }).pos(x, y).width(180).build()).getHeight() + 4;
 
-        if (Services.PLATFORM.hasModlistScreen()) {
+        if (ClientServices.PLATFORM.hasModlistScreen()) {
             cosmeticButton = this.addRenderableWidget(buildCosmeticButton(x, y));
             y += this.addRenderableWidget(new Button.Builder(Translation.Mods.get()).onPress(
-                    btn -> Services.PLATFORM.openModlistScreen(this.minecraft, this)).pos(x, y).width(180).build())
+                    btn -> ClientServices.PLATFORM.openModlistScreen(this.minecraft, this)).pos(x, y).width(180).build())
                 .getHeight() + 8;
         }
 

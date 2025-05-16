@@ -1,8 +1,5 @@
 package net.fishinghacks.utils.platform.services;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
-
 public interface IPlatformHelper {
 
     /**
@@ -26,10 +23,7 @@ public interface IPlatformHelper {
      * @return True if in a development environment, false otherwise.
      */
     boolean isDevelopmentEnvironment();
-    void openModlistScreen(Minecraft mc, Screen parent);
-    boolean hasModlistScreen();
     IConfigBuilder createConfigBuilder();
-    void openConfigScreen();
 
     /**
      * Gets the name of the environment type as a string.

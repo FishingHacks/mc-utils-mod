@@ -4,8 +4,6 @@ import net.fishinghacks.utils.config.ConfigBuilderImpl;
 import net.fishinghacks.utils.platform.services.IConfigBuilder;
 import net.fishinghacks.utils.platform.services.IPlatformHelper;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 
 public class FabricPlatformHelper implements IPlatformHelper {
 
@@ -26,22 +24,7 @@ public class FabricPlatformHelper implements IPlatformHelper {
     }
 
     @Override
-    public void openModlistScreen(Minecraft mc, Screen parent) {
-
-    }
-
-    @Override
-    public boolean hasModlistScreen() {
-        return false;
-    }
-
-    @Override
     public IConfigBuilder createConfigBuilder() {
         return new ConfigBuilderImpl();
-    }
-
-    // TODO: *actual* Config
-    @Override
-    public void openConfigScreen() {
     }
 }

@@ -2,7 +2,7 @@ package net.fishinghacks.utils.gui;
 
 import com.mojang.blaze3d.FieldsAreNonnullByDefault;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.fishinghacks.utils.Constants;
+import net.fishinghacks.utils.ClientConstants;
 import net.fishinghacks.utils.config.Configs;
 import net.fishinghacks.utils.connection.ClientConnectionHandler;
 import net.fishinghacks.utils.gui.components.Button;
@@ -76,7 +76,7 @@ public class GuiOverlayManager {
         if(mouseX == -1 && mouseY == -1) return false;
         if (firstRender) {
             firstRender = false;
-            Constants.onFirstGuiRender();
+            ClientConstants.onFirstGuiRender();
         }
         if (repositionNotifications) repositionNotifications(screen.width, screen.height);
         boolean mouseOverlaps = isInOverlay(mouseX, mouseY);

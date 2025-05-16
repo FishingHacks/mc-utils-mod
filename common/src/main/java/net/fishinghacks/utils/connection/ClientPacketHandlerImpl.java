@@ -1,5 +1,6 @@
 package net.fishinghacks.utils.connection;
 
+import net.fishinghacks.utils.ClientConstants;
 import net.fishinghacks.utils.Constants;
 import net.fishinghacks.utils.cosmetics.CosmeticHandler;
 import net.fishinghacks.utils.gui.GuiOverlayManager;
@@ -51,7 +52,7 @@ public class ClientPacketHandlerImpl implements ClientPacketHandler {
                         minecraft.disconnect();
                     }
                 }
-                Screen screen = Constants.mainScreen();
+                Screen screen = ClientConstants.mainScreen();
                 minecraft.setScreen(screen);
                 if (!ServerAddress.isValidAddress(addr)) return;
                 ServerData serverData = new ServerData(I18n.get("selectServer.defaultName"), addr,

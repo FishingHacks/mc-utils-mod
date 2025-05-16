@@ -5,7 +5,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.cache.RemovalNotification;
 import com.mojang.logging.LogUtils;
-import net.fishinghacks.utils.Constants;
+import net.fishinghacks.utils.ClientConstants;
 import net.minecraft.FileUtil;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.Util;
@@ -30,7 +30,7 @@ public class GenericCache<K, V> {
 
     public GenericCache(CacheType<K, V> type, Duration expiresAfter) {
         this.type = type;
-        this.root = Constants.dataDirectory.get().resolve(type.getFolderName());
+        this.root = ClientConstants.dataDirectory.get().resolve(type.getFolderName());
         cache = CacheBuilder.newBuilder().expireAfterAccess(expiresAfter).removalListener(GenericCache::onRemove)
             .build(new CacheLoader<>() {
                 @Override
