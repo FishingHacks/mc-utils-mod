@@ -23,13 +23,13 @@ public class ConfigsImpl {
 
     public static void register(ModContainer modContainer, Config config) {
         String filename = config.getFilename();
+        if(filename == null) filename = Constants.MOD_ID + "-" + config.type().extension() + ".toml";
         ModConfigSpec spec = ((ConfigImpl) config.getConfig()).inner();
         var type = switch (config.type()) {
             case Client -> ModConfig.Type.CLIENT;
             case Server -> ModConfig.Type.SERVER;
         };
-        if (filename == null) modContainer.registerConfig(type, spec);
-        else modContainer.registerConfig(type, spec, Constants.MOD_ID + "/" + filename + ".toml");
+        modContainer.registerConfig(type, spec, filename);
         KNOWN_CONFIGS.put(spec, config);
     }
 

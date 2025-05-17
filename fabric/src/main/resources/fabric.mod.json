@@ -18,7 +18,6 @@
     "client": [
       "net.fishinghacks.utils.UtilsClientMod"
     ],
-    "main": ["net.fishinghacks.utils.UtilsMod"],
     "server": ["net.fishinghacks.utils.UtilsServerMod"]
   },
   "mixins": [

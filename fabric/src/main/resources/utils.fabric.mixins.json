@@ -5,8 +5,6 @@
   "plugin": "net.fishinghacks.utils.mixin.MixinPlugin",
   "refmap": "${mod_id}.refmap.json",
   "compatibilityLevel": "JAVA_21",
-  "mixins": [
-  ],
   "client": [
     "ClientPacketListenerMixin",
     "CommandsMixin",
@@ -15,7 +13,9 @@
     "MouseHandlerMixin",
     "ToastManagerMixin"
   ],
-  "server": [],
+  "server": [
+    "MinecraftServerMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   }
