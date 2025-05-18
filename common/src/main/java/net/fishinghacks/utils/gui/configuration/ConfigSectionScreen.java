@@ -1,6 +1,8 @@
 package net.fishinghacks.utils.gui.configuration;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
+import net.fishinghacks.utils.Colors;
 import net.fishinghacks.utils.TranslatableEnum;
 import net.fishinghacks.utils.Translation;
 import net.fishinghacks.utils.config.Configs;
@@ -48,9 +50,26 @@ public class ConfigSectionScreen extends ListScreen {
     protected final Map<String, ConfigSectionScreen> sectionCache = new HashMap<>();
     protected Button doneButton, undoButton, redoButton, resetButton;
     protected final UndoManager undoManager = new UndoManager();
+    public boolean asPopup = false;
 
     public static void open(Minecraft mc, Config config) {
         mc.setScreen(new ConfigSectionScreen(config, mc.screen));
+    }
+
+    public static ConfigSectionScreen openWithPath(Minecraft mc, Config config, List<String> path) {
+        var parent = mc.screen;
+        var spec = config.spec();
+        MutableComponent title = Translation.GuiConfigTitle.with();
+        for (String key : path) {
+            var elem = spec.elements.get(key);
+            if (elem == null || !elem.isSubconfig()) break;
+            spec = elem.asSubconfig();
+            title = Translation.GuiConfigCrumbElement.with(title, CRUMB_SEPARATOR,
+                Component.translatable(spec.getTranslationKey()));
+        }
+        var screen = new ConfigSectionScreen(new ConfigContext(parent, spec, config), title);
+        mc.setScreen(screen);
+        return screen;
     }
 
     public ConfigSectionScreen(Screen parent) {
@@ -77,7 +96,18 @@ public class ConfigSectionScreen extends ListScreen {
         if (undoButton != null) undoButton.active = undoManager.canUndo();
         if (redoButton != null) redoButton.active = undoManager.canRedo();
         if (resetButton != null) resetButton.active = isAnyNonDefault();
+        if (asPopup) titleWidget.setY(listStartY - titleWidget.getHeight());
+        else titleWidget.setY((listStartY - titleWidget.getHeight()) / 2);
+
         super.render(guiGraphics, mouseX, mouseY, partialTick);
+
+        // title box
+        if (asPopup) {
+            guiGraphics.fill(titleWidget.getX() - 6, titleWidget.getY() - 6, titleWidget.getRight() + 6, listStartY,
+                Colors.DARK.get());
+            guiGraphics.fill(titleWidget.getX() - 4, titleWidget.getY() - 4, titleWidget.getRight() + 4, listStartY + 2,
+                Colors.BG_DARK.get());
+        }
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
@@ -139,7 +169,7 @@ public class ConfigSectionScreen extends ListScreen {
             final String key = entry.getKey();
             if (key.startsWith("_")) continue;
             if (entry.getValue().isSubconfig()) {
-                elements.add(createSection(key, entry.getValue().asSpec()));
+                elements.add(createSection(key, entry.getValue().asSubconfig()));
                 continue;
             }
             if (!entry.getValue().isValue()) {
@@ -182,8 +212,8 @@ public class ConfigSectionScreen extends ListScreen {
     private Element createColorValue(final String key, ColorValue value) {
         var name = value.getNameTranslation();
         final ColorInput box = new ColorInput(
-            new Input.Builder(font, 0, 0, Button.BIG_WIDTH, Button.DEFAULT_HEIGHT, name).editable(true).maxLength(9)
-                .build(), value.getRaw());
+            new Input.Builder(font, 0, 0, Input.DEFAULT_WIDTH_BIG, Input.DEFAULT_HEIGHT, name).editable(true)
+                .maxLength(9).build(), value.getRaw());
         box.setResponder(newValue -> {
             if (newValue == null || !value.isValid(newValue)) {
                 box.setTextColor(0xffff0000);
@@ -200,14 +230,14 @@ public class ConfigSectionScreen extends ListScreen {
     private Element createStringValue(final String key, AbstractCachedValue<String> value) {
         var val = value.getRaw();
         if (val.length() > 192) {
-            final Text label = new Text.Builder(Button.BIG_WIDTH, Button.DEFAULT_HEIGHT,
+            final Text label = new Text.Builder(Input.DEFAULT_WIDTH_BIG, Input.DEFAULT_HEIGHT,
                 Component.literal(val.substring(0, 128)), font).build();
             label.setTooltip(Tooltip.create(Translation.GuiConfigTooLong.get()));
             return new Element(value.getNameTranslation(), value.getTooltipTranslation(), label);
         }
         var name = value.getNameTranslation();
-        final Input box = new Input.Builder(font, 0, 0, Button.BIG_WIDTH, Button.DEFAULT_HEIGHT, name).editable(true)
-            .maxLength(Math.clamp(val.length() + 5, 128, 192)).value(val).build();
+        final Input box = new Input.Builder(font, 0, 0, Input.DEFAULT_WIDTH_BIG, Input.DEFAULT_HEIGHT, name).editable(
+            true).maxLength(Math.clamp(val.length() + 5, 128, 192)).value(val).build();
         box.setResponder(newValue -> {
             if (newValue == null || !value.isValid(newValue)) {
                 box.setTextColor(0xffff0000);
@@ -286,7 +316,7 @@ public class ConfigSectionScreen extends ListScreen {
                                                                                final AbstractCachedValue<T> value,
                                                                                final Function<String, T> parser) {
         var name = value.getNameTranslation();
-        final Input box = new Input.Builder(font, 0, 0, Button.DEFAULT_WIDTH, Button.DEFAULT_HEIGHT, name).editable(
+        final Input box = new Input.Builder(font, 0, 0, Input.DEFAULT_WIDTH_BIG, Input.DEFAULT_HEIGHT, name).editable(
             true).filter(str -> {
             try {
                 parser.apply(str);
@@ -367,6 +397,20 @@ public class ConfigSectionScreen extends ListScreen {
                     Translation.GuiConfigRestartIgnore.get()));
             }
         }
+    }
+
+    @Override
+    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        if (!asPopup || parent == null) {
+            super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+            return;
+        }
+        parent.render(guiGraphics, -1, -1, partialTick);
+        assert this.minecraft != null;
+        guiGraphics.flush();
+        RenderSystem.getDevice().createCommandEncoder()
+            .clearDepthTexture(Objects.requireNonNull(this.minecraft.getMainRenderTarget().getDepthTexture()), 1.0);
+        renderTransparentBackground(guiGraphics);
     }
 
     private static final class TooltipConfirmScreen extends ConfirmScreen {

@@ -1,15 +1,19 @@
 package net.fishinghacks.utils.modules;
 
 import net.fishinghacks.utils.config.Configs;
+import net.fishinghacks.utils.config.values.AbstractCachedValue;
+import net.fishinghacks.utils.config.values.ModuleToggle;
 import net.fishinghacks.utils.modules.misc.*;
 import net.fishinghacks.utils.modules.ui.*;
 
 import java.util.HashMap;
 import java.util.HashSet;
 
-public class ModuleManager {
+public class ModuleManager implements ModuleManagerLike {
     public static final HashMap<String, Module> modules = new HashMap<>();
     public static final HashSet<String> enabledModules = new HashSet<>();
+
+    public static final ModuleManager instance = new ModuleManager();
 
     static {
         // -- UI --
@@ -18,6 +22,9 @@ public class ModuleManager {
 
         // -- MISC --
         addModule(new AllowBlockedKeys(), new Fullbright(), new Freezecam(), new Freecam(), new Zoom(), new Tablist());
+
+        ModuleToggle.manager = instance;
+        ModuleToggle.toggles.values().forEach(AbstractCachedValue::clearCache);
     }
 
     public static void addModule(Module... modules) {
@@ -30,6 +37,7 @@ public class ModuleManager {
 
     private static void saveModules() {
         Configs.clientConfig.ENABLED_MODULES.set(enabledModules.stream().toList());
+        ModuleToggle.toggles.values().forEach(AbstractCachedValue::clearCache);
     }
 
     public static void enableModule(String name) {
@@ -50,6 +58,20 @@ public class ModuleManager {
         if (enabledModules.contains(name)) enabledModules.remove(name);
         else enabledModules.add(name);
         modules.get(name).toggle();
+        saveModules();
+    }
+
+    @Override
+    public boolean isEnabled(String module) {
+        return enabledModules.contains(module);
+    }
+
+    @Override
+    public void setEnabled(String module, boolean value) {
+        if (enabledModules.contains(module) == value) return;
+        if (value) enabledModules.add(module);
+        else enabledModules.remove(module);
+        modules.get(module).setEnabled(value);
         saveModules();
     }
 }

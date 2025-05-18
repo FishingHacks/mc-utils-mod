@@ -8,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class ConfigSpec {
     public final LinkedHashMap<String, SpecHolder> elements = new LinkedHashMap<>();
@@ -66,12 +65,7 @@ public class ConfigSpec {
             return value instanceof ConfigSpec;
         }
 
-        public void match(Consumer<ConfigSpec> whenSpec, Consumer<AbstractCachedValue<?>> whenValue) {
-            if (value instanceof ConfigSpec spec) whenSpec.accept(spec);
-            else whenValue.accept((AbstractCachedValue<?>) value);
-        }
-
-        public ConfigSpec asSpec() {
+        public ConfigSpec asSubconfig() {
             return (ConfigSpec) value;
         }
 

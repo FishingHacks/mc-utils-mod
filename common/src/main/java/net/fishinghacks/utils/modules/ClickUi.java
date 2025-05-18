@@ -3,6 +3,8 @@ package net.fishinghacks.utils.modules;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.fishinghacks.utils.Colors;
 import net.fishinghacks.utils.Translation;
+import net.fishinghacks.utils.config.Configs;
+import net.fishinghacks.utils.gui.configuration.ConfigSectionScreen;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -21,14 +23,18 @@ import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFW;
 
 import org.jetbrains.annotations.Nullable;
-import java.util.ArrayList;
-import java.util.List;
+
+import java.util.*;
 
 public class ClickUi extends Screen {
-    public static final Lazy<KeyMapping> CLICK_UI_MAPPING = Lazy.lazy(() -> new KeyMapping(Translation.ClickUIOpenKey.key(), InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_RIGHT_SHIFT, "key.categories.misc"));
+    public static final Lazy<KeyMapping> CLICK_UI_MAPPING = Lazy.lazy(
+        () -> new KeyMapping(Translation.ClickUIOpenKey.key(), InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_RIGHT_SHIFT,
+            "key.categories.misc"));
+    private static final HashMap<ModuleCategory, ClickUiCategoryButton> openCategories = new HashMap<>();
 
     @Nullable
     private final Screen lastScreen;
+    private boolean isPrimary = true;
 
     public ClickUi(@Nullable Screen lastScreen) {
         super(Translation.ClickUITitle.get());
@@ -36,20 +42,44 @@ public class ClickUi extends Screen {
     }
 
     @Override
+    public void added() {
+        super.added();
+        isPrimary = true;
+    }
+
+    @Override
+    public void removed() {
+        super.removed();
+        isPrimary = false;
+    }
+
+    @Override
     protected void init() {
         super.init();
 
-        int x = 100;
-        for (ModuleCategory cat : ModuleCategory.values()) {
-            addRenderableWidget(new ClickUiCategoryButton(cat, x, 40));
-            x += 140;
+        if (openCategories.isEmpty()) {
+            int x = 100;
+            for (ModuleCategory cat : ModuleCategory.values()) {
+                openCategories.put(cat, new ClickUiCategoryButton(cat, x, 40));
+                x += 140;
+            }
         }
-        addRenderableWidget(Button.builder(Translation.DragUITitle.get(), button -> Minecraft.getInstance().setScreen(new DragUI(lastScreen))).pos((width - 50) / 2, 0).size(50, 20).build());
+        openCategories.values().forEach(this::addRenderableWidget);
+        addRenderableWidget(Button.builder(Translation.DragUITitle.get(),
+                button -> Minecraft.getInstance().setScreen(new DragUI(lastScreen))).pos((width - 50) / 2, 0).size(50
+                , 20)
+            .build());
     }
 
     @Override
     public void onClose() {
         Minecraft.getInstance().setScreen(lastScreen);
+    }
+
+    @Override
+    public void renderBackground(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        if (!isPrimary) return;
+        renderTransparentBackground(guiGraphics);
     }
 
     private static class ClickUiCategoryButton implements GuiEventListener, Renderable, NarratableEntry {
@@ -58,8 +88,8 @@ public class ClickUi extends Screen {
         private int x;
         private int y;
         private Vector2i dragStart = new Vector2i(0);
-        boolean extended = false;
         boolean isDragging = false;
+        boolean extended = false;
 
         private ClickUiCategoryButton(ModuleCategory category, int x, int y) {
             this.category = category;
@@ -91,17 +121,18 @@ public class ClickUi extends Screen {
             guiGraphics.fill(x + 99, y, x + 100, y + height - 1, Colors.PRIMARY.get());
             guiGraphics.fill(x + 1, y + height - 1, x + 99, y + height, Colors.PRIMARY.get());
 
-            if (!extended) return;
             if (mouseX >= x && mouseX < x + 100 && mouseY >= y && mouseY < y + height) {
                 int index = (mouseY - y) / lineHeight;
                 if (index < modules.size())
-                    guiGraphics.fill(x + 1, y + lineHeight * index, x + 99, y + lineHeight * (index + 1), Colors.SECONDARY_DARK.get());
+                    guiGraphics.fill(x + 1, y + lineHeight * index, x + 99, y + lineHeight * (index + 1),
+                        Colors.SECONDARY_DARK.get());
             }
 
             for (int i = 0; i < modules.size(); ++i) {
                 int color = Colors.WHITE.get();
                 if (modules.get(i).enabled) color = Colors.CYAN.get();
-                guiGraphics.drawString(font, Component.translatable("utils.configuration." + modules.get(i).name()), x + 5, y + 2 + lineHeight * i, color);
+                guiGraphics.drawString(font, Component.translatable("utils.configuration." + modules.get(i).name()),
+                    x + 5, y + 2 + lineHeight * i, color);
             }
         }
 
@@ -114,7 +145,8 @@ public class ClickUi extends Screen {
 
         @Override
         public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-            if ((new Rect2i(x, y, 100, Minecraft.getInstance().font.lineHeight + 4).contains((int) mouseX, (int) mouseY) && button == 0) || isDragging) {
+            if ((new Rect2i(x, y, 100, Minecraft.getInstance().font.lineHeight + 4).contains((int) mouseX,
+                (int) mouseY) && button == 0) || isDragging) {
                 this.x = (int) mouseX + dragStart.x;
                 this.y = (int) mouseY + dragStart.y;
                 this.isDragging = true;
@@ -129,14 +161,17 @@ public class ClickUi extends Screen {
             if (isDragging) return true;
             int lineHeight = Minecraft.getInstance().font.lineHeight + 4;
             if (new Rect2i(x, y, 100, lineHeight).contains((int) mouseX, (int) mouseY)) {
-                if (button == 1) this.extended = !this.extended;
+                if (button == 1) extended = !extended;
                 else if (button == 0) dragStart = new Vector2i(x - (int) mouseX, y - (int) mouseY);
                 return true;
             }
 
             if (new Rect2i(x, y + lineHeight, 100, lineHeight * modules.size()).contains((int) mouseX, (int) mouseY)) {
                 int idx = ((int) mouseY - y - lineHeight) / lineHeight;
-                ModuleManager.toggleModule(modules.get(idx).name());
+                if (idx >= modules.size()) return false;
+                if (button == 0) ModuleManager.toggleModule(modules.get(idx).name());
+                else if (button == 1) ConfigSectionScreen.openWithPath(Minecraft.getInstance(), Configs.clientConfig,
+                    List.of(modules.get(idx).name())).asPopup = true;
                 return true;
             }
 
@@ -148,10 +183,10 @@ public class ClickUi extends Screen {
             if (isDragging) return true;
             int lineHeight = Minecraft.getInstance().font.lineHeight + 4;
             int height = lineHeight;
-            if (extended) {
-                height += lineHeight * modules.size();
-            }
-            return new Rect2i(x, y, 100, height).contains((int) mouseX, (int) mouseY) || GuiEventListener.super.isMouseOver(mouseX, mouseY);
+            if (extended) height += lineHeight * modules.size();
+
+            return new Rect2i(x, y, 100, height).contains((int) mouseX,
+                (int) mouseY) || GuiEventListener.super.isMouseOver(mouseX, mouseY);
         }
 
         @Override

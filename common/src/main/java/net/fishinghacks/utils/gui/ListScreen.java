@@ -17,6 +17,7 @@ public abstract class ListScreen extends BlackScreen {
     protected int listStartY;
     protected int listStartX;
     protected int listWidth;
+    protected AbstractWidget titleWidget;
 
     protected ListScreen(Component title, Screen parent) {
         super(title, parent);
@@ -42,10 +43,6 @@ public abstract class ListScreen extends BlackScreen {
         return new StringWidget(getTitle(), getFont());
     }
 
-    public void scrollToHeight(int height) {
-        scrollToHeight(height, true);
-    }
-
     public void scrollToHeight(int height, boolean clamp) {
         if (clamp) scrollHeight = Math.max(Math.min(height, listHeight + 10) - listVisibleHeight, 0);
         else scrollHeight = Math.max(height - listVisibleHeight, 0);
@@ -56,14 +53,14 @@ public abstract class ListScreen extends BlackScreen {
     @Override
     protected final void init() {
         super.init();
-        var title = addTitle();
+        titleWidget = addTitle();
         listVisibleHeight = height - 30;
         listStartY = 30;
         listWidth = getListWidth();
         listStartX = getListStartX();
-        if (title != null) {
-            title.setPosition((width - title.getWidth()) / 2, (30 - title.getHeight()) / 2);
-            this.addRenderableWidget(title);
+        if (titleWidget != null) {
+            titleWidget.setPosition((width - titleWidget.getWidth()) / 2, (listStartY - titleWidget.getHeight()) / 2);
+            this.addRenderableWidget(titleWidget);
         }
 
         this.onInit();

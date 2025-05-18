@@ -2,9 +2,11 @@ package net.fishinghacks.utils.gui;
 
 import com.mojang.realmsclient.RealmsMainScreen;
 import net.fishinghacks.utils.E4MCStore;
+import net.fishinghacks.utils.config.Configs;
 import net.fishinghacks.utils.connection.ClientConnectionHandler;
 import net.fishinghacks.utils.gui.components.Button;
 import net.fishinghacks.utils.gui.components.IconButton;
+import net.fishinghacks.utils.gui.configuration.ConfigSectionScreen;
 import net.fishinghacks.utils.gui.cosmetics.CosmeticsScreen;
 import net.fishinghacks.utils.gui.mcsettings.McSettingsScreen;
 import net.fishinghacks.utils.Translation;
@@ -103,8 +105,8 @@ public class PauseMenuScreen extends Screen {
         else lanButton = row.addChild(openScreen(PLAYER_REPORTING, () -> new SocialInteractionsScreen(this)));
 
         if (ClientServices.PLATFORM.hasModlistScreen()) row.addChild(new Button.Builder(Translation.Mods.get()).onPress(
-                ignored -> ClientServices.PLATFORM.openModlistScreen(minecraft, this)).width((BUTTONS_WIDTH - 4) / 2).build(), 2)
-            .setWidth(BUTTONS_WIDTH);
+                ignored -> ClientServices.PLATFORM.openModlistScreen(minecraft, this)).width((BUTTONS_WIDTH - 4) / 2)
+            .build(), 2).setWidth(BUTTONS_WIDTH);
 
         Component component = this.minecraft.isLocalServer() ? RETURN_TO_MENU : CommonComponents.GUI_DISCONNECT;
         row.addChild(new Button.Builder(component).width(BUTTONS_WIDTH).onPress(button -> {
@@ -117,11 +119,13 @@ public class PauseMenuScreen extends Screen {
         inviteButton = addRenderableWidget(
             new IconButton.Builder(Icons.INVITE).pos(lanButton.getRight() + 4, lanButton.getY())
                 .onPress(PauseMenuScreen::invitePlayer).build());
+        int x = optionsButton.getX() - 4 - IconButton.DEFAULT_HEIGHT;
         cosmeticsButton = addRenderableWidget(
-            new IconButton.Builder(Icons.COSMETICS).pos(optionsButton.getX() - 4 - IconButton.DEFAULT_HEIGHT,
-                    lanButton.getY()).onPress(
-                    ignored -> Minecraft.getInstance().setScreen(new CosmeticsScreen(Minecraft.getInstance().screen)))
-                .build());
+            new IconButton.Builder(Icons.COSMETICS).pos(x, lanButton.getY() - 4 - IconButton.DEFAULT_HEIGHT)
+                .onPress(ignored -> minecraft.setScreen(new CosmeticsScreen(minecraft.screen))).build());
+        if (!ClientServices.PLATFORM.hasModlistScreen()) addRenderableWidget(
+            new IconButton.Builder(Icons.SETTINGS).pos(x, lanButton.getY())
+                .onPress(ignored -> ConfigSectionScreen.open(minecraft, Configs.clientConfig)).build());
     }
 
     @Override

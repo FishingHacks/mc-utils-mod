@@ -36,7 +36,7 @@ public class Input extends AbstractWidget {
     public static final int DEFAULT_HEIGHT = 16;
     public static final int DEFAULT_WIDTH_SMALL = 90;
     public static final int DEFAULT_WIDTH_NORMAL = 120;
-    public static final int DEFAULT_WIDTH_BIG = 150;
+    public static final int DEFAULT_WIDTH_BIG = 155;
 
     private final Font font;
     private int maxLength = 32;

@@ -6,7 +6,6 @@ import net.fishinghacks.utils.config.spec.ConfigSpec;
 import net.fishinghacks.utils.config.spec.ConfigType;
 import net.fishinghacks.utils.config.values.CachedValue;
 import net.fishinghacks.utils.modules.ModuleManager;
-import net.fishinghacks.utils.Translation;
 import net.fishinghacks.utils.platform.services.IConfig;
 
 import java.util.List;
@@ -27,7 +26,6 @@ public class ClientConfig extends Config {
     ClientConfig() {
         var builder = new ConfigBuilder();
 
-        Translation.GuiConfigCmdPrefix.config(builder);
         CMD_PREFIX = CachedValue.wrap(this, builder, "cmd_prefix", ".",
             s -> s instanceof String str && str.length() == 1);
 

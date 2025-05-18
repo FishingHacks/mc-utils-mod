@@ -21,11 +21,11 @@ public abstract class RenderableModule extends Module {
 
     @Override
     public void buildConfig(Config cfg, ConfigBuilder builder) {
+        super.buildConfig(cfg, builder);
         posX = CachedValue.wrap(cfg, builder, "x", 0);
         posY = CachedValue.wrap(cfg, builder, "y", 0);
         posX.onInvalidate(() -> x = posX.get());
         posY.onInvalidate(() -> y = posY.get());
-        super.buildConfig(cfg, builder);
     }
 
     public abstract void render(GuiGraphics guiGraphics, float partialTick);

@@ -46,9 +46,9 @@ public class ColorInput extends AbstractWidget {
     private int lastOverlayY = 0;
 
     public ColorInput(Input child, Color value) {
-        super(child.getX(), child.getY(), child.getWidth(), child.getHeight(), child.getMessage());
+        super(child.getX(), child.getY(), COLOR_POPUP_WIDTH + 1, child.getHeight(), child.getMessage());
         this.child = child;
-        child.setWidth(COLOR_POPUP_WIDTH);
+        child.setWidth(COLOR_POPUP_WIDTH + 1);
         this.value = value;
         child.setValue(value.format());
         child.setFilter(ColorInput::isValidColorChars);

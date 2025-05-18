@@ -26,7 +26,7 @@ public enum Translation implements Supplier<Component> {
         "utils.cmd.reload_cosmetics.reloaded.all"), CosmeticReloadPlayer(
         "utils.cmd.reload_cosmetics.reloaded.player"), CosmeticReloadUUID(
         "utils.cmd.reload_cosmetics.reloaded.uuid"), NoPlayerFound(
-        "utils.cmd.could_not_find_player"), GuiConfigCmdPrefix("utils.gui.config.cmd_prefix"), ModuleCategoryUi(
+        "utils.cmd.could_not_find_player"), ModuleCategoryUi(
         "utils.module_category.ui"), ModuleCategoryMisc("utils.module_category.misc"), ClickUIOpenKey(
         "key.clickui.open"), FpsConfigColored("config.module.fps.colored"), InviteFailed("utils.invite.failed"), Invite(
         "utils.invite"), InviteTrusted("utils.invite.trusted"), InviteGuiTitle(

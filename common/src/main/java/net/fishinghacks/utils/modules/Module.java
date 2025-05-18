@@ -2,6 +2,7 @@ package net.fishinghacks.utils.modules;
 
 import net.fishinghacks.utils.config.spec.Config;
 import net.fishinghacks.utils.config.spec.ConfigBuilder;
+import net.fishinghacks.utils.config.values.ModuleToggle;
 
 public abstract class Module {
     public abstract String name();
@@ -9,7 +10,9 @@ public abstract class Module {
     public void onEnable() {}
     public void onDisable() {}
     public void onToggle() {}
-    public void buildConfig(Config cfg, ConfigBuilder builder) {}
+    public void buildConfig(Config cfg, ConfigBuilder builder) {
+        new ModuleToggle(cfg, builder, name());
+    }
 
     public boolean enabled = false;
 

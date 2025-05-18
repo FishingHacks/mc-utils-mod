@@ -72,7 +72,7 @@ public abstract class AbstractCachedValue<T> {
 
     protected abstract List<String> getPath();
 
-    protected abstract String getTranslationKey();
+    protected abstract @Nullable String getTranslationKey();
 
     public String getKey() {
         return getPath().getLast();
