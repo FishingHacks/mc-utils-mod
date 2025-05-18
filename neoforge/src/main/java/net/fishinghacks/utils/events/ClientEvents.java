@@ -60,6 +60,13 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
+    public static void onMouseDraggedPre(ScreenEvent.MouseDragged.Pre e) {
+        e.setCanceled(
+            GuiOverlayManager.onDrag((int) e.getMouseX(), (int) e.getMouseY(), e.getMouseButton(), e.getDragX(),
+                e.getDragY()));
+    }
+
+    @SubscribeEvent
     public static void onTick(ClientTickEvent.Post ignored) {
         if (ClickUi.CLICK_UI_MAPPING.get().consumeClick())
             Minecraft.getInstance().setScreen(new ClickUi(Minecraft.getInstance().screen));

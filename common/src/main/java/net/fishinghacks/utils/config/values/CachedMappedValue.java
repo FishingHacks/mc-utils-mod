@@ -40,6 +40,10 @@ public class CachedMappedValue<T, U> extends AbstractCachedValue<T> {
 
     @Override
     public boolean isValid(Object value) {
+        if(value.getClass() == this.get().getClass()) {
+            //noinspection unchecked
+            value = encode.apply((T) value);
+        }
         return internalValue.isValid(value);
     }
 

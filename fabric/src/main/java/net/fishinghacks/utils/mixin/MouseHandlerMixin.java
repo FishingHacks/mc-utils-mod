@@ -17,6 +17,13 @@ public class MouseHandlerMixin {
         return screen.mouseClicked(mouseX, mouseY, button);
     }
 
+    @Redirect(method = "handleAccumulatedMovement", at = @At(value = "INVOKE", target =
+        "Lnet/minecraft/client/gui" + "/screens/Screen;mouseDragged(DDIDD)Z"))
+    public boolean mouseClicked(Screen screen, double mouseX, double mouseY, int button, double dragX, double dragY) {
+        if (GuiOverlayManager.onDrag((int) mouseX, (int) mouseY, button, dragX, dragY)) return true;
+        return screen.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+    }
+
     @Redirect(method = "onScroll", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;" +
         "mouseScrolled(DDDD)Z"))
     public boolean mouseScrolled(Screen screen, double mouseX, double mouseY, double scrollX, double scrollY) {

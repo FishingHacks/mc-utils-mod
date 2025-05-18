@@ -51,10 +51,18 @@ public class GuiOverlayManager {
     }
 
     public static void setOverlay(AbstractWidget owner, ScreenRectangle rectangle, Render render) {
+        setOverlay(owner, rectangle, (a, b, c, d, i1, i2) -> render.render(a, b, c, d));
+    }
+
+    public static void setOverlay(AbstractWidget owner, ScreenRectangle rectangle, RenderAt render) {
         setOverlay(new Overlay(owner, render, rectangle));
     }
 
     public static void setOverlay(AbstractWidget owner, int x, int y, int width, int height, Render render) {
+        setOverlay(owner, x, y, width, height, (a, b, c, d, i1, i2) -> render.render(a, b, c, d));
+    }
+
+    public static void setOverlay(AbstractWidget owner, int x, int y, int width, int height, RenderAt render) {
         setOverlay(new Overlay(owner, render, new ScreenRectangle(x, y, width, height)));
     }
 
@@ -64,7 +72,8 @@ public class GuiOverlayManager {
             .clearDepthTexture(Objects.requireNonNull(Minecraft.getInstance().getMainRenderTarget().getDepthTexture()),
                 1.0);
 
-        if (overlay != null) overlay.render.render(graphics, mouseX, mouseY, partialTick);
+        if (overlay != null) overlay.render.render(graphics, mouseX, mouseY, partialTick, overlay.rectangle.left(),
+            overlay.rectangle.top());
         renderNotifications(graphics, mouseX, mouseY, partialTick);
         if (shouldRenderConnectedServerOverlay(screen))
             renderConnectedServerOverlay(graphics, mouseX, mouseY, partialTick, screen.width);
@@ -73,7 +82,7 @@ public class GuiOverlayManager {
     private static boolean firstRender = true;
 
     public static boolean renderPre(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, Screen screen) {
-        if(mouseX == -1 && mouseY == -1) return false;
+        if (mouseX == -1 && mouseY == -1) return false;
         if (firstRender) {
             firstRender = false;
             ClientConstants.onFirstGuiRender();
@@ -88,6 +97,24 @@ public class GuiOverlayManager {
         return mouseOverlaps;
     }
 
+    public static boolean onDrag(int mouseX, int mouseY, int button, double dragX, double dragY) {
+        if (overlay != null && overlay.rectangle.containsPoint(mouseX, mouseY)) {
+            overlay.owner.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+            return true;
+        }
+        for (Notification notification : notifications) {
+            if (notification.getRectangle().containsPoint(mouseX, mouseY)) {
+                notification.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+                return true;
+            }
+        }
+        if (shouldRenderConnectedServerOverlay(Minecraft.getInstance().screen) && serviceServerSettings.getRectangle()
+            .containsPoint(mouseX, mouseY)) {
+            serviceServerSettings.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+            return true;
+        }
+        return false;
+    }
     public static boolean onClick(int mouseX, int mouseY, int button) {
         if (overlay != null && overlay.rectangle.containsPoint(mouseX, mouseY)) {
             overlay.owner.mouseClicked(mouseX, mouseY, button);
@@ -181,11 +208,16 @@ public class GuiOverlayManager {
         return (toast instanceof SystemToast);
     }
 
-    public record Overlay(AbstractWidget owner, Render render, ScreenRectangle rectangle) {
+    public record Overlay(AbstractWidget owner, RenderAt render, ScreenRectangle rectangle) {
     }
 
     @FunctionalInterface
     public interface Render {
         void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick);
+    }
+
+    @FunctionalInterface
+    public interface RenderAt {
+        void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, int x, int y);
     }
 }

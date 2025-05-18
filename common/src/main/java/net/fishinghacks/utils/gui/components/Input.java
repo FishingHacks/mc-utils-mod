@@ -54,7 +54,7 @@ public class Input extends AbstractWidget {
     private Component hint = null;
     private long focusTime = Util.getMillis();
 
-    private Input(Font font, int x, int y, int width, int height, Component message) {
+    protected Input(Font font, int x, int y, int width, int height, Component message) {
         super(x, y, width, height, message);
         this.font = font;
     }
@@ -354,7 +354,7 @@ public class Input extends AbstractWidget {
         this.textColorUneditable = color;
     }
 
-    private boolean isEditable() {
+    public boolean isEditable() {
         return this.isEditable;
     }
 

@@ -1,7 +1,5 @@
 package net.fishinghacks.utils.platform;
 
-import net.fishinghacks.utils.UtilsMod;
-import net.fishinghacks.utils.gui.nf_configuration.ConfigurationSelectionScreen;
 import net.fishinghacks.utils.platform.services.IClientPlatformHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -17,11 +15,5 @@ public class NeoForgeClientPlatformHelper implements IClientPlatformHelper {
     @Override
     public boolean hasModlistScreen() {
         return true;
-    }
-
-    @Override
-    public void openConfigScreen() {
-        Minecraft.getInstance()
-            .setScreen(new ConfigurationSelectionScreen(UtilsMod.container, Minecraft.getInstance().screen));
     }
 }

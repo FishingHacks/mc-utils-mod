@@ -13,9 +13,4 @@ public class FabricClientPlatformHelper implements IClientPlatformHelper {
     public boolean hasModlistScreen() {
         return false;
     }
-
-    // TODO: *actual* Config
-    @Override
-    public void openConfigScreen() {
-    }
 }

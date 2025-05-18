@@ -30,9 +30,9 @@ public class ClientModEvents {
                     module.render(guiGraphics, partialTick);
             });
         });
-        event.registerAboveAll(Constants.id("notifications"), ((guiGraphics, deltaTracker) -> {
+        event.registerAboveAll(Constants.id("notifications"), (guiGraphics, deltaTracker) -> {
             if (Minecraft.getInstance().screen == null) GuiOverlayManager.renderNotifications(guiGraphics, -1, -1,
                 deltaTracker.getGameTimeDeltaPartialTick(true));
-        }));
+        });
     }
 }

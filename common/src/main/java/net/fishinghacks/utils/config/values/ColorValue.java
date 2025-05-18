@@ -8,4 +8,8 @@ public class ColorValue extends CachedMappedValue<Color, Integer> {
     protected ColorValue(Config config, ConfigValue<Integer> internalValue, ConfigBuilder builder) {
         super(config, internalValue, Color::argb, Color::fromARGB, builder);
     }
+
+    public static ColorValue wrap(Config config, ConfigBuilder builder, String key, Color defaultValue) {
+        return new ColorValue(config, builder.inner().define(key, defaultValue.argb()), builder);
+    }
 }

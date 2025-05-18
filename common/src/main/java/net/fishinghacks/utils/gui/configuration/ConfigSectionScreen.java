@@ -148,7 +148,7 @@ public class ConfigSectionScreen extends ListScreen {
             }
             AbstractCachedValue value = entry.getValue().asCachedValue();
             switch (value) {
-                case ColorValue ignored -> elements.add(null);
+                case ColorValue colorValue -> elements.add(createColorValue(key, colorValue));
                 /// Note: this will never be handled as it is server side. connect to the service server and use the
                 /// cosmetics menu or edit the config yourself.
                 case CosmeticMapConfigValue ignored -> elements.add(null);
@@ -179,6 +179,23 @@ public class ConfigSectionScreen extends ListScreen {
         listLayout.arrangeElements();
     }
 
+    private Element createColorValue(final String key, ColorValue value) {
+        var name = value.getNameTranslation();
+        final ColorInput box = new ColorInput(
+            new Input.Builder(font, 0, 0, Button.BIG_WIDTH, Button.DEFAULT_HEIGHT, name).editable(true).maxLength(9)
+                .build(), value.getRaw());
+        box.setResponder(newValue -> {
+            if (newValue == null || !value.isValid(newValue)) {
+                box.setTextColor(0xffff0000);
+                return;
+            }
+            box.setTextColor(Input.DEFAULT_TEXT_COLOR);
+            if (newValue.equals(value.getRaw())) return;
+            undoManager.add(new UndoAction<>(value::set, key, this::onChanged), newValue, value.getRaw());
+        });
+
+        return new Element(name, value.getTooltipTranslation(), box);
+    }
 
     private Element createStringValue(final String key, AbstractCachedValue<String> value) {
         var val = value.getRaw();

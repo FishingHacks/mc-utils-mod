@@ -80,6 +80,7 @@
   "utils.configuration.server_display.prefix": "Server: ",
   "utils.configuration.text_shadow": "Text Shadow",
   "utils.configuration.background": "Background",
+  "utils.configuration.fg_color": "Text Color",
   "utils.configuration.24_hour_format": "24 Hour Format",
   "utils.configuration.show_seconds": "Show Seconds",
   "utils.configuration.show_date": "Show Data",

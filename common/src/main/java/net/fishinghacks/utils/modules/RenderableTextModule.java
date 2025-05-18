@@ -4,6 +4,7 @@ import net.fishinghacks.utils.Colors;
 import net.fishinghacks.utils.config.values.CachedValue;
 import net.fishinghacks.utils.config.spec.Config;
 import net.fishinghacks.utils.config.spec.ConfigBuilder;
+import net.fishinghacks.utils.config.values.ColorValue;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -23,12 +24,14 @@ public abstract class RenderableTextModule extends RenderableModule {
 
     protected CachedValue<Boolean> textShadow;
     protected CachedValue<Boolean> background;
+    protected ColorValue fgCol;
 
     @Override
     public void buildConfig(Config cfg, ConfigBuilder builder) {
         super.buildConfig(cfg, builder);
         textShadow = CachedValue.wrap(cfg, builder, "text_shadow", true);
         background = CachedValue.wrap(cfg, builder, "background", true);
+        fgCol = ColorValue.wrap(cfg, builder, "fg_color", Colors.WHITE.toCol());
     }
 
     private boolean isRightAligned() {
@@ -47,7 +50,7 @@ public abstract class RenderableTextModule extends RenderableModule {
         for (int i = 0; i < text.size(); ++i) {
             int x = pos.x + 2;
             if (rightAlign) x += (width - font.width(text.get(i)) - 4);
-            guiGraphics.drawString(font, text.get(i), x, pos.y + 1 + font.lineHeight * i, Colors.WHITE.get(),
+            guiGraphics.drawString(font, text.get(i), x, pos.y + 1 + font.lineHeight * i, fgCol.get().argb(),
                 textShadow.get());
         }
     }
@@ -63,7 +66,7 @@ public abstract class RenderableTextModule extends RenderableModule {
         for (int i = 0; i < text.size(); ++i) {
             int x = pos.x + 2;
             if (rightAlign) x += (width - font.width(text.get(i)) - 4);
-            guiGraphics.drawString(font, text.get(i), x, pos.y + 1 + font.lineHeight * i, Colors.WHITE.get(),
+            guiGraphics.drawString(font, text.get(i), x, pos.y + 1 + font.lineHeight * i, fgCol.get().argb(),
                 textShadow.get());
         }
     }

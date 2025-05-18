@@ -1,5 +1,6 @@
 package net.fishinghacks.utils.modules;
 
+import net.fishinghacks.utils.config.Configs;
 import net.fishinghacks.utils.modules.misc.*;
 import net.fishinghacks.utils.modules.ui.*;
 
@@ -28,7 +29,7 @@ public class ModuleManager {
     }
 
     private static void saveModules() {
-        //Configs.clientConfig.ENABLED_MODULES.set(enabledModules.stream().toList());
+        Configs.clientConfig.ENABLED_MODULES.set(enabledModules.stream().toList());
     }
 
     public static void enableModule(String name) {
