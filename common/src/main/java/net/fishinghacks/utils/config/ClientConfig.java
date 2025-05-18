@@ -1,14 +1,19 @@
 package net.fishinghacks.utils.config;
 
+import net.fishinghacks.utils.config.spec.Config;
+import net.fishinghacks.utils.config.spec.ConfigBuilder;
+import net.fishinghacks.utils.config.spec.ConfigSpec;
+import net.fishinghacks.utils.config.spec.ConfigType;
+import net.fishinghacks.utils.config.values.CachedValue;
 import net.fishinghacks.utils.modules.ModuleManager;
 import net.fishinghacks.utils.Translation;
-import net.fishinghacks.utils.platform.Services;
 import net.fishinghacks.utils.platform.services.IConfig;
 
 import java.util.List;
 
 public class ClientConfig extends Config {
     private final IConfig config;
+    private final ConfigSpec spec;
 
     public final CachedValue<String> CMD_PREFIX;
     public final CachedValue<Boolean> CUSTOM_MENUS;
@@ -20,18 +25,18 @@ public class ClientConfig extends Config {
     public final CachedValue<Boolean> AUTOCONNECT;
 
     ClientConfig() {
-        var builder = Services.PLATFORM.createConfigBuilder();
+        var builder = new ConfigBuilder();
 
-        CMD_PREFIX = CachedValue.wrap(this, Translation.GuiConfigCmdPrefix.config(builder)
-            .define("cmd_prefix", ".", s -> s instanceof String str && str.length() == 1));
+        Translation.GuiConfigCmdPrefix.config(builder);
+        CMD_PREFIX = CachedValue.wrap(this, builder, "cmd_prefix", ".",
+            s -> s instanceof String str && str.length() == 1);
 
-        CUSTOM_MENUS = CachedValue.wrap(this, builder.define("custom_menus", false));
-        REPLACE_SYSTEM_TOASTS = CachedValue.wrap(this, builder.define("replace_system_toasts", false));
-        SHOW_SPLASH = CachedValue.wrap(this, builder.define("show_splash", true));
-        SHOW_PANORAMA = CachedValue.wrap(this, builder.define("show_panorama", true));
+        CUSTOM_MENUS = CachedValue.wrap(this, builder, "custom_menus", false);
+        REPLACE_SYSTEM_TOASTS = CachedValue.wrap(this, builder, "replace_system_toasts", false);
+        SHOW_SPLASH = CachedValue.wrap(this, builder, "show_splash", true);
+        SHOW_PANORAMA = CachedValue.wrap(this, builder, "show_panorama", true);
 
-        ENABLED_MODULES = CachedValue.wrap(this,
-            builder.defineListAllowEmpty("_active_mods", List.of(), () -> "", v -> v instanceof String));
+        ENABLED_MODULES = CachedValue.wrapListEmpty(this, builder, "_active_mods", () -> "", v -> v instanceof String);
         ENABLED_MODULES.onInvalidate(() -> {
             ModuleManager.enabledModules.clear();
             for (var v : ENABLED_MODULES.get())
@@ -43,9 +48,9 @@ public class ClientConfig extends Config {
                 }
 
         });
-        SERVICE_SERVER_HISTORY = CachedValue.wrap(this,
-            builder.defineListAllowEmpty("_service_server_history", List.of(), () -> "", v -> v instanceof String));
-        AUTOCONNECT = CachedValue.wrap(this, builder.define("autoconnect", false));
+        SERVICE_SERVER_HISTORY = CachedValue.wrapListEmpty(this, builder, "_service_server_history", () -> "",
+            v -> v instanceof String);
+        AUTOCONNECT = CachedValue.wrap(this, builder, "autoconnect", false);
 
         for (var entry : ModuleManager.modules.values()) {
             builder.enterSection(entry.name());
@@ -53,7 +58,8 @@ public class ClientConfig extends Config {
             builder.exitSection();
         }
 
-        config = builder.build();
+        spec = builder.getSpec();
+        config = builder.inner().build();
     }
 
     @Override
@@ -64,5 +70,10 @@ public class ClientConfig extends Config {
     @Override
     public ConfigType type() {
         return ConfigType.Client;
+    }
+
+    @Override
+    public ConfigSpec spec() {
+        return spec;
     }
 }

@@ -1,4 +1,4 @@
-package net.fishinghacks.utils.gui.configuration;
+package net.fishinghacks.utils.gui.nf_configuration;
 
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import net.fishinghacks.utils.gui.ListScreen;
@@ -7,6 +7,7 @@ import net.fishinghacks.utils.gui.components.Box;
 import net.fishinghacks.utils.gui.components.Button;
 import net.fishinghacks.utils.gui.components.Center;
 import net.fishinghacks.utils.gui.components.Spacer;
+import net.fishinghacks.utils.gui.configuration.TranslationChecker;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.ConfirmScreen;

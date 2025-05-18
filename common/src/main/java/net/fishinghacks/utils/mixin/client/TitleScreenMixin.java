@@ -1,8 +1,10 @@
 package net.fishinghacks.utils.mixin.client;
 
+import net.fishinghacks.utils.config.Configs;
 import net.fishinghacks.utils.connection.ClientConnectionHandler;
 import net.fishinghacks.utils.gui.Icons;
 import net.fishinghacks.utils.gui.components.VanillaIconButton;
+import net.fishinghacks.utils.gui.configuration.ConfigSectionScreen;
 import net.fishinghacks.utils.gui.cosmetics.CosmeticsScreen;
 import net.fishinghacks.utils.platform.ClientServices;
 import net.minecraft.client.Minecraft;
@@ -30,15 +32,22 @@ public class TitleScreenMixin extends Screen {
 
     @Inject(method = "render", at = @At("HEAD"))
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
-        utils_mod_multiloader$cosmeticButton.visible = utils_mod_multiloader$cosmeticButton.active = ClientConnectionHandler.getInstance().isConnected();
+        utils_mod_multiloader$cosmeticButton.visible = utils_mod_multiloader$cosmeticButton.active =
+            ClientConnectionHandler.getInstance()
+            .isConnected();
     }
 
     @Inject(method = "createNormalMenuOptions", at = @At("RETURN"))
     public void createNormalMenuOptions(int ignored0, int rowHeight, CallbackInfoReturnable<Integer> ci) {
         int y = ci.getReturnValue();
-        int x = this.width / 2 - 100 - 4 - VanillaIconButton.DEFAULT_WIDTH;
+        int x = this.width / 2 - 104 - VanillaIconButton.DEFAULT_WIDTH;
         utils_mod_multiloader$cosmeticButton = addRenderableWidget(
             new VanillaIconButton(x, ClientServices.PLATFORM.hasModlistScreen() ? y + rowHeight : y, Icons.COSMETICS,
                 ignored -> Minecraft.getInstance().setScreen(new CosmeticsScreen(this)), Supplier::get));
+        x = this.width / 2 + 104;
+        assert minecraft != null;
+        if (!ClientServices.PLATFORM.hasModlistScreen()) addRenderableWidget(
+            new VanillaIconButton(x, y, Icons.SETTINGS,
+                ignored -> ConfigSectionScreen.open(minecraft, Configs.clientConfig), Supplier::get));
     }
 }

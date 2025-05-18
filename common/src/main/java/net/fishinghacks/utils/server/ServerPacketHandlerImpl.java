@@ -2,11 +2,12 @@ package net.fishinghacks.utils.server;
 
 import net.fishinghacks.utils.CommonUtil;
 import net.fishinghacks.utils.config.Configs;
-import net.fishinghacks.utils.config.CosmeticMapConfigValue;
+import net.fishinghacks.utils.config.values.CosmeticMapConfigValue;
 import net.fishinghacks.utils.connection.Connection;
 import net.fishinghacks.utils.connection.packets.*;
 
 import org.jetbrains.annotations.Nullable;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -79,9 +80,9 @@ public record ServerPacketHandlerImpl(Server server, Path cosmeticsDirectory) im
                                        Function<CosmeticMapConfigValue.PlayerCosmetics,
                                            CosmeticMapConfigValue.PlayerCosmetics> modify) {
         server.schedule(() -> {
-            Configs.serverConfig.cosmeticMap.getValue().compute(id, (ignored, cosmetics) -> modify.apply(
+            Configs.serverConfig.cosmeticMap.get().compute(id, (ignored, cosmetics) -> modify.apply(
                 cosmetics == null ? new CosmeticMapConfigValue.PlayerCosmetics() : cosmetics));
-            Configs.serverConfig.cosmeticMap.updated();
+            Configs.serverConfig.cosmeticMap.save();
             server.broadcast(new ReloadCosmeticForPlayer(id));
         });
     }
@@ -112,7 +113,7 @@ public record ServerPacketHandlerImpl(Server server, Path cosmeticsDirectory) im
 
     @Override
     public void handleGetCosmeticForPlayer(UUID playerId, Connection conn) {
-        var value = Configs.serverConfig.cosmeticMap.getValue().get(playerId);
+        var value = Configs.serverConfig.cosmeticMap.get().get(playerId);
         if (value != null) conn.send(
             new GetCosmeticForPlayerReply(playerId, value.cape, value.capeIsMCCapes, value.models.stream().toList()));
         else conn.send(new GetCosmeticForPlayerReply(playerId, null, false, List.of()));

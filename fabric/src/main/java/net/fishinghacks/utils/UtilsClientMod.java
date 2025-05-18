@@ -5,7 +5,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fishinghacks.utils.caching.DownloadTextureCache;
-import net.fishinghacks.utils.config.ConfigType;
+import net.fishinghacks.utils.config.spec.ConfigType;
 import net.fishinghacks.utils.config.ConfigsImpl;
 import net.fishinghacks.utils.connection.ClientConnectionHandler;
 import net.fishinghacks.utils.modules.ClickUi;

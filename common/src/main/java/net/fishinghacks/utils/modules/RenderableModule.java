@@ -1,8 +1,8 @@
 package net.fishinghacks.utils.modules;
 
-import net.fishinghacks.utils.config.CachedValue;
-import net.fishinghacks.utils.config.Config;
-import net.fishinghacks.utils.platform.services.IConfigBuilder;
+import net.fishinghacks.utils.config.values.CachedValue;
+import net.fishinghacks.utils.config.spec.Config;
+import net.fishinghacks.utils.config.spec.ConfigBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import org.joml.Vector2i;
@@ -20,9 +20,9 @@ public abstract class RenderableModule extends Module {
     }
 
     @Override
-    public void buildConfig(Config cfg, IConfigBuilder builder) {
-        posX = CachedValue.wrap(cfg, builder.define("x", 0));
-        posY = CachedValue.wrap(cfg, builder.define("y", 0));
+    public void buildConfig(Config cfg, ConfigBuilder builder) {
+        posX = CachedValue.wrap(cfg, builder, "x", 0);
+        posY = CachedValue.wrap(cfg, builder, "y", 0);
         posX.onInvalidate(() -> x = posX.get());
         posY.onInvalidate(() -> y = posY.get());
         super.buildConfig(cfg, builder);

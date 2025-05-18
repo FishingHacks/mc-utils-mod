@@ -1,11 +1,17 @@
 package net.fishinghacks.utils.config;
 
-import net.fishinghacks.utils.platform.Services;
+import net.fishinghacks.utils.config.spec.Config;
+import net.fishinghacks.utils.config.spec.ConfigBuilder;
+import net.fishinghacks.utils.config.spec.ConfigSpec;
+import net.fishinghacks.utils.config.spec.ConfigType;
+import net.fishinghacks.utils.config.values.CachedValue;
+import net.fishinghacks.utils.config.values.CosmeticMapConfigValue;
 import net.fishinghacks.utils.platform.services.IConfig;
 import org.jetbrains.annotations.Nullable;
 
 public class ServerConfig extends Config {
     private final IConfig config;
+    private final ConfigSpec spec;
 
     public final CachedValue<Boolean> serverEnabled;
     public final CachedValue<Integer> serverPort;
@@ -16,16 +22,24 @@ public class ServerConfig extends Config {
     public final CosmeticMapConfigValue cosmeticMap;
 
     ServerConfig() {
-        var builder = Services.PLATFORM.createConfigBuilder();
+        var builder = new ConfigBuilder();
 
-        serverEnabled = CachedValue.wrap(this, builder.worldRestart().define("server_enabled", true));
-        serverPort = CachedValue.wrap(this, builder.worldRestart().define("server_port", 25560));
-        serverName = CachedValue.wrap(this, builder.define("server_name", ""));
-        sendServerInvite = CachedValue.wrap(this, builder.worldRestart().define("send_server_invite", false));
-        serverInviteName = CachedValue.wrap(this, builder.worldRestart().define("server_invite_name", ""));
-        serverInviteUrl = CachedValue.wrap(this, builder.worldRestart().define("server_invite_url", ""));
-        cosmeticMap = new CosmeticMapConfigValue(builder.define("cosmetic_map", "{}"), this);
+        builder.worldRestart();
+        serverEnabled = CachedValue.wrap(this, builder, "server_enabled", true);
+        builder.worldRestart();
+        serverPort = CachedValue.wrap(this, builder, "server_port", 25560);
+        builder.worldRestart();
+        serverName = CachedValue.wrap(this, builder, "server_name", "");
+        builder.worldRestart();
+        sendServerInvite = CachedValue.wrap(this, builder, "send_server_invite", false);
+        builder.worldRestart();
+        serverInviteName = CachedValue.wrap(this, builder, "server_invite_name", "");
+        builder.worldRestart();
+        serverInviteUrl = CachedValue.wrap(this, builder, "server_invite_url", "");
+        builder.worldRestart();
+        cosmeticMap = CosmeticMapConfigValue.wrap(this, builder, "cosmetic_map", "{}");
 
+        spec = builder.getSpec();
         config = builder.build();
     }
 
@@ -42,5 +56,10 @@ public class ServerConfig extends Config {
     @Override
     public ConfigType type() {
         return ConfigType.Server;
+    }
+
+    @Override
+    public ConfigSpec spec() {
+        return spec;
     }
 }

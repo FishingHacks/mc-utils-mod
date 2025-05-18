@@ -1,7 +1,7 @@
 package net.fishinghacks.utils.platform;
 
 import net.fishinghacks.utils.UtilsMod;
-import net.fishinghacks.utils.gui.configuration.ConfigurationSelectionScreen;
+import net.fishinghacks.utils.gui.nf_configuration.ConfigurationSelectionScreen;
 import net.fishinghacks.utils.platform.services.IClientPlatformHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;

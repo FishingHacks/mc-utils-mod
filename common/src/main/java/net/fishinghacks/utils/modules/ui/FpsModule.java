@@ -1,11 +1,11 @@
 package net.fishinghacks.utils.modules.ui;
 
 import net.fishinghacks.utils.Translation;
-import net.fishinghacks.utils.config.CachedValue;
-import net.fishinghacks.utils.config.Config;
+import net.fishinghacks.utils.config.values.CachedValue;
+import net.fishinghacks.utils.config.spec.Config;
+import net.fishinghacks.utils.config.spec.ConfigBuilder;
 import net.fishinghacks.utils.modules.ModuleCategory;
 import net.fishinghacks.utils.modules.RenderableTextModule;
-import net.fishinghacks.utils.platform.services.IConfigBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -17,9 +17,10 @@ public class FpsModule extends RenderableTextModule {
     static CachedValue<Boolean> colored;
 
     @Override
-    public void buildConfig(Config cfg, IConfigBuilder builder) {
+    public void buildConfig(Config cfg, ConfigBuilder builder) {
         super.buildConfig(cfg, builder);
-        colored = CachedValue.wrap(cfg, Translation.FpsConfigColored.config(builder).define("colored", true));
+        Translation.FpsConfigColored.config(builder);
+        colored = CachedValue.wrap(cfg, builder, "colored", true);
     }
 
     @Override

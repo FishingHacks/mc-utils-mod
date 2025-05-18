@@ -1,12 +1,12 @@
 package net.fishinghacks.utils.modules.ui;
 
-import net.fishinghacks.utils.config.CachedValue;
-import net.fishinghacks.utils.config.Config;
+import net.fishinghacks.utils.config.values.CachedValue;
+import net.fishinghacks.utils.config.spec.Config;
+import net.fishinghacks.utils.config.spec.ConfigBuilder;
 import net.fishinghacks.utils.modules.ModuleCategory;
 import net.fishinghacks.utils.modules.RenderableModule;
 import net.fishinghacks.utils.Colors;
 import net.fishinghacks.utils.Translation;
-import net.fishinghacks.utils.platform.services.IConfigBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -25,9 +25,9 @@ public class KeystrokeMod extends RenderableModule {
     private CachedValue<Boolean> showMouse;
 
     @Override
-    public void buildConfig(Config cfg, IConfigBuilder builder) {
+    public void buildConfig(Config cfg, ConfigBuilder builder) {
         super.buildConfig(cfg, builder);
-        showMouse = CachedValue.wrap(cfg, builder.define("keystrokes_show_mouse", false));
+        showMouse = CachedValue.wrap(cfg, builder, "keystrokes_show_mouse", false);
     }
 
     private void drawButton(GuiGraphics graphics, int x, int y, boolean pressed, Component key) {

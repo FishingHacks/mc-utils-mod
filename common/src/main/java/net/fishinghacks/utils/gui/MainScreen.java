@@ -5,6 +5,7 @@ import net.fishinghacks.utils.config.Configs;
 import net.fishinghacks.utils.connection.ClientConnectionHandler;
 import net.fishinghacks.utils.gui.components.Button;
 import net.fishinghacks.utils.gui.components.IconButton;
+import net.fishinghacks.utils.gui.configuration.ConfigSectionScreen;
 import net.fishinghacks.utils.gui.cosmetics.CosmeticsScreen;
 import net.fishinghacks.utils.gui.mcsettings.McSettingsScreen;
 import net.fishinghacks.utils.Colors;
@@ -70,19 +71,20 @@ public class MainScreen extends Screen {
             new Button.Builder(SINGLEPLAYER).onPress(btn -> this.minecraft.setScreen(new SelectWorldScreen(this)))
                 .pos(x, y).width(180).build()).getHeight() + 4;
 
-        if (!ClientServices.PLATFORM.hasModlistScreen()) cosmeticButton = this.addRenderableWidget(buildCosmeticButton(x, y));
         y += this.addRenderableWidget(new Button.Builder(MULTIPLAYER).onPress(btn -> {
             Screen screen = this.minecraft.options.skipMultiplayerWarning ? new JoinMultiplayerScreen(
                 this) : new SafetyScreen(this);
             minecraft.setScreen(screen);
         }).pos(x, y).width(180).build()).getHeight() + 4;
 
-        if (ClientServices.PLATFORM.hasModlistScreen()) {
-            cosmeticButton = this.addRenderableWidget(buildCosmeticButton(x, y));
-            y += this.addRenderableWidget(new Button.Builder(Translation.Mods.get()).onPress(
+        cosmeticButton = this.addRenderableWidget(buildCosmeticButton(x, y));
+        if (ClientServices.PLATFORM.hasModlistScreen()) y += this.addRenderableWidget(
+                new Button.Builder(Translation.Mods.get()).onPress(
                     btn -> ClientServices.PLATFORM.openModlistScreen(this.minecraft, this)).pos(x, y).width(180).build())
-                .getHeight() + 8;
-        }
+            .getHeight() + 8;
+        else y += this.addRenderableWidget(new Button.Builder(Translation.Config.get()).onPress(
+                btn -> ConfigSectionScreen.open(minecraft, Configs.clientConfig)).pos(x, y).width(180).build())
+            .getHeight() + 8;
 
         this.addRenderableWidget(new Button.Builder(OPTIONS).onPress(
                 btn -> this.minecraft.setScreen(new McSettingsScreen(this, this.minecraft.options))).pos(x, y).width(88)

@@ -1,10 +1,10 @@
 package net.fishinghacks.utils.modules.misc;
 
-import net.fishinghacks.utils.config.CachedValue;
-import net.fishinghacks.utils.config.Config;
+import net.fishinghacks.utils.config.values.CachedValue;
+import net.fishinghacks.utils.config.spec.Config;
+import net.fishinghacks.utils.config.spec.ConfigBuilder;
 import net.fishinghacks.utils.modules.Module;
 import net.fishinghacks.utils.modules.ModuleCategory;
-import net.fishinghacks.utils.platform.services.IConfigBuilder;
 
 public class Tablist extends Module {
     public static boolean isEnabled = false;
@@ -17,14 +17,14 @@ public class Tablist extends Module {
     private CachedValue<Boolean> showFooterVal;
 
     @Override
-    public void buildConfig(Config cfg, IConfigBuilder builder) {
+    public void buildConfig(Config cfg, ConfigBuilder builder) {
         super.buildConfig(cfg, builder);
 
-        showSuffixVal = CachedValue.wrap(cfg, builder.define("nametag_suffixes", false));
+        showSuffixVal = CachedValue.wrap(cfg, builder, "nametag_suffixes", false);
         showSuffixVal.onInvalidate(() -> showSuffix = showSuffixVal.get());
-        showHeaderVal = CachedValue.wrap(cfg, builder.define("show_header", true));
+        showHeaderVal = CachedValue.wrap(cfg, builder, "show_header", true);
         showHeaderVal.onInvalidate(() -> showHeader = showHeaderVal.get());
-        showFooterVal = CachedValue.wrap(cfg, builder.define("show_footer", true));
+        showFooterVal = CachedValue.wrap(cfg, builder, "show_footer", true);
         showFooterVal.onInvalidate(() -> showFooter = showFooterVal.get());
     }
 

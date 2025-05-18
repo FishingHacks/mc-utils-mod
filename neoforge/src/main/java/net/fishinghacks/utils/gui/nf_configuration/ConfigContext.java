@@ -1,4 +1,4 @@
-package net.fishinghacks.utils.gui.configuration;
+package net.fishinghacks.utils.gui.nf_configuration;
 
 import com.electronwill.nightconfig.core.UnmodifiableConfig;
 import net.minecraft.client.gui.screens.Screen;

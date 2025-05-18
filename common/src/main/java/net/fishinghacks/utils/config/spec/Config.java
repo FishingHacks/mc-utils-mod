@@ -1,4 +1,4 @@
-package net.fishinghacks.utils.config;
+package net.fishinghacks.utils.config.spec;
 
 import net.fishinghacks.utils.platform.services.IConfig;
 
@@ -31,6 +31,7 @@ public abstract class Config {
     }
 
     public abstract ConfigType type();
+    public abstract ConfigSpec spec();
 
     // Note: Initially I copied a system from Mekanism where you save the config in a separate thread to avoid freezes or it not saving(?) on slower systems.
     // When I did that, however, the server was unable to exit (It stopped but then didn't exit). I have no idea why this is happening, but saving on the mainthread seems to work.

@@ -1,7 +1,7 @@
 package net.fishinghacks.utils.modules;
 
-import net.fishinghacks.utils.config.Config;
-import net.fishinghacks.utils.platform.services.IConfigBuilder;
+import net.fishinghacks.utils.config.spec.Config;
+import net.fishinghacks.utils.config.spec.ConfigBuilder;
 
 public abstract class Module {
     public abstract String name();
@@ -9,7 +9,7 @@ public abstract class Module {
     public void onEnable() {}
     public void onDisable() {}
     public void onToggle() {}
-    public void buildConfig(Config cfg, IConfigBuilder builder) {}
+    public void buildConfig(Config cfg, ConfigBuilder builder) {}
 
     public boolean enabled = false;
 

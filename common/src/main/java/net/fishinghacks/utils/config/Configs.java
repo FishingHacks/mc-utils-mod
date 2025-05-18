@@ -1,5 +1,7 @@
 package net.fishinghacks.utils.config;
 
+import net.fishinghacks.utils.config.spec.Config;
+
 import java.util.function.BiConsumer;
 
 public class Configs {

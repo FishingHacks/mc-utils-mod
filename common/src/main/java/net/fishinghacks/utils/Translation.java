@@ -1,5 +1,6 @@
 package net.fishinghacks.utils;
 
+import net.fishinghacks.utils.config.spec.ConfigBuilder;
 import net.fishinghacks.utils.platform.services.IConfigBuilder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -45,7 +46,18 @@ public enum Translation implements Supplier<Component> {
         "utils.common.facing.east"), ServerDisplayPrefix("utils.configuration.server_display.prefix"), SuffixDev(
         "utils.suffix.dev"), SuffixTranslator("utils.suffix.translator"), SuffixBetaTester(
         "utils.suffix.beta_tester"), KeyAlt("utils.key.alt"), KeyShift("utils.key.shift"), KeyControl(
-        "utils.key.control"), KeyMacControl("utils.key.control.mac"), Mods("utils.common.mods"),
+        "utils.key.control"), KeyMacControl("utils.key.control.mac"), Mods("utils.common.mods"), Config(
+        "utils.common.config"), GuiConfigTooLong("utils.gui.config.value_too_long"), GuiConfigUnsupported(
+        "utils.gui.config.value_unsupported"), GuiConfigSectionButton(
+        "utils.gui.config.section_button"), GuiConfigCrumbElement(
+        "utils.gui.config.crumb_element"), GuiConfigCrumbSeperator(
+        "utils.gui.config.crumb_seperator"), GuiConfigRestartGameTitle(
+        "utils.gui.config.restart.game.title"), GuiConfigRestartGameDescription(
+        "utils.gui.config.restart.game.text"), GuiConfigRestartWorldTitle(
+        "utils.gui.config.restart.world.title"), GuiConfigRestartWorldDescription(
+        "utils.gui.config.restart.world.text"), GuiConfigRestartIgnore(
+        "utils.gui.config.restart.return"), GuiConfigRestartIgnoreTooltip(
+        "utils.gui.config.restart.return.tooltip"), GuiConfigTitle("utils.gui.config.title"),
     ;
 
     private final String key;
@@ -68,7 +80,7 @@ public enum Translation implements Supplier<Component> {
         return component;
     }
 
-    public IConfigBuilder config(IConfigBuilder builder) {
-        return builder.translation(this.key);
+    public IConfigBuilder config(ConfigBuilder builder) {
+        return builder.inner().translation(this.key);
     }
 }

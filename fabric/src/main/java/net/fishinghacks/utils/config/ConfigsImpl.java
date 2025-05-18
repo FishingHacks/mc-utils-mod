@@ -9,6 +9,8 @@ import com.electronwill.nightconfig.toml.TomlFormat;
 import com.electronwill.nightconfig.toml.TomlParser;
 import com.electronwill.nightconfig.toml.TomlWriter;
 import net.fishinghacks.utils.Constants;
+import net.fishinghacks.utils.config.spec.Config;
+import net.fishinghacks.utils.config.spec.ConfigType;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.IOException;

@@ -2,7 +2,7 @@ package net.fishinghacks.utils;
 
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fishinghacks.utils.config.ConfigType;
+import net.fishinghacks.utils.config.spec.ConfigType;
 import net.fishinghacks.utils.config.Configs;
 import net.fishinghacks.utils.config.ConfigsImpl;
 import net.fishinghacks.utils.server.Server;

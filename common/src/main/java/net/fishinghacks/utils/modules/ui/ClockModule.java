@@ -1,10 +1,10 @@
 package net.fishinghacks.utils.modules.ui;
 
-import net.fishinghacks.utils.config.CachedValue;
-import net.fishinghacks.utils.config.Config;
+import net.fishinghacks.utils.config.values.CachedValue;
+import net.fishinghacks.utils.config.spec.Config;
+import net.fishinghacks.utils.config.spec.ConfigBuilder;
 import net.fishinghacks.utils.modules.ModuleCategory;
 import net.fishinghacks.utils.modules.RenderableTextModule;
-import net.fishinghacks.utils.platform.services.IConfigBuilder;
 import net.minecraft.network.chat.Component;
 
 import java.time.LocalDateTime;
@@ -35,11 +35,11 @@ public class ClockModule extends RenderableTextModule {
     }
 
     @Override
-    public void buildConfig(Config cfg, IConfigBuilder builder) {
+    public void buildConfig(Config cfg, ConfigBuilder builder) {
         super.buildConfig(cfg, builder);
-        twentyFourHours = CachedValue.wrap(cfg, builder.define("24_hour_format", true));
-        showSeconds = CachedValue.wrap(cfg, builder.define("show_seconds", false));
-        showDate = CachedValue.wrap(cfg, builder.define("show_date", false));
+        twentyFourHours = CachedValue.wrap(cfg, builder, "24_hour_format", true);
+        showSeconds = CachedValue.wrap(cfg, builder, "show_seconds", false);
+        showDate = CachedValue.wrap(cfg, builder, "show_date", false);
         cfg.addCachedValue(() -> formatter = buildFormatter());
     }
 

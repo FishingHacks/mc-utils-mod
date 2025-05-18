@@ -1,9 +1,11 @@
-package net.fishinghacks.utils.gui.configuration;
+package net.fishinghacks.utils.gui.nf_configuration;
 
 import com.electronwill.nightconfig.core.UnmodifiableConfig;
 import net.fishinghacks.utils.gui.Icons;
 import net.fishinghacks.utils.gui.ListScreen;
 import net.fishinghacks.utils.gui.components.*;
+import net.fishinghacks.utils.gui.configuration.TranslationChecker;
+import net.fishinghacks.utils.gui.configuration.UndoManager;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -122,7 +124,7 @@ public class ConfigurationSectionScreen extends ListScreen {
         final List<Element> elements = new ArrayList<>();
         for (final UnmodifiableConfig.Entry entry : context.entries()) {
             final String key = entry.getKey();
-//            if(key.startsWith("_")) continue;
+            if(key.startsWith("_")) continue;
             final Object rawValue = entry.getRawValue();
             switch (rawValue) {
                 case ModConfigSpec.ConfigValue cv -> {

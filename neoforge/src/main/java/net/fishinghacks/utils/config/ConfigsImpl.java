@@ -1,6 +1,7 @@
 package net.fishinghacks.utils.config;
 
 import net.fishinghacks.utils.Constants;
+import net.fishinghacks.utils.config.spec.Config;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;

@@ -12,4 +12,5 @@ public class Icons {
     public static final ResourceLocation FOLDER = Constants.id("textures/menu/folder.png");
     public static final ResourceLocation INVITE = Constants.id("textures/menu/invite.png");
     public static final ResourceLocation COSMETICS = Constants.id("textures/menu/cosmetics.png");
+    public static final ResourceLocation SETTINGS = Constants.id("textures/menu/settings.png");
 }

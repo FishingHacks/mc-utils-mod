@@ -36,12 +36,10 @@ public class UndoManager {
         }
     }
 
-    private void add(Step<?> step, boolean execute) {
+    private void add(Step<?> step) {
         undos.add(step);
         redos.clear();
-        if (execute) {
-            step.runRedo();
-        }
+        step.runRedo();
     }
 
     public <T> Step<T> step(Consumer<T> run, T newValue, Consumer<T> undo, T oldValue) {
@@ -49,14 +47,10 @@ public class UndoManager {
     }
 
     public <T> void add(Consumer<T> run, T newValue, Consumer<T> undo, T oldValue) {
-        add(step(run, newValue, undo, oldValue), true);
+        add(step(run, newValue, undo, oldValue));
     }
     public <T> void add(Consumer<T> apply, T newValue, T oldValue) {
-        add(step(apply, newValue, apply, oldValue), true);
-    }
-
-    public <T> void addNoExecute(Consumer<T> run, T newValue, Consumer<T> undo, T oldValue) {
-        add(step(run, newValue, undo, oldValue), false);
+        add(step(apply, newValue, apply, oldValue));
     }
 
     public void add(Step<?>... steps) {
@@ -65,7 +59,7 @@ public class UndoManager {
 
     public void add(final List<Step<?>> steps) {
         add(new Step<>(n -> steps.forEach(Step::runRedo), null, n -> steps.forEach(
-            Step::runUndo), null), true);
+            Step::runUndo), null));
     }
 
     public boolean canUndo() {

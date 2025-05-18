@@ -7,4 +7,8 @@ public class TranslationChecker {
         if (I18n.exists(key)) return key;
         return fallback;
     }
+
+    public static boolean exists(String key) {
+        return I18n.exists(key);
+    }
 }

@@ -51,7 +51,18 @@ public class ConfigValueImpl<T> implements ConfigValue<T> {
         return cached == null ? cached = getRaw() : cached;
     }
 
+    @Override
     public List<String> getPath() {
         return path;
+    }
+
+    @Override
+    public @Nullable String getTranslation() {
+        return spec.langKey;
+    }
+
+    @Override
+    public boolean isValid(Object value) {
+        return spec.validator.test(value);
     }
 }

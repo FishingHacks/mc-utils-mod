@@ -1,4 +1,4 @@
-package net.fishinghacks.utils.config;
+package net.fishinghacks.utils.config.spec;
 
 public enum ConfigType {
     Client, Server;
