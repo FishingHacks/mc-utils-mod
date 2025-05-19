@@ -11,7 +11,7 @@ public enum Translation implements Supplier<Component> {
     ClickUITitle("utils.gui.clickui.title"), DragUITitle("utils.gui.dragui.title"), CmdInvalid(
         "utils.cmd.invalid"), CmdInviteNotConnected("utils.cmd.invite.not_connected"), CmdInviteNotShared(
         "utils.cmd.invite.not_shared"), CmdInviteE4MCMissing("utils.cmd.invite.e4mc_missing"), CmdInviteInvited(
-        "utils.cmd.invite.invited"), CmdCalcResult("utils.cmd.calc.result"), CmdCalcInvalidSubcommand(
+        "utils.cmd.invite.invited"), CmdCalcRunning("utils.cmd.calc.running"), CmdCalcResult("utils.cmd.calc.result"), CmdCalcResultResultLong("utils.cmd.calc.result_long"), CmdCalcInvalidSubcommand(
         "utils.cmd.calc.invalid_subcommand"), CmdCalcInvalidBlockid("utils.cmd.calc.invalid_blockid"), CmdCalcOverworld(
         "utils.cmd.calc.overworld"), CmdCalcNether("utils.cmd.calc.nether"), CmdCalcNetherOverworldUsage(
         "utils.cmd.calc.nether_overworld_usage"), CmdCalcParseIntFailed(
@@ -21,7 +21,7 @@ public enum Translation implements Supplier<Component> {
         "utils.cmd.calc.craft.result"), CmdCalcCraftOneOf("utils.cmd.calc.craft.one_of"), CmdCalcCraftNotFound(
         "utils.cmd.calc.craft.no_recipe_found"), CmdCalcCraftMultiple(
         "utils.cmd.calc.craft.multiple"), CmdCalcCraftUsage("utils.cmd.calc.craft.usage"), CmdCalcCraftEntry(
-        "utils.cmd.calc.craft.entry"), Error("utils.common.error"), ClickToCopy(
+        "utils.cmd.calc.craft.entry"), CmdCalcStoppedCalculation("cmd.calc.stopped_calculation"), Error("utils.common.error"), ClickToCopy(
         "utils.common.click_to_copy"), CosmeticReloadAll(
         "utils.cmd.reload_cosmetics.reloaded.all"), CosmeticReloadPlayer(
         "utils.cmd.reload_cosmetics.reloaded.player"), CosmeticReloadUUID(
@@ -47,7 +47,7 @@ public enum Translation implements Supplier<Component> {
         "utils.suffix.dev"), SuffixTranslator("utils.suffix.translator"), SuffixBetaTester(
         "utils.suffix.beta_tester"), KeyAlt("utils.key.alt"), KeyShift("utils.key.shift"), KeyControl(
         "utils.key.control"), KeyMacControl("utils.key.control.mac"), Mods("utils.common.mods"), Config(
-        "utils.common.config"), GuiConfigTooLong("utils.gui.config.value_too_long"), GuiConfigUnsupported(
+        "utils.common.config"), ClickHere("utils.common.click_here"), GuiConfigTooLong("utils.gui.config.value_too_long"), GuiConfigUnsupported(
         "utils.gui.config.value_unsupported"), GuiConfigSectionButton(
         "utils.gui.config.section_button"), GuiConfigCrumbElement(
         "utils.gui.config.crumb_element"), GuiConfigCrumbSeperator(

@@ -1,0 +1,17 @@
+package net.fishinghacks.utils.macros.exprs;
+
+import net.fishinghacks.utils.macros.BreakoutException;
+import net.fishinghacks.utils.macros.EvalContext;
+import net.fishinghacks.utils.macros.MathException;
+
+public record InlineIfExpr(Expression determiner, Expression left, Expression right) implements Expression {
+    @Override
+    public LiteralValue eval(EvalContext context) throws MathException, BreakoutException.EvalShouldStop {
+        return determiner.eval(context).asBoolean() ? left.eval(context) : right.eval(context);
+    }
+
+    @Override
+    public String toString() {
+        return determiner.toString() + "? " + left.toString() + " : " + right.toString();
+    }
+}

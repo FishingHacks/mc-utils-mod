@@ -1,11 +1,8 @@
 package net.fishinghacks.utils.commands;
 
-import net.fishinghacks.utils.calc.CalcContext;
-import net.fishinghacks.utils.calc.CustomFunction;
-import net.fishinghacks.utils.calc.MathException;
-import net.fishinghacks.utils.calc.exprs.Expression;
-import net.fishinghacks.utils.calc.exprs.LiteralValue;
-import net.fishinghacks.utils.calc.parsing.Parser;
+import net.fishinghacks.utils.macros.Executor;
+import net.fishinghacks.utils.macros.RunningMacro;
+import net.fishinghacks.utils.macros.exprs.LiteralValue;
 import net.fishinghacks.utils.Translation;
 import net.fishinghacks.utils.mixin.client.IngredientAccessor;
 import net.minecraft.ChatFormatting;
@@ -29,28 +26,62 @@ import oshi.util.tuples.Pair;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 public class CalcCommand extends ArgDotCommand {
     private static final ContextMap EMPTY = new ContextMap.Builder().create(new ContextKeySet.Builder().build());
 
+    private static final HashMap<Integer, RunningMacro> calculations = new HashMap<>();
+    private static int currentIndex = 0;
+
+    public static void runCalculation(String content, ChatListener listener) {
+        int index = currentIndex++;
+        var calcStopFormatted = Component.literal(".calc ").withStyle(ChatFormatting.YELLOW)
+            .append(Component.literal("stop ").withStyle(ChatFormatting.LIGHT_PURPLE))
+            .append(Component.literal(String.valueOf(index)).withStyle(ChatFormatting.GREEN));
+        var stopAction = Translation.ClickHere.with().withStyle(ChatFormatting.DARK_AQUA)
+            .withStyle(style -> style.withClickEvent(new ClickEvent.RunCommand("stop_calc " + index)));
+        listener.handleSystemMessage(Translation.CmdCalcRunning.with(index, calcStopFormatted, stopAction), false);
+        var macro = Executor.runInThread(content, "<input>", new HashMap<>(),
+            v -> listener.handleSystemMessage(v, false), v -> formatOutput(v, content, index, listener),
+            (ignored) -> Optional.empty(), () -> calculations.remove(index));
+        calculations.put(index, macro);
+    }
+
+    public static void calculate(String content, ChatListener listener, Consumer<@Nullable LiteralValue> onFinish) {
+        int index = currentIndex++;
+        var calcStopFormatted = Component.literal(".calc ").withStyle(ChatFormatting.YELLOW)
+            .append(Component.literal("stop ").withStyle(ChatFormatting.LIGHT_PURPLE))
+            .append(Component.literal(String.valueOf(index)).withStyle(ChatFormatting.GREEN))
+            .withStyle(style -> style.withClickEvent(new ClickEvent.SuggestCommand(".calc stop " + index)));
+        var stopAction = Translation.ClickHere.with().withStyle(ChatFormatting.DARK_AQUA)
+            .withStyle(style -> style.withClickEvent(new ClickEvent.RunCommand("stop_calc " + index)));
+        listener.handleSystemMessage(Translation.CmdCalcRunning.with(index, calcStopFormatted, stopAction), false);
+
+        boolean[] didFinish = new boolean[]{false};
+        var macro = Executor.runInThread(content, "<input>", new HashMap<>(), v -> {
+            listener.handleSystemMessage(v, false);
+            if (!didFinish[0]) {
+                onFinish.accept(null);
+                didFinish[0] = true;
+            }
+        }, onFinish, (ignored) -> Optional.empty(), () -> calculations.remove(index));
+        calculations.put(index, macro);
+    }
+
+    private static void formatOutput(LiteralValue output, String content, int index, ChatListener listener) {
+        var formatted = output.formatted();
+        MutableComponent comp;
+        if (content.length() < 20) comp = Translation.CmdCalcResult.with(content);
+        else comp = Translation.CmdCalcResultResultLong.with(index);
+        if (!formatted.isEmpty()) comp.append(formatted.getFirst());
+        listener.handleSystemMessage(comp, false);
+        for (int i = 1; i < formatted.size(); ++i) listener.handleSystemMessage(formatted.get(i), false);
+    }
+
     @Override
     public String getName() {
         return "calc";
-    }
-
-    private @Nullable LiteralValue evaluate(String content, ChatListener listener) {
-        try {
-            Parser parser = new Parser(content);
-            var expr = parser.parseExpectEnd();
-            var ctx = CalcContext.getDefault();
-            return expr.eval(ctx);
-        } catch (MathException e) {
-            listener.handleSystemMessage(Component.literal(e.source.isEmpty() ? content : e.source), false);
-            MutableComponent comp = Component.literal(" ".repeat(e.characterPos) + "^- ")
-                .append(Translation.Error.get()).append(e.message).withStyle(ChatFormatting.RED);
-            listener.handleSystemMessage(comp, false);
-            return null;
-        }
     }
 
     private String join(String[] content, int startPos) {
@@ -62,18 +93,7 @@ public class CalcCommand extends ArgDotCommand {
     @Override
     public void run(String[] args, ChatListener listener) {
         switch (args[0]) {
-            case "calc" -> {
-                String content = join(args, 1);
-                var result = evaluate(content, listener);
-                if (result == null) return;
-                var stringifiedResult = result.toString();
-                MutableComponent formattedResult = Translation.CmdCalcResult.with(
-                    Component.literal(content).withStyle(ChatFormatting.AQUA),
-                    Component.literal(stringifiedResult).withStyle(ChatFormatting.GREEN)).append(" ").append(
-                    Translation.ClickToCopy.get().copy().withStyle(ChatFormatting.DARK_AQUA)
-                        .withStyle(style -> style.withClickEvent(new ClickEvent.CopyToClipboard(stringifiedResult))));
-                listener.handleSystemMessage(formattedResult, false);
-            }
+            case "calc" -> runCalculation(join(args, 1), listener);
             case "nether", "overworld" -> {
                 int x;
                 int y;
@@ -107,103 +127,63 @@ public class CalcCommand extends ArgDotCommand {
                         .withStyle(ChatFormatting.AQUA)).append(" ").append("X: " + newX + " Y: " + y + " Z: " + newZ);
                 listener.handleSystemMessage(comp, false);
             }
-            case "custom" -> {
-                switch (args[1]) {
-                    case "add" -> {
-                        if (args.length < 5) {
-                            listener.handleSystemMessage(
-                                Translation.CmdCalcCustomAddUsage.get().copy().withStyle(ChatFormatting.RED), false);
-                            return;
-                        }
-                        int equalidx = 0;
-                        for (int i = 3; i < args.length - 1; ++i) {
-                            if (args[i].equals("=")) {
-                                equalidx = i;
-                                break;
-                            }
-                        }
-                        if (equalidx == 0) {
-                            listener.handleSystemMessage(
-                                Translation.CmdCalcCustomAddUsage.get().copy().withStyle(ChatFormatting.RED), false);
-                            return;
-                        }
-                        String name = args[2];
-                        var variables = Arrays.stream(args).skip(3).limit(equalidx - 3).toList();
-                        Expression expr;
-                        String content = join(args, equalidx + 1);
-                        try {
-                            Parser parser = new Parser(content);
-                            expr = parser.parseExpectEnd();
-                        } catch (MathException e) {
-                            listener.handleSystemMessage(Component.literal(e.source.isEmpty() ? content : e.source),
-                                false);
-                            MutableComponent comp = Component.literal(" ".repeat(e.characterPos) + "^- ")
-                                .append(Translation.Error.get()).append(e.message).withStyle(ChatFormatting.RED);
-                            listener.handleSystemMessage(comp, false);
-                            return;
-                        }
-                        CalcContext.customFunctions.put(name, new CustomFunction(content, expr, variables));
-                        MutableComponent comp = Translation.CmdCalcCustomAdded.get().copy()
-                            .append(Component.literal(" " + name).withStyle(ChatFormatting.AQUA));
-                        for (var arg : variables) comp = comp.append(" " + arg);
-                        comp.append(" = ").append(content);
-                        listener.handleSystemMessage(comp, false);
-                    }
-                    case "remove" -> {
-                        CalcContext.customFunctions.remove(args[2]);
-                        listener.handleSystemMessage(Translation.CmdCalcParseCustomFuncRemoved.with(
-                            Component.literal(args[2]).withStyle(ChatFormatting.AQUA)), false);
-                    }
-                    case "list" -> CalcContext.customFunctions.forEach((k, v) -> {
-                        MutableComponent comp = Component.empty()
-                            .append(Component.literal(k).withStyle(ChatFormatting.AQUA));
-                        for (var arg : v.variables()) comp.append(" " + arg);
-                        comp.append(" = ");
-                        comp.append(v.source());
-                        listener.handleSystemMessage(comp, false);
-                    });
-                    default -> listener.handleSystemMessage(
-                        Translation.CmdCalcInvalidSubcommand.with("custom " + args[1]).withStyle(ChatFormatting.RED),
-                        false);
-                }
-            }
+            case "custom" ->
+                listener.handleSystemMessage(Component.literal("custom is currently not supported."), false);
             case "craft" -> {
                 if (args.length < 2) {
                     listener.handleSystemMessage(
                         Translation.CmdCalcCraftUsage.get().copy().withStyle(ChatFormatting.RED), false);
                     return;
                 }
-                int amount = 1;
-                if (args.length > 2) {
-                    var result = evaluate(join(args, 2), listener);
-                    if (result == null) return;
-                    amount = (int) Math.floor(result.value());
-                }
-
-                ClientPacketListener packetListener = Minecraft.getInstance().getConnection();
-                if (packetListener == null) return;
-                var res = packetListener.searchTrees().recipes().search(args[1].toLowerCase(Locale.ROOT));
-                if (res.isEmpty() && !args[1].contains(":")) res = packetListener.searchTrees().recipes()
-                    .search("minecraft:" + args[1].toLowerCase(Locale.ROOT));
-                if (res.isEmpty()) {
+                if (args.length > 2) calculate(join(args, 2), listener, value -> {
+                    if (value == null) return;
+                    craftOutput(args[1], (int) Math.floor(value.asDouble()), listener);
+                });
+                else craftOutput(args[1], 1, listener);
+            }
+            case "stop" -> {
+                if (args.length < 2) {
                     listener.handleSystemMessage(
-                        Translation.CmdCalcCraftNotFound.with(args[1]).withStyle(ChatFormatting.RED), false);
+                        Translation.CmdCalcCraftUsage.get().copy().withStyle(ChatFormatting.RED), false);
                     return;
                 }
-                var recipes = res.getFirst();
-                if (recipes.getRecipes().isEmpty()) {
+                try {
+                    var index = Integer.parseInt(args[1]);
+                    var calc = calculations.get(index);
+                    if (calc != null) calc.stop();
+                    listener.handleSystemMessage(Translation.CmdCalcStoppedCalculation.with(
+                        Component.literal("" + index).withStyle(ChatFormatting.GREEN)), false);
+                } catch (NumberFormatException e) {
                     listener.handleSystemMessage(
-                        Translation.CmdCalcCraftNotFound.with(args[1]).withStyle(ChatFormatting.RED), false);
-                    return;
+                        Translation.CmdCalcParseIntFailed.with(args[1]).withStyle(ChatFormatting.RED), false);
                 }
-                var recipe = recipes.getRecipes().getFirst();
-                var requirements = recipe.craftingRequirements();
-                assert requirements.isPresent();
-                calculateCraft(recipe.resultItems(EMPTY).getFirst(), requirements.orElse(List.of()), amount, listener);
             }
             default -> listener.handleSystemMessage(
                 Translation.CmdCalcInvalidSubcommand.with(args[0]).withStyle(ChatFormatting.RED), false);
         }
+    }
+
+    private void craftOutput(String item, int amount, ChatListener listener) {
+        ClientPacketListener packetListener = Minecraft.getInstance().getConnection();
+        if (packetListener == null) return;
+        var res = packetListener.searchTrees().recipes().search(item.toLowerCase(Locale.ROOT));
+        if (res.isEmpty() && !item.contains(":"))
+            res = packetListener.searchTrees().recipes().search("minecraft:" + item.toLowerCase(Locale.ROOT));
+        if (res.isEmpty()) {
+            listener.handleSystemMessage(Translation.CmdCalcCraftNotFound.with(item).withStyle(ChatFormatting.RED),
+                false);
+            return;
+        }
+        var recipes = res.getFirst();
+        if (recipes.getRecipes().isEmpty()) {
+            listener.handleSystemMessage(Translation.CmdCalcCraftNotFound.with(item).withStyle(ChatFormatting.RED),
+                false);
+            return;
+        }
+        var recipe = recipes.getRecipes().getFirst();
+        var requirements = recipe.craftingRequirements();
+        assert requirements.isPresent();
+        calculateCraft(recipe.resultItems(EMPTY).getFirst(), requirements.orElse(List.of()), amount, listener);
     }
 
     private MutableComponent copyable(String value) {
@@ -259,8 +239,8 @@ public class CalcCommand extends ArgDotCommand {
     }
 
     private MutableComponent craftEntry(Component item, int amount) {
-        return Translation.CmdCalcCraftEntry.with(item, number(amount),
-            number((double) amount / CalcContext.ITEMS_PER_STACK),
-            number((double) amount / CalcContext.ITEMS_PER_SHULKERBOX));
+        return Translation.CmdCalcCraftEntry.with(item, number(amount), number((double) amount / 64),
+            // 3 * 9 * 64
+            number((double) amount / 1728));
     }
 }
