@@ -4,6 +4,7 @@ import net.fishinghacks.utils.Translation;
 import net.fishinghacks.utils.config.values.CachedValue;
 import net.fishinghacks.utils.config.spec.Config;
 import net.fishinghacks.utils.config.spec.ConfigBuilder;
+import net.fishinghacks.utils.modules.Module;
 import net.fishinghacks.utils.modules.ModuleCategory;
 import net.fishinghacks.utils.modules.RenderableTextModule;
 import net.minecraft.ChatFormatting;
@@ -13,7 +14,8 @@ import net.minecraft.network.chat.MutableComponent;
 
 import java.util.List;
 
-public class FpsModule extends RenderableTextModule {
+@Module(name = "fps", category = ModuleCategory.UI)
+public class Fps extends RenderableTextModule {
     static CachedValue<Boolean> colored;
 
     @Override
@@ -40,15 +42,5 @@ public class FpsModule extends RenderableTextModule {
     public List<Component> getPreviewText() {
         return List.of(Component.literal("FPS: ").withStyle(ChatFormatting.GRAY)
             .append(Component.literal("0").withStyle(ChatFormatting.GREEN)));
-    }
-
-    @Override
-    public String name() {
-        return "fps";
-    }
-
-    @Override
-    public ModuleCategory category() {
-        return ModuleCategory.UI;
     }
 }

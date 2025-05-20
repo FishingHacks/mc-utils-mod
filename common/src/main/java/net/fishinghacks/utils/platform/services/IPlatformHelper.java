@@ -1,5 +1,8 @@
 package net.fishinghacks.utils.platform.services;
 
+import java.lang.annotation.Annotation;
+import java.util.Set;
+
 public interface IPlatformHelper {
 
     /**
@@ -24,6 +27,7 @@ public interface IPlatformHelper {
      */
     boolean isDevelopmentEnvironment();
     IConfigBuilder createConfigBuilder();
+    Set<Class<?>> scanForAnnotation(Class<? extends Annotation> annotation);
 
     /**
      * Gets the name of the environment type as a string.

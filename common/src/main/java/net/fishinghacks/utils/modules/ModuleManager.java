@@ -1,33 +1,40 @@
 package net.fishinghacks.utils.modules;
 
+import net.fishinghacks.utils.Constants;
 import net.fishinghacks.utils.config.Configs;
 import net.fishinghacks.utils.config.values.AbstractCachedValue;
 import net.fishinghacks.utils.config.values.ModuleToggle;
 import net.fishinghacks.utils.modules.misc.*;
 import net.fishinghacks.utils.modules.ui.*;
+import net.fishinghacks.utils.platform.Services;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
 
 public class ModuleManager implements ModuleManagerLike {
-    public static final HashMap<String, Module> modules = new HashMap<>();
+    public static final HashMap<String, IModule> modules = new HashMap<>();
     public static final HashSet<String> enabledModules = new HashSet<>();
 
     public static final ModuleManager instance = new ModuleManager();
 
-    static {
-        // -- UI --
-        addModule(new PositionModule(), new FpsModule(), new PingModule(), new PositionModule(), new ModListModule(),
-            new KeystrokeMod(), new ClockModule(), new ServerDisplayModule());
 
-        // -- MISC --
-        addModule(new AllowBlockedKeys(), new Fullbright(), new Freezecam(), new Freecam(), new Zoom(), new Tablist());
+    static {
+        Services.PLATFORM.scanForAnnotation(Module.class).forEach(clazz -> {
+            try {
+                addModule((IModule) clazz.getConstructor().newInstance());
+            } catch (Exception e) {
+                Constants.LOG.info("Failed to construct a {}", clazz.getName(), e);
+            }
+        });
 
         ModuleToggle.manager = instance;
         ModuleToggle.toggles.values().forEach(AbstractCachedValue::clearCache);
     }
 
-    public static void addModule(Module... modules) {
+    public static void addModule(IModule... modules) {
         for (var module : modules) {
             ModuleManager.modules.put(module.name(), module);
             module.enabled = false;

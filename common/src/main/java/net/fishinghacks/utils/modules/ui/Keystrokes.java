@@ -3,6 +3,7 @@ package net.fishinghacks.utils.modules.ui;
 import net.fishinghacks.utils.config.values.CachedValue;
 import net.fishinghacks.utils.config.spec.Config;
 import net.fishinghacks.utils.config.spec.ConfigBuilder;
+import net.fishinghacks.utils.modules.Module;
 import net.fishinghacks.utils.modules.ModuleCategory;
 import net.fishinghacks.utils.modules.RenderableModule;
 import net.fishinghacks.utils.Colors;
@@ -12,7 +13,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import org.joml.Vector2i;
 
-public class KeystrokeMod extends RenderableModule {
+@Module(name = "keystrokes", category = ModuleCategory.UI)
+public class Keystrokes extends RenderableModule {
     public static final int buttonSize = 17;
     public static final int textOff = 5;
     public static final int buttonSpacing = 4;
@@ -93,15 +95,5 @@ public class KeystrokeMod extends RenderableModule {
     @Override
     public Vector2i previewSize() {
         return new Vector2i(width, showMouse.get() ? heightMouse : height);
-    }
-
-    @Override
-    public String name() {
-        return "keystrokes";
-    }
-
-    @Override
-    public ModuleCategory category() {
-        return ModuleCategory.UI;
     }
 }

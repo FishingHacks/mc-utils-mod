@@ -3,6 +3,7 @@ package net.fishinghacks.utils.gui;
 import com.mojang.blaze3d.FieldsAreNonnullByDefault;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fishinghacks.utils.ClientConstants;
+import net.fishinghacks.utils.Telemetry;
 import net.fishinghacks.utils.config.Configs;
 import net.fishinghacks.utils.connection.ClientConnectionHandler;
 import net.fishinghacks.utils.gui.components.Button;
@@ -11,6 +12,7 @@ import net.fishinghacks.utils.gui.mcsettings.McSettingsScreen;
 import net.fishinghacks.utils.Colors;
 import net.fishinghacks.utils.Translation;
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -67,6 +69,7 @@ public class GuiOverlayManager {
     }
 
     public static void renderPost(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, Screen screen) {
+        long start = Util.getMillis();
         graphics.flush();
         RenderSystem.getDevice().createCommandEncoder()
             .clearDepthTexture(Objects.requireNonNull(Minecraft.getInstance().getMainRenderTarget().getDepthTexture()),
@@ -77,6 +80,7 @@ public class GuiOverlayManager {
         renderNotifications(graphics, mouseX, mouseY, partialTick);
         if (shouldRenderConnectedServerOverlay(screen))
             renderConnectedServerOverlay(graphics, mouseX, mouseY, partialTick, screen.width);
+        Telemetry.registerRender("Overlay Manager", (int)(Util.getMillis() - start));
     }
 
     private static boolean firstRender = true;

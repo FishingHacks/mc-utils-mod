@@ -3,10 +3,12 @@ package net.fishinghacks.utils.modules.misc;
 import net.fishinghacks.utils.config.values.CachedValue;
 import net.fishinghacks.utils.config.spec.Config;
 import net.fishinghacks.utils.config.spec.ConfigBuilder;
+import net.fishinghacks.utils.modules.IModule;
 import net.fishinghacks.utils.modules.Module;
 import net.fishinghacks.utils.modules.ModuleCategory;
 
-public class Tablist extends Module {
+@Module(name = "tablist", category = ModuleCategory.MISC)
+public class Tablist extends IModule {
     public static boolean isEnabled = false;
     public static boolean showSuffix = false;
     public static boolean showHeader = true;
@@ -27,20 +29,9 @@ public class Tablist extends Module {
         showFooterVal = CachedValue.wrap(cfg, builder, "show_footer", true);
         showFooterVal.onInvalidate(() -> showFooter = showFooterVal.get());
     }
-
-    @Override
-    public String name() {
-        return "tablist";
-    }
-
     @Override
     public void onToggle() {
         super.onToggle();
         isEnabled = enabled;
-    }
-
-    @Override
-    public ModuleCategory category() {
-        return ModuleCategory.MISC;
     }
 }

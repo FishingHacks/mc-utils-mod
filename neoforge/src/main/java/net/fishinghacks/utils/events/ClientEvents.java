@@ -2,6 +2,7 @@ package net.fishinghacks.utils.events;
 
 import net.fishinghacks.utils.Constants;
 import net.fishinghacks.utils.E4MCStore;
+import net.fishinghacks.utils.Telemetry;
 import net.fishinghacks.utils.caching.DownloadTextureCache;
 import net.fishinghacks.utils.commands.CommandManager;
 import net.fishinghacks.utils.connection.ClientConnectionHandler;
@@ -15,6 +16,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.event.lifecycle.ClientStartedEvent;
+import net.neoforged.neoforge.client.event.lifecycle.ClientStoppingEvent;
 import net.neoforged.neoforge.event.CommandEvent;
 
 @EventBusSubscriber(modid = Constants.MOD_ID, value = Dist.CLIENT)
@@ -80,7 +82,13 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void onStarted(ClientStartedEvent ignored) {
+        Telemetry.start("Overlay Manager");
         DownloadTextureCache.loadCaches();
+    }
+    @SubscribeEvent
+    public static void onStopping(ClientStoppingEvent ignored) {
+        Telemetry.stop("Overlay Manager");
+        Telemetry.shutdown();
     }
 
     @SubscribeEvent

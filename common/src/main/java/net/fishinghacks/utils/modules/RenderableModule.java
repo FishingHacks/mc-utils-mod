@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import org.joml.Vector2i;
 
-public abstract class RenderableModule extends Module {
+public abstract class RenderableModule extends IModule {
     public int x = 0;
     public int y = 0;
 

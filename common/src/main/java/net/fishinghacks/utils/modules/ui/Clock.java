@@ -3,6 +3,7 @@ package net.fishinghacks.utils.modules.ui;
 import net.fishinghacks.utils.config.values.CachedValue;
 import net.fishinghacks.utils.config.spec.Config;
 import net.fishinghacks.utils.config.spec.ConfigBuilder;
+import net.fishinghacks.utils.modules.Module;
 import net.fishinghacks.utils.modules.ModuleCategory;
 import net.fishinghacks.utils.modules.RenderableTextModule;
 import net.minecraft.network.chat.Component;
@@ -14,7 +15,8 @@ import java.time.format.TextStyle;
 import java.time.temporal.ChronoField;
 import java.util.List;
 
-public class ClockModule extends RenderableTextModule {
+@Module(name = "clock", category = ModuleCategory.UI)
+public class Clock extends RenderableTextModule {
     private CachedValue<Boolean> twentyFourHours;
     private CachedValue<Boolean> showSeconds;
     private CachedValue<Boolean> showDate;
@@ -51,15 +53,5 @@ public class ClockModule extends RenderableTextModule {
     @Override
     public List<Component> getPreviewText() {
         return List.of(Component.literal(LocalDateTime.of(0, 1, 1, 0, 0, 0).format(formatter)));
-    }
-
-    @Override
-    public String name() {
-        return "clock";
-    }
-
-    @Override
-    public ModuleCategory category() {
-        return ModuleCategory.UI;
     }
 }

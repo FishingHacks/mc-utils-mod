@@ -84,7 +84,7 @@ public class ClickUi extends Screen {
 
     private static class ClickUiCategoryButton implements GuiEventListener, Renderable, NarratableEntry {
         private final ModuleCategory category;
-        private final List<Module> modules = new ArrayList<>();
+        private final List<IModule> modules = new ArrayList<>();
         private int x;
         private int y;
         private Vector2i dragStart = new Vector2i(0);

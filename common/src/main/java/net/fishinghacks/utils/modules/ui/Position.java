@@ -3,6 +3,7 @@ package net.fishinghacks.utils.modules.ui;
 import net.fishinghacks.utils.config.values.CachedValue;
 import net.fishinghacks.utils.config.spec.Config;
 import net.fishinghacks.utils.config.spec.ConfigBuilder;
+import net.fishinghacks.utils.modules.Module;
 import net.fishinghacks.utils.modules.ModuleCategory;
 import net.fishinghacks.utils.modules.RenderableTextModule;
 import net.fishinghacks.utils.Translation;
@@ -16,7 +17,8 @@ import net.minecraft.world.phys.Vec3;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PositionModule extends RenderableTextModule {
+@Module(name = "position", category = ModuleCategory.UI)
+public class Position extends RenderableTextModule {
     private CachedValue<Boolean> showDirection;
     private CachedValue<Boolean> showBiome;
 
@@ -72,15 +74,5 @@ public class PositionModule extends RenderableTextModule {
             entries.add(Translation.Facing.get().copy().append(Translation.West.get()).append("(--)"));
         if (showBiome.get()) entries.add(Component.translatable("biome.minecraft.beach"));
         return entries;
-    }
-
-    @Override
-    public String name() {
-        return "position";
-    }
-
-    @Override
-    public ModuleCategory category() {
-        return ModuleCategory.UI;
     }
 }
