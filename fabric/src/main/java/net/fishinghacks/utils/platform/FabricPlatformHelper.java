@@ -52,19 +52,14 @@ public class FabricPlatformHelper implements IPlatformHelper {
     }
 
     @Override
-    public String getPlatformName() {
-        return "Fabric";
-    }
-
-    @Override
     public boolean isModLoaded(String modId) {
         return FabricLoader.getInstance().isModLoaded(modId);
     }
 
     @Override
-    public boolean isDevelopmentEnvironment() {
+    public boolean isReleaseEnvironment() {
 
-        return FabricLoader.getInstance().isDevelopmentEnvironment();
+        return !FabricLoader.getInstance().isDevelopmentEnvironment();
     }
 
     @Override

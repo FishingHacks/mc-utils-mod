@@ -1,6 +1,5 @@
 package net.fishinghacks.utils.platform;
 
-import net.fishinghacks.utils.Constants;
 import net.fishinghacks.utils.config.ConfigBuilderImpl;
 import net.fishinghacks.utils.platform.services.IConfigBuilder;
 import net.fishinghacks.utils.platform.services.IPlatformHelper;
@@ -17,11 +16,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class NeoForgePlatformHelper implements IPlatformHelper {
-    @Override
-    public String getPlatformName() {
-
-        return "NeoForge";
-    }
 
     @Override
     public boolean isModLoaded(String modid) {
@@ -33,9 +27,9 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
     }
 
     @Override
-    public boolean isDevelopmentEnvironment() {
+    public boolean isReleaseEnvironment() {
 
-        return !FMLLoader.isProduction();
+        return FMLLoader.isProduction();
     }
 
     @Override

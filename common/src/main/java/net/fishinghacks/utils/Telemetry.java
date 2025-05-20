@@ -14,23 +14,23 @@ public class Telemetry {
 
     @NotNull
     private static Entry getEntry(String name) {
-        if (!Services.PLATFORM.isDevelopmentEnvironment())
+        if (Services.PLATFORM.isReleaseEnvironment())
             throw new IllegalStateException("all places should check for development env.");
         return entries.computeIfAbsent(name, Entry::new);
     }
 
     public static void start(String name) {
-        if (!Services.PLATFORM.isDevelopmentEnvironment()) return;
+        if (Services.PLATFORM.isReleaseEnvironment()) return;
         getEntry(name).start();
     }
 
     public static void stop(String name) {
-        if (!Services.PLATFORM.isDevelopmentEnvironment()) return;
+        if (Services.PLATFORM.isReleaseEnvironment()) return;
         getEntry(name).stop();
     }
 
     public static void shutdown() {
-        if (!Services.PLATFORM.isDevelopmentEnvironment()) return;
+        if (Services.PLATFORM.isReleaseEnvironment()) return;
         entries.values().forEach(e -> {
             if (e.isRunning) e.stop();
             e.dumpTelemetry();
@@ -38,7 +38,7 @@ public class Telemetry {
     }
 
     public static void registerRender(String name, int time) {
-        if (!Services.PLATFORM.isDevelopmentEnvironment()) return;
+        if (Services.PLATFORM.isReleaseEnvironment()) return;
         getEntry(name).add(time);
     }
 

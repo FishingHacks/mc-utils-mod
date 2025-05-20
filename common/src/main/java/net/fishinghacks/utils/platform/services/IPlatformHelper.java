@@ -6,13 +6,6 @@ import java.util.Set;
 public interface IPlatformHelper {
 
     /**
-     * Gets the name of the current platform
-     *
-     * @return The name of the current platform.
-     */
-    String getPlatformName();
-
-    /**
      * Checks if a mod with the given id is loaded.
      *
      * @param modId The mod to check if it is loaded.
@@ -25,17 +18,7 @@ public interface IPlatformHelper {
      *
      * @return True if in a development environment, false otherwise.
      */
-    boolean isDevelopmentEnvironment();
+    boolean isReleaseEnvironment();
     IConfigBuilder createConfigBuilder();
     Set<Class<?>> scanForAnnotation(Class<? extends Annotation> annotation);
-
-    /**
-     * Gets the name of the environment type as a string.
-     *
-     * @return The name of the environment type.
-     */
-    default String getEnvironmentName() {
-
-        return isDevelopmentEnvironment() ? "development" : "production";
-    }
 }
