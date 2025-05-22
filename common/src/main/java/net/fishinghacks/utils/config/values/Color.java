@@ -60,6 +60,11 @@ public class Color {
         return new Color(ARGB.color(alpha, this.col));
     }
 
+
+    public Color withAlpha(float alpha) {
+        return new Color(ARGB.color((int) (alpha * 255f), this.col));
+    }
+
     private Color(int col) {
         this.col = col;
     }

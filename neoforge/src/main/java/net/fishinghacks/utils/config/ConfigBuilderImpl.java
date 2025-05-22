@@ -36,6 +36,11 @@ public record ConfigBuilderImpl(ModConfigSpec.Builder builder) implements IConfi
     }
 
     @Override
+    public <T extends Enum<T>> ConfigValue<T> defineEnum(String path, T defaultValue) {
+        return new ConfigValueImpl<>(builder.defineEnum(path, defaultValue));
+    }
+
+    @Override
     public <T> ConfigValue<List<? extends T>> defineListAllowEmpty(String path, List<T> defaultValue,
                                                                    Supplier<T> createElement,
                                                                    Predicate<Object> validator) {

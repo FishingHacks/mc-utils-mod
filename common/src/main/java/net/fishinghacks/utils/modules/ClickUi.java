@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.fishinghacks.utils.Colors;
 import net.fishinghacks.utils.Translation;
 import net.fishinghacks.utils.config.Configs;
+import net.fishinghacks.utils.gui.ActionsListScreen;
 import net.fishinghacks.utils.gui.configuration.ConfigSectionScreen;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -65,9 +66,12 @@ public class ClickUi extends Screen {
             }
         }
         openCategories.values().forEach(this::addRenderableWidget);
+        int middle = width / 2;
         addRenderableWidget(Button.builder(Translation.DragUITitle.get(),
-                button -> Minecraft.getInstance().setScreen(new DragUI(lastScreen))).pos((width - 50) / 2, 0).size(50
-                , 20)
+                button -> Minecraft.getInstance().setScreen(new DragUI(lastScreen))).pos(middle - 52, 0).size(50, 20)
+            .build());
+        addRenderableWidget(Button.builder(Translation.GuiActionsTitle.get(),
+                button -> Minecraft.getInstance().setScreen(new ActionsListScreen(this))).pos(middle + 2, 0).size(50, 20)
             .build());
     }
 

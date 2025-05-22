@@ -74,6 +74,11 @@ public class CachedValue<T> extends AbstractCachedValue<T> {
         return new CachedValue<>(cfg, builder.inner().define(key, defaultValue), builder);
     }
 
+    public static <T extends Enum<T>> CachedValue<T> wrapEnum(Config cfg, ConfigBuilder builder, String key,
+                                                              T defaultValue) {
+        return new CachedValue<>(cfg, builder.inner().defineEnum(key, defaultValue), builder);
+    }
+
     public static <T> CachedValue<List<? extends T>> wrapListEmpty(Config cfg, ConfigBuilder builder, String key,
                                                                    List<T> defaultValue, Supplier<T> defaultElement,
                                                                    Predicate<Object> itemValidator) {

@@ -14,13 +14,15 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-/// EXTENDERS: you have to call `finish` at the end of your constructor. if you are also abstract, let your extenders know this too.
+/// EXTENDERS: you have to call `finish` at the end of your constructor. if you are also abstract, let your extenders
+///  know this too.
 public abstract class AbstractCachedValue<T> {
     private @Nullable Set<InvalidationListener> invalidationListeners;
     private @Nullable T value;
     public final RestartType needsRestart;
 
-    /// EXTENDERS: you have to call `finish` at the end of your constructor. if you are also abstract, let your extenders know this too.
+    /// EXTENDERS: you have to call `finish` at the end of your constructor. if you are also abstract, let your
+    /// extenders know this too.
     protected AbstractCachedValue(Config config, ConfigBuilder builder) {
         this.needsRestart = builder.type;
         config.addCachedValue(this::clearCache);
@@ -31,9 +33,12 @@ public abstract class AbstractCachedValue<T> {
     }
 
     protected abstract T doGet();
+
     /// Getting the underlying value without any checks in-between
     public abstract T getRaw();
+
     public abstract T getDefault();
+
     public abstract boolean isValid(Object value);
 
     public T get() {
@@ -54,7 +59,7 @@ public abstract class AbstractCachedValue<T> {
     protected abstract void doClearCache();
 
     public void save() {
-        doSet(value, true);
+        doSet(value == null ? get() : value, true);
     }
 
     public void onInvalidate(InvalidationListener listener) {

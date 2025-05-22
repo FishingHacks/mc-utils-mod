@@ -1,9 +1,7 @@
 package net.fishinghacks.utils.config;
 
-import net.fishinghacks.utils.config.spec.Config;
-import net.fishinghacks.utils.config.spec.ConfigBuilder;
-import net.fishinghacks.utils.config.spec.ConfigSpec;
-import net.fishinghacks.utils.config.spec.ConfigType;
+import net.fishinghacks.utils.config.spec.*;
+import net.fishinghacks.utils.config.values.ActionListCachedValue;
 import net.fishinghacks.utils.config.values.CachedValue;
 import net.fishinghacks.utils.modules.ModuleManager;
 import net.fishinghacks.utils.platform.services.IConfig;
@@ -22,6 +20,7 @@ public class ClientConfig extends Config {
     public final CachedValue<List<? extends String>> ENABLED_MODULES;
     public final CachedValue<List<? extends String>> SERVICE_SERVER_HISTORY;
     public final CachedValue<Boolean> AUTOCONNECT;
+    public final ActionListCachedValue ACTIONS;
 
     ClientConfig() {
         var builder = new ConfigBuilder();
@@ -49,6 +48,7 @@ public class ClientConfig extends Config {
         SERVICE_SERVER_HISTORY = CachedValue.wrapListEmpty(this, builder, "_service_server_history", () -> "",
             v -> v instanceof String);
         AUTOCONNECT = CachedValue.wrap(this, builder, "autoconnect", false);
+        ACTIONS = ActionListCachedValue.wrap(this, builder, "_actions");
 
         for (var entry : ModuleManager.modules.values()) {
             builder.enterSection(entry.name());

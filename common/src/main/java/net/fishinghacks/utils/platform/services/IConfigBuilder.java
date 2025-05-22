@@ -17,6 +17,7 @@ public interface IConfigBuilder {
 
     ConfigValue<Boolean> define(String path, boolean defaultValue);
     <T> ConfigValue<T> define(String path, T defaultValue);
+    <T extends Enum<T>> ConfigValue<T> defineEnum(String path, T defaultValue);
 
     <T> ConfigValue<List<? extends T>> defineListAllowEmpty(String path, List<T> defaultValue, Supplier<T> createElement,
                                             Predicate<Object> validator);

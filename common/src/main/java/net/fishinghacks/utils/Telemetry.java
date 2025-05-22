@@ -10,27 +10,28 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Telemetry {
+    private static final boolean DISABLE = true;
     private static final HashMap<String, Entry> entries = new HashMap<>();
 
     @NotNull
     private static Entry getEntry(String name) {
-        if (Services.PLATFORM.isReleaseEnvironment())
+        if (Services.PLATFORM.isReleaseEnvironment() || DISABLE)
             throw new IllegalStateException("all places should check for development env.");
         return entries.computeIfAbsent(name, Entry::new);
     }
 
     public static void start(String name) {
-        if (Services.PLATFORM.isReleaseEnvironment()) return;
+        if (Services.PLATFORM.isReleaseEnvironment() || DISABLE) return;
         getEntry(name).start();
     }
 
     public static void stop(String name) {
-        if (Services.PLATFORM.isReleaseEnvironment()) return;
+        if (Services.PLATFORM.isReleaseEnvironment() || DISABLE) return;
         getEntry(name).stop();
     }
 
     public static void shutdown() {
-        if (Services.PLATFORM.isReleaseEnvironment()) return;
+        if (Services.PLATFORM.isReleaseEnvironment() || DISABLE) return;
         entries.values().forEach(e -> {
             if (e.isRunning) e.stop();
             e.dumpTelemetry();
@@ -38,7 +39,7 @@ public class Telemetry {
     }
 
     public static void registerRender(String name, int time) {
-        if (Services.PLATFORM.isReleaseEnvironment()) return;
+        if (Services.PLATFORM.isReleaseEnvironment() || DISABLE) return;
         getEntry(name).add(time);
     }
 

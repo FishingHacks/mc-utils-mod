@@ -51,6 +51,12 @@ public class ConfigBuilderImpl implements IConfigBuilder {
     }
 
     @Override
+    public <T extends Enum<T>> ConfigValue<T> defineEnum(String path, T defaultValue) {
+        Objects.requireNonNull(defaultValue, "Default value can not be null");
+        return define(path, defaultValue, o -> o != null && defaultValue.getClass().isAssignableFrom(o.getClass()));
+    }
+
+    @Override
     public <T> ConfigValue<List<? extends T>> defineListAllowEmpty(String path, List<T> defaultValue,
                                                                    Supplier<T> createElement,
                                                                    Predicate<Object> validator) {

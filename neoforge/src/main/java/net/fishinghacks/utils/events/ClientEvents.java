@@ -85,6 +85,7 @@ public class ClientEvents {
         Telemetry.start("Overlay Manager");
         DownloadTextureCache.loadCaches();
     }
+
     @SubscribeEvent
     public static void onStopping(ClientStoppingEvent ignored) {
         Telemetry.stop("Overlay Manager");

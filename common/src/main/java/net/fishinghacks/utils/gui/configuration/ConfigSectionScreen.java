@@ -10,7 +10,7 @@ import net.fishinghacks.utils.config.spec.Config;
 import net.fishinghacks.utils.config.spec.ConfigSpec;
 import net.fishinghacks.utils.config.spec.RestartType;
 import net.fishinghacks.utils.config.values.AbstractCachedValue;
-import net.fishinghacks.utils.config.values.ColorValue;
+import net.fishinghacks.utils.config.values.CachedColorValue;
 import net.fishinghacks.utils.config.values.CosmeticMapConfigValue;
 import net.fishinghacks.utils.gui.Icons;
 import net.fishinghacks.utils.gui.ListScreen;
@@ -178,7 +178,7 @@ public class ConfigSectionScreen extends ListScreen {
             }
             AbstractCachedValue value = entry.getValue().asCachedValue();
             switch (value) {
-                case ColorValue colorValue -> elements.add(createColorValue(key, colorValue));
+                case CachedColorValue colorValue -> elements.add(createColorValue(key, colorValue));
                 /// Note: this will never be handled as it is server side. connect to the service server and use the
                 /// cosmetics menu or edit the config yourself.
                 case CosmeticMapConfigValue ignored -> elements.add(null);
@@ -209,7 +209,7 @@ public class ConfigSectionScreen extends ListScreen {
         listLayout.arrangeElements();
     }
 
-    private Element createColorValue(final String key, ColorValue value) {
+    private Element createColorValue(final String key, CachedColorValue value) {
         var name = value.getNameTranslation();
         final ColorInput box = new ColorInput(
             new Input.Builder(font, 0, 0, Input.DEFAULT_WIDTH_BIG, Input.DEFAULT_HEIGHT, name).editable(true)

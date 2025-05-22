@@ -18,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
 import org.jetbrains.annotations.Nullable;
+
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
@@ -197,7 +198,7 @@ public class GuiDropdown<T> extends AbstractWidget {
     }
 
     protected void drawScrollingString(GuiGraphics graphics, Font font, Component text, int minX, int maxX, int y,
-                                 int color) {
+                                       int color) {
         int maxWidth = maxX - minX;
         int textWidth = font.width(text.getVisualOrderText());
         if (textWidth <= maxWidth) {

@@ -28,6 +28,8 @@ dependencies {
 
     //    localRuntime "link.e4mc:e4mc_minecraft-neoforge:5.3.1"
     compileOnly "link.e4mc:e4mc_minecraft-neoforge:5.3.1"
+
+    compileOnly "com.electronwill.night-config:core:3.7.0"
 }
 
 configurations {

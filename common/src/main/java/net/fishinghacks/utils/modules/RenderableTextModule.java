@@ -4,7 +4,7 @@ import net.fishinghacks.utils.Colors;
 import net.fishinghacks.utils.config.values.CachedValue;
 import net.fishinghacks.utils.config.spec.Config;
 import net.fishinghacks.utils.config.spec.ConfigBuilder;
-import net.fishinghacks.utils.config.values.ColorValue;
+import net.fishinghacks.utils.config.values.CachedColorValue;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -24,14 +24,14 @@ public abstract class RenderableTextModule extends RenderableModule {
 
     protected CachedValue<Boolean> textShadow;
     protected CachedValue<Boolean> background;
-    protected ColorValue fgCol;
+    protected CachedColorValue fgCol;
 
     @Override
     public void buildConfig(Config cfg, ConfigBuilder builder) {
         super.buildConfig(cfg, builder);
         textShadow = CachedValue.wrap(cfg, builder, "text_shadow", true);
         background = CachedValue.wrap(cfg, builder, "background", true);
-        fgCol = ColorValue.wrap(cfg, builder, "fg_color", Colors.WHITE.toCol());
+        fgCol = CachedColorValue.wrap(cfg, builder, "fg_color", Colors.WHITE.toCol());
     }
 
     private boolean isRightAligned() {

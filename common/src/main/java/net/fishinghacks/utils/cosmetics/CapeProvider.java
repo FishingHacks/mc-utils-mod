@@ -6,9 +6,11 @@ package net.fishinghacks.utils.cosmetics;
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.platform.NativeImage;
 import net.fishinghacks.utils.caching.DownloadTextureCache;
+import net.fishinghacks.utils.platform.Services;
 import org.jetbrains.annotations.NotNull;
 
 import org.jetbrains.annotations.Nullable;
+
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
@@ -39,7 +41,7 @@ public enum CapeProvider {
             case ServiceProvider -> ServiceProviderGetter.get(profile.getId());
             case Builtin -> {
                 if (Objects.equals(profile.getId().toString(),
-                    "2a312138-2b30-4a6c-b43d-784d0d755e44") ) {
+                    "2a312138-2b30-4a6c-b43d-784d0d755e44") || !Services.PLATFORM.isReleaseEnvironment()) {
                     yield DownloadTextureCache.capeGallery.getOrLoad(
                         "014fe5e6a44df115dfeeb631cd4ccce0843de3f5beaad15f7f98d31af7e6ef94");
                 }
