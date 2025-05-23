@@ -22,7 +22,7 @@ public class Keystrokes extends RenderableModule {
     public static final int spaceHeight = 10;
     public static final int height = 2 * buttonSpacing + 2 * buttonSize + spaceHeight;
     public static final int heightMouse = height + buttonSize + buttonSpacing;
-    public static final int mouseBtnWidth = (width - buttonSpacing) / 2;
+    public static final int mouseBtnWidth = (width - 5) / 2;
 
     private CachedValue<Boolean> showMouse;
 
@@ -76,7 +76,7 @@ public class Keystrokes extends RenderableModule {
         y += spaceHeight + buttonSpacing;
         x = this.x;
         drawMouseButton(graphics, x, y, lmb, Translation.Lmb.get());
-        x += mouseBtnWidth + buttonSpacing;
+        x += mouseBtnWidth + 5;
         drawMouseButton(graphics, x, y, rmb, Translation.Rmb.get());
     }
 

@@ -36,10 +36,16 @@ public class ClickUi extends Screen {
     @Nullable
     private final Screen lastScreen;
     private boolean isPrimary = true;
+    private final Screen dragUi;
 
-    public ClickUi(@Nullable Screen lastScreen) {
+    public ClickUi(@Nullable Screen lastScreen, @Nullable Screen dragUi) {
         super(Translation.ClickUITitle.get());
         this.lastScreen = lastScreen;
+        this.dragUi = dragUi == null ? new DragUI(lastScreen, this) : dragUi;
+    }
+
+    public ClickUi(@Nullable Screen lastScreen) {
+        this(lastScreen, null);
     }
 
     @Override
@@ -67,11 +73,12 @@ public class ClickUi extends Screen {
         }
         openCategories.values().forEach(this::addRenderableWidget);
         int middle = width / 2;
-        addRenderableWidget(Button.builder(Translation.DragUITitle.get(),
-                button -> Minecraft.getInstance().setScreen(new DragUI(lastScreen))).pos(middle - 52, 0).size(50, 20)
-            .build());
+        addRenderableWidget(
+            Button.builder(Translation.DragUITitle.get(), button -> Minecraft.getInstance().setScreen(dragUi))
+                .pos(middle - 52, 0).size(50, 20).build());
         addRenderableWidget(Button.builder(Translation.GuiActionsTitle.get(),
-                button -> Minecraft.getInstance().setScreen(new ActionsListScreen(this))).pos(middle + 2, 0).size(50, 20)
+                button -> Minecraft.getInstance().setScreen(new ActionsListScreen(this))).pos(middle + 2, 0).size(50,
+                20)
             .build());
     }
 
@@ -82,8 +89,9 @@ public class ClickUi extends Screen {
 
     @Override
     public void renderBackground(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        if (!isPrimary) return;
-        renderTransparentBackground(guiGraphics);
+        if (minecraft != null && minecraft.level != null) {
+            if (isPrimary) renderTransparentBackground(guiGraphics);
+        } else renderPanorama(guiGraphics, partialTick);
     }
 
     private static class ClickUiCategoryButton implements GuiEventListener, Renderable, NarratableEntry {

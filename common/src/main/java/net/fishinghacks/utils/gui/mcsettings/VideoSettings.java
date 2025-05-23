@@ -30,11 +30,14 @@ public class VideoSettings implements OptionSubscreen {
             videoMode.getRefreshRate(), videoMode.getRedBits() + videoMode.getGreenBits() + videoMode.getBlueBits());
     }
 
-    private static List<OptionInstance<?>> options(Options options) {
+    private static List<OptionInstance<?>> options1(Options options) {
         return List.of(options.biomeBlendRadius(), options.graphicsMode(), options.renderDistance(),
             options.prioritizeChunkUpdates(), options.simulationDistance(), options.ambientOcclusion(),
-            options.framerateLimit(), options.enableVsync(), options.inactivityFpsLimit(), options.guiScale(),
-            options.attackIndicator(), options.gamma(), options.cloudStatus(), options.fullscreen(),
+            options.framerateLimit(), options.enableVsync(), options.inactivityFpsLimit());// options.guiScale(),
+    }
+
+    private static List<OptionInstance<?>> options2(Options options) {
+        return List.of(options.attackIndicator(), options.gamma(), options.cloudStatus(), options.fullscreen(),
             options.particles(), options.mipmapLevels(), options.entityShadows(), options.screenEffectScale(),
             options.entityDistanceScaling(), options.fovEffectScale(), options.showAutosaveIndicator(),
             options.glintSpeed(), options.glintStrength(), options.menuBackgroundBlurriness(), options.bobView());
@@ -67,9 +70,14 @@ public class VideoSettings implements OptionSubscreen {
         layout.addChild(
             new ConfigSection(Component.translatable("options.fullscreen.resolution"), widget, configWidth));
 
-        for (var opt : options(options)) {
-            layout.addChild(OptionUtils.configFromOptionInstance(opt, configWidth));
-        }
+        for (var opt : options1(options)) layout.addChild(OptionUtils.configFromOptionInstance(opt, configWidth));
+        var guiScaleDropdown = new GuiDropdown<>(options.guiScale().get(),
+            value -> value == 0 ? Component.translatable("options.guiScale.auto") : Component.literal(
+                Integer.toString(value)), List.of(0, 1, 2, 3, 4));
+        guiScaleDropdown.onValueChange((ignored, value) -> options.guiScale().set(value));
+        guiScaleDropdown.setWidth(Slider.DEFAULT_WIDTH);
+        layout.addChild(new ConfigSection(Component.translatable("options.guiScale"), guiScaleDropdown, configWidth));
+        for (var opt : options2(options)) layout.addChild(OptionUtils.configFromOptionInstance(opt, configWidth));
     }
 
     public void onClose(Options options) {

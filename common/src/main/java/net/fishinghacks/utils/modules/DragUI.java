@@ -3,27 +3,33 @@ package net.fishinghacks.utils.modules;
 import net.fishinghacks.utils.Colors;
 import net.fishinghacks.utils.Translation;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.screens.Screen;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector2i;
 
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.glfw.GLFW;
+
 import java.util.Objects;
 
 public class DragUI extends Screen {
     @Nullable
     private final Screen lastScreen;
+    private final Screen clickUi;
 
-    public DragUI(@Nullable Screen lastScreen) {
+    public DragUI(@Nullable Screen lastScreen, @Nullable Screen clickUi) {
         super(Translation.ClickUITitle.get());
         this.lastScreen = lastScreen;
+        this.clickUi = clickUi == null ? new ClickUi(lastScreen, this) : clickUi;
     }
 
     @Override
@@ -34,13 +40,26 @@ public class DragUI extends Screen {
             if (module instanceof RenderableModule renderableModule)
                 this.addRenderableWidget(new RenderableModulePreview(renderableModule, width, height));
         });
-        addRenderableWidget(Button.builder(Translation.ClickUITitle.get(),
-                button -> Minecraft.getInstance().setScreen(new ClickUi(lastScreen))).pos((width - 50) / 2, 0).size(50, 20)
-            .build());
+        addRenderableWidget(
+            Button.builder(Translation.ClickUITitle.get(), button -> Minecraft.getInstance().setScreen(clickUi))
+                .pos((width - 50) / 2, 0).size(50, 20).build());
     }
 
     @Override
     public void renderBackground(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        if (minecraft == null || minecraft.level == null) renderPanorama(guiGraphics, partialTick);
+    }
+
+    @Override
+    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
+        if (getFocused() instanceof RenderableModulePreview p) p.renderOutline(guiGraphics);
+    }
+
+    @Override
+    public void onClose() {
+        assert minecraft != null;
+        minecraft.setScreen(lastScreen);
     }
 
     private static final class RenderableModulePreview implements GuiEventListener, Renderable, NarratableEntry {
@@ -50,6 +69,7 @@ public class DragUI extends Screen {
         private boolean dragging;
         private final int screenWidth;
         private final int screenHeight;
+        private boolean focused = false;
 
         private RenderableModulePreview(RenderableModule module, int screenWidth, int screenHeight) {
             this.module = module;
@@ -75,14 +95,19 @@ public class DragUI extends Screen {
         public void render(@NotNull GuiGraphics guiGraphics, int i, int i1, float partialTick) {
             if (!module.enabled) return;
             clamp();
-            guiGraphics.fill(module.x, module.y, module.x + size.x, module.y + size.y,
-                Colors.BLACK.withAlpha(0x7f));
+            guiGraphics.fill(module.x, module.y, module.x + size.x, module.y + size.y, Colors.BLACK.withAlpha(0x7f));
             module.renderPreview(guiGraphics, partialTick);
+        }
+
+        public void renderOutline(@NotNull GuiGraphics guiGraphics) {
+            if (focused) guiGraphics.renderOutline(module.x - 1, module.y - 1, size.x + 2, size.y + 2,
+                Colors.CYAN.withAlpha(0x7f));
         }
 
         @Override
         public boolean mouseReleased(double mouseX, double mouseY, int button) {
             dragging = false;
+            clamp();
             module.savePos();
             return GuiEventListener.super.mouseReleased(mouseX, mouseY, button);
         }
@@ -115,12 +140,30 @@ public class DragUI extends Screen {
         }
 
         @Override
-        public void setFocused(boolean b) {
+        public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+            int amount = (modifiers & GLFW.GLFW_MOD_SHIFT) > 0 ? 10 : 1;
+            switch (keyCode) {
+                case GLFW.GLFW_KEY_LEFT -> module.x -= amount;
+                case GLFW.GLFW_KEY_RIGHT -> module.x += amount;
+                case GLFW.GLFW_KEY_UP -> module.y -= amount;
+                case GLFW.GLFW_KEY_DOWN -> module.y += amount;
+                default -> {
+                    return false;
+                }
+            }
+            clamp();
+            module.savePos();
+            return true;
+        }
+
+        @Override
+        public void setFocused(boolean focused) {
+            this.focused = focused;
         }
 
         @Override
         public boolean isFocused() {
-            return false;
+            return focused;
         }
 
         @Override
@@ -135,6 +178,11 @@ public class DragUI extends Screen {
         @Override
         public int hashCode() {
             return Objects.hash(module);
+        }
+
+        @Override
+        public @Nullable ComponentPath nextFocusPath(@NotNull FocusNavigationEvent event) {
+            return focused ? null : ComponentPath.leaf(this);
         }
 
         @Override

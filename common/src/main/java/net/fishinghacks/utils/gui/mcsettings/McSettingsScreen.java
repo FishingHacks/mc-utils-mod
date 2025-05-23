@@ -51,7 +51,7 @@ public class McSettingsScreen extends ListScreen {
         if (width > Button.BIG_WIDTH + 18) return width * 3;
         width = this.width / 3;
         if (width > Button.BIG_WIDTH + 18) return width * 2;
-        return width / 2;
+        return Math.max(this.width - Button.BIG_WIDTH - 30, 0);
     }
 
     @Override
@@ -107,7 +107,7 @@ public class McSettingsScreen extends ListScreen {
     @Override
     protected void buildList() {
         if (subscreen == null) subscreen = current.getSubscreen(minecraft, options);
-        if(minecraft != null && minecraft.level != null) {
+        if (minecraft != null && minecraft.level != null) {
             subscreen.addElements(listLayout, options, listWidth, this);
             return;
         }
