@@ -35,7 +35,7 @@ public class GenericCache<K, V> {
             .build(new CacheLoader<>() {
                 @Override
                 public CompletableFuture<V> load(@NotNull K key) {
-                    return GenericCache.this.load(key).thenCompose(type::process).exceptionallyCompose(e -> {
+                    return GenericCache.this.downloadBytes(key).thenCompose(type::process).exceptionallyCompose(e -> {
                         LOGGER.info("Failed to load {}", key, e);
                         return CompletableFuture.failedStage(e);
                     });
@@ -50,15 +50,31 @@ public class GenericCache<K, V> {
     private static void onRemove(RemovalNotification<Object, Object> objectObjectRemovalNotification) {
         Object key = objectObjectRemovalNotification.getKey();
         Object value = objectObjectRemovalNotification.getValue();
-        try {
-            if (key instanceof AutoCloseable a) a.close();
-        } catch (Exception e) {
-            LOGGER.error("Failed to close {}", key, e);
+        if (key == null) key = "";
+        if (value == null) value = "";
+        delete(key);
+        delete(value);
+        if (key instanceof CompletableFuture<?> future) {
+            if (future.isDone()) try {
+                delete(future.get());
+            } catch (Exception ignored) {
+            }
+            else future.thenAccept(GenericCache::delete);
         }
+        if (value instanceof CompletableFuture<?> future) {
+            if (future.isDone()) try {
+                delete(future.get());
+            } catch (Exception ignored) {
+            }
+            else future.thenAccept(GenericCache::delete);
+        }
+    }
+
+    private static void delete(Object obj) {
         try {
-            if (value instanceof AutoCloseable a) a.close();
+            if (obj instanceof AutoCloseable a) a.close();
         } catch (Exception e) {
-            LOGGER.error("Failed to close value of {} ({})", key, value, e);
+            LOGGER.error("Failed to close value {}", obj);
         }
     }
 
@@ -70,14 +86,14 @@ public class GenericCache<K, V> {
         return cache.getUnchecked(key);
     }
 
-    public CompletableFuture<byte[]> load(K key) {
+    private CompletableFuture<byte[]> downloadBytes(K key) {
         Downloader downloader = type.getDownloader(key);
         Path path = type.getCacheFile(key, root);
 
-        return download(path, key, downloader, Util.nonCriticalIoPool());
+        return downloadBytes(path, key, downloader, Util.nonCriticalIoPool());
     }
 
-    private CompletableFuture<byte[]> download(Path path, K key, Downloader downloader, Executor executor) {
+    private CompletableFuture<byte[]> downloadBytes(Path path, K key, Downloader downloader, Executor executor) {
         if (Files.isRegularFile(path)) {
             return CompletableFuture.supplyAsync(() -> {
                 LOGGER.debug("Loading HTTP texture from local cache ({})", path);

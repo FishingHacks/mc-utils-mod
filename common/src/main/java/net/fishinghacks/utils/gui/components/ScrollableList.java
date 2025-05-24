@@ -9,6 +9,7 @@ import net.minecraft.client.gui.layouts.LayoutElement;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.navigation.FocusNavigationEvent;
+import net.minecraft.client.gui.navigation.ScreenDirection;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
@@ -101,7 +102,7 @@ public class ScrollableList extends AbstractWidget {
 
         @Override
         public void setFocused(boolean b) {
-            child.setFocused(true);
+            child.setFocused(b);
         }
 
         @Override
@@ -121,8 +122,7 @@ public class ScrollableList extends AbstractWidget {
 
         @Override
         public @Nullable ComponentPath nextFocusPath(@NotNull FocusNavigationEvent event) {
-            if (child.active && child.visible && !child.isFocused()) return ComponentPath.leaf(this);
-            return null;
+            return child.active && child.visible && !child.isFocused() ? ComponentPath.leaf(this) : null;
         }
 
         public boolean mouseClicked(double mouseX, double mouseY, int button) {
@@ -162,6 +162,11 @@ public class ScrollableList extends AbstractWidget {
 
         public boolean isMouseOver(double mouseX, double mouseY) {
             return list.getBounds().containsPoint((int) mouseX, (int) mouseY) && child.isMouseOver(mouseX, mouseY);
+        }
+
+        @Override
+        public @NotNull ScreenRectangle getBorderForArrowNavigation(@NotNull ScreenDirection direction) {
+            return child.getBorderForArrowNavigation(direction);
         }
     }
 }

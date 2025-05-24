@@ -52,14 +52,6 @@ public class GuiOverlayManager {
         GuiOverlayManager.overlay = overlay;
     }
 
-    public static void setOverlay(AbstractWidget owner, ScreenRectangle rectangle, Render render) {
-        setOverlay(owner, rectangle, (a, b, c, d, i1, i2) -> render.render(a, b, c, d));
-    }
-
-    public static void setOverlay(AbstractWidget owner, ScreenRectangle rectangle, RenderAt render) {
-        setOverlay(new Overlay(owner, render, rectangle));
-    }
-
     public static void setOverlay(AbstractWidget owner, int x, int y, int width, int height, Render render) {
         setOverlay(owner, x, y, width, height, (a, b, c, d, i1, i2) -> render.render(a, b, c, d));
     }
@@ -80,7 +72,7 @@ public class GuiOverlayManager {
         renderNotifications(graphics, mouseX, mouseY, partialTick);
         if (shouldRenderConnectedServerOverlay(screen))
             renderConnectedServerOverlay(graphics, mouseX, mouseY, partialTick, screen.width);
-        Telemetry.registerRender("Overlay Manager", (int)(Util.getMillis() - start));
+        Telemetry.registerRender("Overlay Manager", (int) (Util.getMillis() - start));
     }
 
     private static boolean firstRender = true;
@@ -119,6 +111,7 @@ public class GuiOverlayManager {
         }
         return false;
     }
+
     public static boolean onClick(int mouseX, int mouseY, int button) {
         if (overlay != null && overlay.rectangle.containsPoint(mouseX, mouseY)) {
             overlay.owner.mouseClicked(mouseX, mouseY, button);
@@ -152,11 +145,11 @@ public class GuiOverlayManager {
     }
 
     public static Notification addNotification(Component message, List<Notification.NotifyButton> buttons) {
-        return addNotification(message, buttons, Duration.ofSeconds(15));
+        return addNotification(Duration.ofSeconds(15), message, buttons);
     }
 
-    public static Notification addNotification(Component message, List<Notification.NotifyButton> buttons,
-                                               Duration openDuration) {
+    public static Notification addNotification(Duration openDuration, Component message,
+                                               List<Notification.NotifyButton> buttons) {
         Notification notification = new Notification(message, buttons, openDuration);
         notifications.add(notification);
         repositionNotifications = true;
@@ -197,7 +190,7 @@ public class GuiOverlayManager {
         return (screen instanceof MainScreen) || (screen instanceof TitleScreen) || (screen instanceof OptionsScreen) || (screen instanceof McSettingsScreen) || (screen instanceof PauseScreen) || (screen instanceof PauseMenuScreen);
     }
 
-    private static void renderConnectedServerOverlay(GuiGraphics graphics, int mouseX, int mouseY, float partialTick,
+    private static void renderConnectedServerOverlay(GuiGraphics graphics, int mouseX, int mouseY, float ignoredPartialTick,
                                                      int screenWidth) {
         serviceServerSettings.setX(screenWidth - 2 - serviceServerSettings.getWidth());
         serviceServerSettings.render(RenderType.guiOverlay(), graphics, mouseX, mouseY);

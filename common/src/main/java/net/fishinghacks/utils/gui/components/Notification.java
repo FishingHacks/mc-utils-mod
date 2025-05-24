@@ -112,6 +112,7 @@ public class Notification extends UnfocusableWidget {
     }
 
     public boolean checkForRemoval() {
+        if (durationMillis == 0) return false;
         if (Util.getMillis() - startMillis > durationMillis) {
             close();
             return true;
@@ -121,16 +122,18 @@ public class Notification extends UnfocusableWidget {
 
     @Override
     protected void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        if (isHovered) startMillis += Util.getMillis() - lastRenderMillis;
-        lastRenderMillis = Util.getMillis();
-
         RenderType overlay = RenderType.guiOverlay();
         guiGraphics.fill(overlay, getX(), getY(), getRight(), getBottom(), Colors.DARK.get());
         guiGraphics.fill(overlay, getX() + 1, getY() + 1, getRight() - 1, getBottom() - 1, Colors.BG_DARK.get());
-        int millisSinceStart = (int) Math.min(Util.getMillis() - startMillis, durationMillis);
-        int progress = millisSinceStart * getWidth() / (int) durationMillis;
-        guiGraphics.fill(overlay, getX(), getY(), getX() + progress, getY() + 2,
-            isHovered ? Colors.GRAY.get() : Colors.DARK_HIGHLIGHT.get());
+        if (durationMillis != 0) {
+            if (isHovered) startMillis += Util.getMillis() - lastRenderMillis;
+            lastRenderMillis = Util.getMillis();
+
+            int millisSinceStart = (int) Math.min(Util.getMillis() - startMillis, durationMillis);
+            int progress = millisSinceStart * getWidth() / (int) durationMillis;
+            guiGraphics.fill(overlay, getX(), getY(), getX() + progress, getY() + 2,
+                isHovered ? Colors.GRAY.get() : Colors.DARK_HIGHLIGHT.get());
+        }
 
         int textX = getX() + 1 + textPadding;
         int textY = getY() + 2 + textPadding;

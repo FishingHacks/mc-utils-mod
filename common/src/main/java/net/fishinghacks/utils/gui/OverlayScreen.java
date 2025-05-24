@@ -19,7 +19,6 @@ public abstract class OverlayScreen extends Screen {
     protected int overlayHeight;
     protected int x;
     protected int y;
-    protected Button closeButton;
 
     protected OverlayScreen(Component title, @Nullable Screen parent, int width, int height) {
         super(title);

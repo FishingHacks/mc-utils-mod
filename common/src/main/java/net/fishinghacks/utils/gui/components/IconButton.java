@@ -14,24 +14,16 @@ import java.util.function.Consumer;
 public class IconButton extends Button {
     public static final int DEFAULT_WIDTH = Button.CUBE_WIDTH;
 
-    private ResourceLocation icon;
+    private final ResourceLocation icon;
     private int iconWidth;
     private int iconHeight;
+    public int color = Colors.WHITE.get();
 
     protected IconButton(int x, int y, ResourceLocation icon, @Nullable Consumer<Button> onPress) {
         super(x, y, DEFAULT_WIDTH, DEFAULT_HEIGHT, Component.empty(), onPress);
 
         this.icon = icon;
         this.recomputeSize();
-    }
-
-    public ResourceLocation getIcon() {
-        return icon;
-    }
-
-    public void setIcon(ResourceLocation icon) {
-        this.icon = icon;
-        recomputeSize();
     }
 
     private void recomputeSize() {
@@ -53,12 +45,13 @@ public class IconButton extends Button {
         guiGraphics.blit(RenderType::guiTextured, icon, getX() + offsetX + 1, getY() + offsetY + 1, 0, 0, displayWidth,
             displayHeight, iconWidth, iconHeight, iconWidth, iconHeight, Colors.BLACK.get());
         guiGraphics.blit(RenderType::guiTextured, icon, getX() + offsetX, getY() + offsetY, 0, 0, displayWidth,
-            displayHeight, iconWidth, iconHeight, iconWidth, iconHeight, Colors.WHITE.get());
+            displayHeight, iconWidth, iconHeight, iconWidth, iconHeight, color);
     }
 
     public static class Builder {
         protected int x = 0;
         protected int y = 0;
+        protected int color = Colors.WHITE.get();
         protected boolean active = true;
         protected ResourceLocation icon;
         protected @Nullable Consumer<Button> onPress = null;
@@ -70,6 +63,7 @@ public class IconButton extends Button {
         public IconButton build() {
             IconButton b = new IconButton(x, y, icon, onPress);
             b.active = active;
+            b.color = color;
             return b;
         }
 
@@ -94,8 +88,8 @@ public class IconButton extends Button {
             return this;
         }
 
-        public Builder icon(ResourceLocation icon) {
-            this.icon = icon;
+        public Builder color(int color) {
+            this.color = color;
             return this;
         }
 

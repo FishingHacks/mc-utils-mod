@@ -10,6 +10,7 @@ import net.fishinghacks.utils.gui.configuration.ConfigSectionScreen;
 import net.fishinghacks.utils.gui.cosmetics.CosmeticsScreen;
 import net.fishinghacks.utils.gui.mcsettings.McSettingsScreen;
 import net.fishinghacks.utils.Colors;
+import net.fishinghacks.utils.gui.screenshots.ScreenshotsScreen;
 import net.fishinghacks.utils.modules.ClickUi;
 import net.fishinghacks.utils.platform.ClientServices;
 import net.minecraft.FieldsAreNonnullByDefault;
@@ -106,34 +107,37 @@ public class MainScreen extends Screen {
         int x = width - 5 - Button.CUBE_WIDTH;
 
         y += addRenderableWidget(new IconButton.Builder(Icons.MACROS).pos(x, y).build()).getHeight() + 4;
-        y += addRenderableWidget(new IconButton.Builder(Icons.SCREENSHOTS).pos(x, y).build()).getHeight() + 4;
+        y += addRenderableWidget(new IconButton.Builder(Icons.SCREENSHOTS).onPress(
+            ignored -> minecraft.setScreen(new ScreenshotsScreen(this))).pos(x, y).build()).getHeight() + 4;
         cosmeticButton = addRenderableWidget(new IconButton.Builder(Icons.COSMETICS).pos(x, y)
             .onPress(ignored -> minecraft.setScreen(new CosmeticsScreen(this))).build());
         y += cosmeticButton.getHeight() + 4;
         y += addRenderableWidget(new IconButton.Builder(Icons.SETTINGS).pos(x, y)
             .onPress(ignored -> minecraft.setScreen(new ConfigSectionScreen(this))).build()).getHeight() + 4;
         addRenderableWidget(
-            Button.Builder.cube('M').pos(x, y).onPress(ignored -> minecraft.setScreen(new ClickUi(this)))
+            new IconButton.Builder(Icons.MODULES).pos(x, y).onPress(ignored -> minecraft.setScreen(new ClickUi(this)))
                 .build()).getHeight();
     }
 
     private void buildSidebarBig(int x) {
         assert minecraft != null;
         int y = height / 3;
-        y += addRenderableWidget(new IconTextButton.Builder(Icons.MACROS, Component.literal("Macros")).x(x + 300).y(y)
-            .build()).getHeight() + 4;
         y += addRenderableWidget(
-            new IconTextButton.Builder(Icons.SCREENSHOTS, Component.literal("Screenshots")).x(x + 300).y(y)
+            new IconTextButton.Builder(Icons.MACROS, Translation.MainGuiButtonMacros.get()).x(x + 300).y(y)
                 .build()).getHeight() + 4;
+        y += addRenderableWidget(
+            new IconTextButton.Builder(Icons.SCREENSHOTS, Translation.ScreenshotGuiTitle.get()).onPress(
+                ignored -> minecraft.setScreen(new ScreenshotsScreen(this))).x(x + 300).y(y).build()).getHeight() + 4;
         cosmeticButton = addRenderableWidget(
-            new IconTextButton.Builder(Icons.COSMETICS, Component.literal("Cosmetics")).x(x + 300).y(y)
+            new IconTextButton.Builder(Icons.COSMETICS, Translation.CosmeticGuiTitle.get()).x(x + 300).y(y)
                 .onPress(ignored -> minecraft.setScreen(new CosmeticsScreen(this))).build());
         y += cosmeticButton.getHeight() + 4;
         y += addRenderableWidget(
-            new IconTextButton.Builder(Icons.SETTINGS, Component.literal("Settings")).x(x + 300).y(y)
+            new IconTextButton.Builder(Icons.SETTINGS, Translation.MainGuiButtonSettings.get()).x(x + 300).y(y)
                 .onPress(ignored -> minecraft.setScreen(new ConfigSectionScreen(this))).build()).getHeight() + 4;
-        addRenderableWidget(Button.Builder.normal(Component.literal("Modules")).x(x + 300).y(y)
-            .onPress(ignored -> minecraft.setScreen(new ClickUi(this))).build()).getHeight();
+        addRenderableWidget(
+            new IconTextButton.Builder(Icons.MODULES, Translation.MainGuiButtonModules.get()).x(x + 300).y(y)
+                .onPress(ignored -> minecraft.setScreen(new ClickUi(this))).build()).getHeight();
     }
 
     @Override
