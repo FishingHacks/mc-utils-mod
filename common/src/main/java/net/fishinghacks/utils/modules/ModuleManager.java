@@ -43,6 +43,7 @@ public class ModuleManager implements ModuleManagerLike {
     }
 
     public static void enableModule(String name) {
+        if(!modules.containsKey(name)) return;
         if (enabledModules.contains(name)) return;
         enabledModules.add(name);
         modules.get(name).setEnabled(true);

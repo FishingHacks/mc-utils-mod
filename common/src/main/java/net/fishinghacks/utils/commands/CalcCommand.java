@@ -86,13 +86,16 @@ public class CalcCommand extends ArgDotCommand {
 
     private String join(String[] content, int startPos) {
         StringBuilder contentString = new StringBuilder();
-        for (int i = startPos; i < content.length; ++i) contentString.append(content[i]);
+        for (int i = startPos; i < content.length; ++i) {
+            if (i != 0) contentString.append(' ');
+            contentString.append(content[i]);
+        }
         return contentString.toString();
     }
 
     @Override
     public void run(String[] args, ChatListener listener) {
-        switch (args[0]) {
+        switch (args.length > 0 ? args[0] : null) {
             case "calc" -> runCalculation(join(args, 1), listener);
             case "nether", "overworld" -> {
                 int x;
@@ -158,7 +161,7 @@ public class CalcCommand extends ArgDotCommand {
                         Translation.CmdCalcParseIntFailed.with(args[1]).withStyle(ChatFormatting.RED), false);
                 }
             }
-            default -> listener.handleSystemMessage(
+            case null, default -> listener.handleSystemMessage(
                 Translation.CmdCalcInvalidSubcommand.with(args[0]).withStyle(ChatFormatting.RED), false);
         }
     }

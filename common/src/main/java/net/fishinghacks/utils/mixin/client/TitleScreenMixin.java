@@ -3,6 +3,7 @@ package net.fishinghacks.utils.mixin.client;
 import net.fishinghacks.utils.Translation;
 import net.fishinghacks.utils.connection.ClientConnectionHandler;
 import net.fishinghacks.utils.gui.Icons;
+import net.fishinghacks.utils.gui.MacrosScreen;
 import net.fishinghacks.utils.gui.components.Button;
 import net.fishinghacks.utils.gui.components.VanillaIconButton;
 import net.fishinghacks.utils.gui.components.VanillaIconTextButton;
@@ -49,7 +50,8 @@ public class TitleScreenMixin extends Screen {
         assert minecraft != null;
         int x = width - 5 - Button.CUBE_WIDTH;
 
-        y += addRenderableWidget(new VanillaIconButton(x, y, Icons.MACROS)).getHeight() + 4;
+        y += addRenderableWidget(
+            new VanillaIconButton(x, y, Icons.MACROS, ignored -> MacrosScreen.open())).getHeight() + 4;
         y += addRenderableWidget(new VanillaIconButton(x, y, Icons.SCREENSHOTS,
             ignored -> minecraft.setScreen(new ScreenshotsScreen(this)))).getHeight() + 4;
         utils_mod_multiloader$cosmeticButton = addRenderableWidget(
@@ -65,8 +67,8 @@ public class TitleScreenMixin extends Screen {
     private void utils_mod_multiloader$buildSidebarBig(int x, int y) {
         x += 300;
         assert minecraft != null;
-        y += addRenderableWidget(
-            new VanillaIconTextButton(x, y, Icons.MACROS, Translation.MainGuiButtonMacros.get())).getHeight() + 4;
+        y += addRenderableWidget(new VanillaIconTextButton(x, y, Icons.MACROS, Translation.MainGuiButtonMacros.get(),
+            ignored -> MacrosScreen.open())).getHeight() + 4;
         y += addRenderableWidget(
             new VanillaIconTextButton(x, y, Icons.SCREENSHOTS, Translation.ScreenshotGuiTitle.get(),
                 ignored -> minecraft.setScreen(new ScreenshotsScreen(this)))).getHeight() + 4;

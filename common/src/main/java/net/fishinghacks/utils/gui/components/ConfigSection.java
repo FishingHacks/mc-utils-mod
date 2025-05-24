@@ -33,19 +33,6 @@ public class ConfigSection implements LayoutElement {
             .build();
     }
 
-    public ConfigSection(int margin, int x, int y, Component header, AbstractWidget widget, int width) {
-        this(margin, x, y, header, null, widget, width);
-    }
-
-
-    public ConfigSection(int x, int y, Component header, @Nullable Component footer,
-                         AbstractWidget widget, int width) {
-        this(DEFAULT_MARGIN, x, y, header, footer, widget, width);
-    }
-
-    public ConfigSection(int x, int y, Component header, AbstractWidget widget, int width) {
-        this(DEFAULT_MARGIN, x, y, header, null, widget, width);
-    }
 
     public ConfigSection(Component header, @Nullable Component footer, AbstractWidget widget, int width) {
         this(DEFAULT_MARGIN, 0, 0, header, footer, widget, width);
@@ -61,7 +48,7 @@ public class ConfigSection implements LayoutElement {
 
     @Override
     public void setX(int x) {
-        header.setX(margin + x);
+        header.setX(margin + x + 2);
         widget.setX(x + width - widget.getWidth() - margin);
         if (footer != null) footer.setX(margin + x);
     }

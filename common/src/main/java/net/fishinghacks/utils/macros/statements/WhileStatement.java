@@ -3,7 +3,7 @@ package net.fishinghacks.utils.macros.statements;
 import net.fishinghacks.utils.macros.BreakoutException;
 import net.fishinghacks.utils.macros.EvalContext;
 import net.fishinghacks.utils.macros.Executor;
-import net.fishinghacks.utils.macros.MathException;
+import net.fishinghacks.utils.macros.MacroException;
 import net.fishinghacks.utils.macros.exprs.Expression;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public class WhileStatement extends Statement {
     }
 
     @Override
-    protected void run(EvalContext context) throws MathException, BreakoutException {
+    protected void run(EvalContext context) throws MacroException, BreakoutException {
         while (condition.eval(context).asBoolean()) {
             Executor.checkExit(context);
             context.enterScope();

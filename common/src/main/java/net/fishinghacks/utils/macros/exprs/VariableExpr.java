@@ -5,10 +5,10 @@ import net.fishinghacks.utils.macros.parsing.Location;
 
 public record VariableExpr(String name, Location location) implements Expression {
     @Override
-    public LiteralValue eval(EvalContext context) throws MathException, BreakoutException.EvalShouldStop {
+    public LiteralValue eval(EvalContext context) throws MacroException, BreakoutException.EvalShouldStop {
         var variable = context.lookup(name);
         if (variable.isEmpty())
-            throw new MathException(Translation.UnboundVariable.with(name), location);
+            throw new MacroException(Translation.UnboundVariable.with(name), location);
         return variable.get();
     }
 

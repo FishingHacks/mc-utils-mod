@@ -2,7 +2,7 @@ package net.fishinghacks.utils.macros.parsing;
 
 import net.fishinghacks.utils.Constants;
 import net.fishinghacks.utils.macros.FunctionValue;
-import net.fishinghacks.utils.macros.MathException;
+import net.fishinghacks.utils.macros.MacroException;
 import net.fishinghacks.utils.macros.Translation;
 import net.fishinghacks.utils.macros.exprs.*;
 import net.fishinghacks.utils.macros.statements.*;
@@ -26,7 +26,7 @@ public class Parser {
         this(new Tokenizer(content, file));
     }
 
-    public @Nullable Token peek() throws MathException {
+    public @Nullable Token peek() throws MacroException {
         if (peekedToken != null) return peekedToken;
         peekedToken = tokenizer.getNext().orElse(null);
         if (peekedToken != null) Constants.LOG.info("Got {} ({})", peekedToken.type(), peekedToken.value());
@@ -34,72 +34,74 @@ public class Parser {
         return peekedToken;
     }
 
-    public boolean atEnd() throws MathException {
+    public boolean atEnd() throws MacroException {
         return peek() == null;
     }
 
-    public Token next() throws MathException {
+    public Token next() throws MacroException {
         Token token = peekExpectAnyToken();
         peekedToken = null;
         return token;
     }
 
-    public Token peekExpectAnyToken() throws MathException {
+    public Token peekExpectAnyToken() throws MacroException {
         Token token = peek();
-        if (token == null) throw new MathException(Translation.ExpectedToken.get(), tokenizer.endLoc);
+        if (token == null) throw new MacroException(Translation.ExpectedToken.get(), tokenizer.endLoc);
         return token;
     }
 
-    public Token expect(TokenType tokenType) throws MathException {
+    public Token expect(TokenType tokenType) throws MacroException {
         Token token = peekExpectAnyToken();
         peekedToken = null;
         if (token.type() != tokenType)
-            throw new MathException(Translation.ExpectedTokenType.with(tokenType.toString(), token.type().toString()),
+            throw new MacroException(Translation.ExpectedTokenType.with(tokenType.toString(), token.type().toString()),
                 token.location());
         return token;
     }
 
-    public void expect(TokenType tokenType, TokenType... tokens) throws MathException {
+    public void expect(TokenType tokenType, TokenType... tokens) throws MacroException {
         Token token = peek();
-        if (token == null) throw new MathException(Translation.ExpectedTokenTypesButNone.with(
+        if (token == null) throw new MacroException(Translation.ExpectedTokenTypesButNone.with(
             tokenType.toString() + Arrays.stream(tokens).map(v -> ", " + v).reduce("", String::concat)),
             tokenizer.endLoc);
         peekedToken = null;
         if (token.type() == tokenType) return;
         for (var expectedTokenType : tokens) if (token.type() == expectedTokenType) return;
-        throw new MathException(Translation.ExpectedTokenTypes.with(
+        throw new MacroException(Translation.ExpectedTokenTypes.with(
             tokenType.toString() + Arrays.stream(tokens).map(v -> ", " + v).reduce("", String::concat),
             token.type().toString()), token.location());
     }
 
-    public boolean peekMatch(TokenType... tokens) throws MathException {
+    public boolean peekMatch(TokenType... tokens) throws MacroException {
         Token token = peek();
         if (token == null) return false;
         for (TokenType type : tokens) if (type == token.type()) return true;
         return false;
     }
 
-    public Statement parseStatement() throws MathException {
+    public Optional<Statement> parseStatement() throws MacroException {
         while (peekMatch(TokenType.Semicolon)) next();
-        TokenType type = peekExpectAnyToken().type();
+        Token token = peek();
+        if (token == null) return Optional.empty();
+        TokenType type = token.type();
         var stmt = switch (type) {
             case KeywordBreak -> {
                 next();
                 expect(TokenType.Semicolon);
-                if (!isInLoop) throw new MathException(Translation.LoopKwInvalid.get(), next().location());
+                if (!isInLoop) throw new MacroException(Translation.LoopKwInvalid.get(), next().location());
                 yield new BreakStatement();
             }
             case KeywordContinue -> {
                 next();
                 expect(TokenType.Semicolon);
-                if (!isInLoop) throw new MathException(Translation.LoopKwInvalid.get(), next().location());
+                if (!isInLoop) throw new MacroException(Translation.LoopKwInvalid.get(), next().location());
                 yield new ContinueStatement();
             }
             case KeywordReturn -> {
                 var loc = next().location();
                 var expr = peekMatch(TokenType.Semicolon) ? null : parseExpr();
                 expect(TokenType.Semicolon);
-                if (!isInFunction) throw new MathException(Translation.ReturnKwInvalid.get(), loc);
+                if (!isInFunction) throw new MacroException(Translation.ReturnKwInvalid.get(), loc);
                 yield new ReturnStatement(expr);
             }
             case KeywordFor -> {
@@ -189,25 +191,33 @@ public class Parser {
             }
         };
         while (peekMatch(TokenType.Semicolon)) next();
-        return stmt;
+        return Optional.of(stmt);
     }
 
-    private List<Statement> parseStatementList() throws MathException {
+    private List<Statement> parseStatementList() throws MacroException {
         if (peekMatch(TokenType.CurlyOpen)) {
             next();
             var list = new ArrayList<Statement>();
-            while (!peekMatch(TokenType.CurlyClose)) list.add(parseStatement());
+            while (!peekMatch(TokenType.CurlyClose)) {
+                peekExpectAnyToken();
+                var statement = parseStatement();
+                if (statement.isEmpty()) throw new IllegalStateException();
+                list.add(statement.get());
+            }
             next();
             return list;
         }
-        return List.of(parseStatement());
+        peekExpectAnyToken();
+        var statement = parseStatement();
+        if (statement.isEmpty()) throw new IllegalStateException();
+        return List.of(statement.get());
     }
 
-    public Expression parseExpr() throws MathException {
+    public Expression parseExpr() throws MacroException {
         return parseInlineIf();
     }
 
-    public Expression parseInlineIf() throws MathException {
+    public Expression parseInlineIf() throws MacroException {
         Expression expr = parseBoolOp();
         while (peekMatch(TokenType.QuestionMark)) {
             next();
@@ -218,7 +228,7 @@ public class Parser {
         return expr;
     }
 
-    public Expression parseBoolOp() throws MathException {
+    public Expression parseBoolOp() throws MacroException {
         Expression expr = parseComparison();
         while (peekMatch(TokenType.Ampersand, TokenType.Pipe)) {
             var type = next().type();
@@ -230,7 +240,7 @@ public class Parser {
         return expr;
     }
 
-    public Expression parseComparison() throws MathException {
+    public Expression parseComparison() throws MacroException {
         Expression expr = parseAddition();
         while (peekMatch(TokenType.LessThan, TokenType.GreaterThan, TokenType.Equal, TokenType.ExclamationMark)) {
             BiFunction<Expression, Expression, Expression> constructor;
@@ -262,7 +272,7 @@ public class Parser {
         return expr;
     }
 
-    public Expression parseAddition() throws MathException {
+    public Expression parseAddition() throws MacroException {
         Expression expr = parseMultiplication();
 
         while (peekMatch(TokenType.Plus, TokenType.Minus)) expr = switch (next().type()) {
@@ -274,7 +284,7 @@ public class Parser {
         return expr;
     }
 
-    public Expression parseMultiplication() throws MathException {
+    public Expression parseMultiplication() throws MacroException {
         Expression expr = parsePower();
 
         while (peekMatch(TokenType.Multiply, TokenType.Divide, TokenType.Remainder)) expr = switch (next().type()) {
@@ -287,7 +297,7 @@ public class Parser {
         return expr;
     }
 
-    public Expression parsePower() throws MathException {
+    public Expression parsePower() throws MacroException {
         Expression expr = parseUnary();
 
         while (peekMatch(TokenType.Power)) {
@@ -298,7 +308,7 @@ public class Parser {
         return expr;
     }
 
-    public Expression parseUnary() throws MathException {
+    public Expression parseUnary() throws MacroException {
         while (peekMatch(TokenType.Plus, TokenType.Minus, TokenType.ExclamationMark)) {
             switch (next().type()) {
                 case Plus -> {
@@ -316,7 +326,7 @@ public class Parser {
         return parseCall();
     }
 
-    public Expression parseCall() throws MathException {
+    public Expression parseCall() throws MacroException {
         Expression expr = parseIndex();
         while (peekMatch(TokenType.ParenOpen)) {
             var loc = next().location();
@@ -335,7 +345,7 @@ public class Parser {
         return expr;
     }
 
-    public Expression parseIndex() throws MathException {
+    public Expression parseIndex() throws MacroException {
         Expression expr = parseLiteral();
         while (peekMatch(TokenType.Dot, TokenType.BracketOpen)) {
             if (next().type() == TokenType.Dot) {
@@ -353,7 +363,7 @@ public class Parser {
         return expr;
     }
 
-    public Expression parseLiteral() throws MathException {
+    public Expression parseLiteral() throws MacroException {
         if (peekMatch(TokenType.ParenOpen)) {
             next();
             Expression expr = parseExpr();
@@ -369,10 +379,57 @@ public class Parser {
             try {
                 return new LiteralValue(Double.parseDouble(token.value()));
             } catch (NumberFormatException e) {
-                throw new MathException(Translation.InvalidNumber.with(e.getMessage()), token.location());
+                throw new MacroException(Translation.InvalidNumber.with(e.getMessage()), token.location());
             }
         }
-        expect(TokenType.ParenClose, TokenType.Identifier, TokenType.Number);
+        if (peekMatch(TokenType.String)) return new LiteralValue(next().value());
+        if (peekMatch(TokenType.Pipe)) {
+            next();
+            var args = new ArrayList<String>();
+            while (!peekMatch(TokenType.Pipe)) {
+                if (!args.isEmpty()) {
+                    expect(TokenType.Comma);
+                    if (peekMatch(TokenType.Pipe)) break;
+                }
+                args.add(expect(TokenType.Identifier).value());
+            }
+            next();
+            List<Statement> body;
+            if (peekMatch(TokenType.CurlyOpen)) body = parseStatementList();
+            else body = List.of(new ReturnStatement(parseExpr()));
+            return new LiteralValue(new FunctionValue("<anonymous>", args, body));
+        }
+        if (peekMatch(TokenType.BracketOpen)) {
+            next();
+            var values = new ArrayList<Expression>();
+            while (!peekMatch(TokenType.BracketClose)) {
+                if (!values.isEmpty()) {
+                    expect(TokenType.Comma);
+                    if (peekMatch(TokenType.BracketClose)) break;
+                }
+                values.add(parseExpr());
+            }
+            next();
+            return new ArrayExpression(values);
+        }
+
+        if (peekMatch(TokenType.CurlyOpen)) {
+            next();
+            var values = new HashMap<String, Expression>();
+            while (!peekMatch(TokenType.CurlyClose)) {
+                if (!values.isEmpty()) {
+                    expect(TokenType.Comma);
+                    if (peekMatch(TokenType.CurlyClose)) break;
+                }
+                var key = expect(TokenType.Identifier).value();
+                expect(TokenType.Colon);
+                values.put(key, parseExpr());
+            }
+            next();
+            return new ObjectExpression(values);
+        }
+        expect(TokenType.ParenOpen, TokenType.Identifier, TokenType.Number, TokenType.String, TokenType.Pipe,
+            TokenType.BracketOpen, TokenType.CurlyOpen);
         throw new IllegalStateException();
     }
 }

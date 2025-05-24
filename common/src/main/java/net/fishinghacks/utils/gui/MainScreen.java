@@ -106,7 +106,8 @@ public class MainScreen extends Screen {
         int y = height / 3;
         int x = width - 5 - Button.CUBE_WIDTH;
 
-        y += addRenderableWidget(new IconButton.Builder(Icons.MACROS).pos(x, y).build()).getHeight() + 4;
+        y += addRenderableWidget(new IconButton.Builder(Icons.MACROS).pos(x, y).onPress(ignored -> MacrosScreen.open())
+            .build()).getHeight() + 4;
         y += addRenderableWidget(new IconButton.Builder(Icons.SCREENSHOTS).onPress(
             ignored -> minecraft.setScreen(new ScreenshotsScreen(this))).pos(x, y).build()).getHeight() + 4;
         cosmeticButton = addRenderableWidget(new IconButton.Builder(Icons.COSMETICS).pos(x, y)
@@ -124,7 +125,7 @@ public class MainScreen extends Screen {
         int y = height / 3;
         y += addRenderableWidget(
             new IconTextButton.Builder(Icons.MACROS, Translation.MainGuiButtonMacros.get()).x(x + 300).y(y)
-                .build()).getHeight() + 4;
+                .onPress(ignored -> MacrosScreen.open()).build()).getHeight() + 4;
         y += addRenderableWidget(
             new IconTextButton.Builder(Icons.SCREENSHOTS, Translation.ScreenshotGuiTitle.get()).onPress(
                 ignored -> minecraft.setScreen(new ScreenshotsScreen(this))).x(x + 300).y(y).build()).getHeight() + 4;

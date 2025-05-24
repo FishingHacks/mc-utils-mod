@@ -22,21 +22,22 @@ public enum Translation implements Supplier<Component> {
         "utils.cmd.calc.craft.result"), CmdCalcCraftOneOf("utils.cmd.calc.craft.one_of"), CmdCalcCraftNotFound(
         "utils.cmd.calc.craft.no_recipe_found"), CmdCalcCraftMultiple(
         "utils.cmd.calc.craft.multiple"), CmdCalcCraftUsage("utils.cmd.calc.craft.usage"), CmdCalcCraftEntry(
-        "utils.cmd.calc.craft.entry"), CmdCalcStoppedCalculation("cmd.calc.stopped_calculation"), Error(
+        "utils.cmd.calc.craft.entry"), CmdCalcStoppedCalculation("utils.cmd.calc.stopped_calculation"), Error(
         "utils.common.error"), ClickToCopy("utils.common.click_to_copy"), CosmeticReloadAll(
         "utils.cmd.reload_cosmetics.reloaded.all"), CosmeticReloadPlayer(
         "utils.cmd.reload_cosmetics.reloaded.player"), CosmeticReloadUUID(
         "utils.cmd.reload_cosmetics.reloaded.uuid"), NoPlayerFound("utils.cmd.could_not_find_player"), ModuleCategoryUi(
         "utils.module_category.ui"), ModuleCategoryMisc("utils.module_category.misc"), ClickUIOpenKey(
-        "key.clickui.open"), FpsConfigColored("config.module.fps.colored"), InviteFailed("utils.invite.failed"), Invite(
-        "utils.invite"), InviteTrusted("utils.invite.trusted"), InviteGuiTitle(
-        "utils.invite.gui_title"), InvitePlayerName("utils.invite.player_name"), InviteAccept(
-        "utils.invite.accept"), ServerDisconnected("utils.server.disconnected"), ServerUnconnected(
-        "utils.server.unconnected"), ServerConnecting("utils.server.connecting"), ServerConnected(
-        "utils.server.connected"), ServerConnection("utils.server.connection"), ServerConnect(
-        "utils.server.connect"), ServerDisconnect("utils.server.disconnect"), CosmeticGuiTitle(
-        "utils.gui.cosmetics.title"), CosmeticGuiCape("utils.gui.cosmetics.cape"), CosmeticGuiElytra(
-        "utils.gui.cosmetics.elytra"), CosmeticGuiClear("utils.gui.cosmetics.clear"), CosmeticGuiTypeMCCapes(
+        "key.clickui.open"), Invite("utils.invite"), FpsConfigColored("config.module.fps.colored"), InviteFailed(
+        "utils.invite.failed"), InviteNotification("utils.invite.notification"), InviteTrusted(
+        "utils.invite.trusted"), InviteGuiTitle("utils.invite.gui_title"), InvitePlayerName(
+        "utils.invite.player_name"), InviteAccept("utils.invite.accept"), ServerDisconnected(
+        "utils.server.disconnected"), ServerUnconnected("utils.server.unconnected"), ServerConnecting(
+        "utils.server.connecting"), ServerConnected("utils.server.connected"), ServerConnection(
+        "utils.server.connection"), ServerConnect("utils.server.connect"), ServerDisconnect(
+        "utils.server.disconnect"), CosmeticGuiTitle("utils.gui.cosmetics.title"), CosmeticGuiCape(
+        "utils.gui.cosmetics.cape"), CosmeticGuiElytra("utils.gui.cosmetics.elytra"), CosmeticGuiClear(
+        "utils.gui.cosmetics.clear"), CosmeticGuiTypeMCCapes(
         "utils.gui.cosmetics.type.mccapes"), CosmeticGuiTypeServerCapes(
         "utils.gui.cosmetics.type.server_capes"), CosmeticGuiTypeServerModels(
         "utils.gui.cosmetics.type.server_models"), CosmeticGuiLoading(
@@ -65,13 +66,19 @@ public enum Translation implements Supplier<Component> {
         "utils.configuration.chat.time_format.12_hours"), ActionTypeToggleModule(
         "utils.action_type.toggle_module"), ActionTypeEnableModule(
         "utils.action_type.enable_module"), ActionTypeDisableModule(
-        "utils.action_type.disable_module"), ActionTypeHoldModule("utils.action_type.hold_module"), GuiActionsTitle(
-        "utils.gui.actions.title"), GuiActionsRemove("utils.gui.actions.remove"), GuiActionsType(
-        "utils.gui.actions.type"), GuiActionsKey("utils.gui.actions.key"), GuiActionsValue(
-        "utils.gui.actions.value"), Open("utils.common.open"), ScreenshotGuiTitle(
-        "utils.gui.screenshots.title"), ScreenshotGuiConfirmDelete(
+        "utils.action_type.disable_module"), ActionTypeHoldModule(
+        "utils.action_type.hold_module"), ActionTypeStartMacro("utils.action_type.start_macro"), ActionTypeToggleMacro(
+        "utils.action_type.toggle_macro"), GuiActionsTitle("utils.gui.actions.title"), GuiActionsRemove(
+        "utils.gui.actions.remove"), GuiActionsType("utils.gui.actions.type"), GuiActionsKey(
+        "utils.gui.actions.key"), GuiActionsValue("utils.gui.actions.value"), Open(
+        "utils.common.open"), ScreenshotGuiTitle("utils.gui.screenshots.title"), ScreenshotGuiConfirmDelete(
         "utils.gui.screenshots.confirm_delete"), MainGuiButtonMacros("utils.gui.main.macros"), MainGuiButtonSettings(
-        "utils.gui.main.settings"), MainGuiButtonModules("utils.gui.main.modules"),
+        "utils.gui.main.settings"), MainGuiButtonModules("utils.gui.main.modules"), CmdMacrosNoneRunning(
+        "utils.cmd.macros.no_running"), CmdMacrosRunning("utils.cmd.macros.running"), CmdMacrosExited(
+        "utils.cmd.macros.exited"), CmdMacrosStartedRunning("utils.cmd.macros.started_running"), CmdMacrosStopped(
+        "utils.cmd.macros.stopped"), CmdMacrosStopUsage("utils.cmd.macros.stop.usage"), CmdMacrosStartUsage(
+        "utils.cmd.macros.start.usage"), CmdMacrosFailedToStart("utils.cmd.macros.failed_to_start"), CmdMacrosHelp(
+        "utils.cmd.macros.help"),
     ;
 
     private final String key;

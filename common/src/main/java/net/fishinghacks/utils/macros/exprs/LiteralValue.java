@@ -31,24 +31,28 @@ public final class LiteralValue implements Expression {
         this(value, ValueType.Boolean);
     }
 
-    public LiteralValue(String value) {
+    public LiteralValue(@NotNull String value) {
         this(value, ValueType.String);
     }
 
-    public LiteralValue(List<LiteralValue> value) {
+    public LiteralValue(@NotNull List<LiteralValue> value) {
         this(value, ValueType.List);
     }
 
-    public LiteralValue(Map<String, LiteralValue> value) {
+    public LiteralValue(@NotNull Map<String, LiteralValue> value) {
         this(value, ValueType.Map);
     }
 
-    public LiteralValue(FunctionValue value) {
+    public LiteralValue(@NotNull FunctionValue value) {
         this(value, ValueType.Function);
     }
 
-    public LiteralValue(BuiltinFunctionValue value) {
+    public LiteralValue(@NotNull BuiltinFunctionValue value) {
         this(value, ValueType.BuiltinFunction);
+    }
+
+    public LiteralValue(@NotNull UserData data) {
+        this(data, ValueType.UserData);
     }
 
     @Override
@@ -82,8 +86,13 @@ public final class LiteralValue implements Expression {
         return type == ValueType.List ? Optional.of((List<LiteralValue>) value) : Optional.empty();
     }
 
+    public Optional<UserData> asUserData() {
+        return type == ValueType.UserData ? Optional.of((UserData) value) : Optional.empty();
+    }
+
     @Override
     public String toString() {
+        if (type == ValueType.UserData) return value.toString();
         if (type != ValueType.String) return asString();
         return "\"" + ((String) value).replaceAll("\\\\", "\\\\").replaceAll("\"", "\\\\\"").replaceAll("\\n", "\\\\n")
             .replaceAll("\\t", "\\\\t") + "\"";
@@ -98,7 +107,7 @@ public final class LiteralValue implements Expression {
             case Number -> ((double) value) != 0.0;
             case String -> !((String) value).isEmpty();
             case Boolean -> (boolean) value;
-            case List, Function, BuiltinFunction, Map -> true;
+            case List, Function, BuiltinFunction, Map, UserData -> true;
             case Null -> false;
         };
     }
@@ -133,6 +142,7 @@ public final class LiteralValue implements Expression {
             case Function -> "<function " + ((FunctionValue) value).name() + ">";
             case BuiltinFunction -> "<built-in fuction " + ((BuiltinFunctionValue) value).name() + ">";
             case Null -> "null";
+            case UserData -> ((UserData) value).asString();
         };
     }
 
@@ -195,7 +205,7 @@ public final class LiteralValue implements Expression {
                 list.add(Component.literal("    ".repeat(indent)).append("}"));
                 yield list;
             }
-            case Boolean, Function, Null, BuiltinFunction ->
+            case Boolean, Function, Null, BuiltinFunction, UserData ->
                 List.of(Component.literal(toString()).withStyle(ChatFormatting.LIGHT_PURPLE));
         };
     }
@@ -206,7 +216,7 @@ public final class LiteralValue implements Expression {
 
 
     public enum ValueType implements TranslatableEnum {
-        Number, String, Boolean, List, Map, Function, Null, BuiltinFunction;
+        Number, String, Boolean, List, Map, Function, Null, BuiltinFunction, UserData;
 
         @Override
         public @NotNull Component getTranslatedName() {
@@ -218,6 +228,7 @@ public final class LiteralValue implements Expression {
                 case Map -> Translation.TypeMap.get();
                 case Function, BuiltinFunction -> Translation.TypeFunction.get();
                 case Null -> Translation.TypeNull.get();
+                case UserData -> Translation.TypeUserData.get();
             };
         }
     }

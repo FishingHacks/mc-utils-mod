@@ -2,7 +2,7 @@ package net.fishinghacks.utils.macros.statements;
 
 import net.fishinghacks.utils.macros.BreakoutException;
 import net.fishinghacks.utils.macros.EvalContext;
-import net.fishinghacks.utils.macros.MathException;
+import net.fishinghacks.utils.macros.MacroException;
 import net.fishinghacks.utils.macros.exprs.Expression;
 
 public class VariableDefinitionStatement extends Statement {
@@ -15,7 +15,7 @@ public class VariableDefinitionStatement extends Statement {
     }
 
     @Override
-    protected void run(EvalContext context) throws MathException, BreakoutException {
+    protected void run(EvalContext context) throws MacroException, BreakoutException {
         context.scopes().getLast().put(name, expr.eval(context));
     }
 }

@@ -11,7 +11,9 @@ import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 import org.jetbrains.annotations.Nullable;
+
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public class InputPopupScreen extends OverlayScreen {
     public final Consumer<String> consumer;
@@ -20,14 +22,17 @@ public class InputPopupScreen extends OverlayScreen {
     private Input input;
     private final String initialValue;
     private final int titleWidth;
+    @Nullable
+    private final Predicate<String> filter;
 
-    protected InputPopupScreen(@Nullable Screen parent, Component title, @Nullable Component hint, Consumer<String> consumer,
-                               String value) {
+    protected InputPopupScreen(@Nullable Screen parent, Component title, @Nullable Component hint,
+                               Consumer<String> consumer, String value, @Nullable Predicate<String> filter) {
         super(title, parent, 250, 80);
         this.consumer = consumer;
         this.initialValue = value;
         titleWidth = Minecraft.getInstance().font.width(title);
         this.hint = hint;
+        this.filter = filter;
     }
 
     @Override
@@ -43,6 +48,7 @@ public class InputPopupScreen extends OverlayScreen {
         input = addRenderableWidget(
             Input.Builder.big().value(input != null ? input.getValue() : initialValue).width(200)
                 .pos((width - 200) / 2, insideY + (insideHeight - Input.DEFAULT_HEIGHT) / 2).hint(hint).build());
+        if (filter != null) input.setFilter(filter);
     }
 
     @Override
@@ -53,13 +59,18 @@ public class InputPopupScreen extends OverlayScreen {
     }
 
     public void onSubmit() {
-        if (input != null) consumer.accept(input.getValue());
         onClose();
+        if (input != null) consumer.accept(input.getValue());
+    }
+
+    public static void open(Component message, Component hint, Consumer<String> consumer, String value,
+                            @Nullable Predicate<String> filter) {
+        Minecraft.getInstance()
+            .setScreen(new InputPopupScreen(Minecraft.getInstance().screen, message, hint, consumer, value, filter));
     }
 
     public static void open(Component message, Component hint, Consumer<String> consumer, String value) {
-        Minecraft.getInstance()
-            .setScreen(new InputPopupScreen(Minecraft.getInstance().screen, message, hint, consumer, value));
+        open(message, hint, consumer, value, null);
     }
 
     public static void open(Component message, Component hint, Consumer<String> consumer) {
@@ -72,5 +83,9 @@ public class InputPopupScreen extends OverlayScreen {
 
     public static void open(Component message, Consumer<String> consumer) {
         open(message, Component.empty(), consumer, "");
+    }
+
+    public static void open(Component message, Consumer<String> consumer, Predicate<String> filter) {
+        open(message, Component.empty(), consumer, "", filter);
     }
 }

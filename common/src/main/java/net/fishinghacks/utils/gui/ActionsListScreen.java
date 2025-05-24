@@ -6,7 +6,6 @@ import net.fishinghacks.utils.actions.ActionType;
 import net.fishinghacks.utils.config.Configs;
 import net.fishinghacks.utils.gui.components.*;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -37,52 +36,30 @@ public class ActionsListScreen extends ListScreen {
 
     @Override
     protected void buildList() {
-        listLayout = new LinearLayout(listStartX, listStartY, LinearLayout.Orientation.VERTICAL);
-        LinearLayout boxLayout = LinearLayout.vertical();
-        listLayout.addChild(new Box(boxLayout));
-
-        int width = listWidth - 2 * Box.DEFAULT_BORDER_SIZE;
-        boxLayout.addChild(new Spacer(width, 10));
+        assert minecraft != null;
+        listLayout = new LinearLayout(listStartX, listStartY, LinearLayout.Orientation.VERTICAL).spacing(2);
 
         buttons.clear();
         int i = 0;
         for (var action : Configs.clientConfig.ACTIONS.get()) {
-            final int index = i;
-            boxLayout.addChild(new ConfigSection(action.type().getTranslatedName(),
-                Button.Builder.small(Translation.GuiActionsRemove.get()).onPress(ignored -> removeEntry(index)).build(),
-                width));
-            var dropdown = GuiDropdown.fromTranslatableEnum(action.type(), ActionType.values());
-            dropdown.onValueChange((ignored, value) -> updateType(index, value));
-            dropdown.setWidth(Input.DEFAULT_WIDTH_BIG);
-            boxLayout.addChild(new ConfigSection(Translation.GuiActionsType.get(), dropdown, width));
-            var button = Button.Builder.small(action.key().getDisplayName()).width(Input.DEFAULT_WIDTH_BIG)
-                .onPress(selfButton -> {
-                    if (selectedKey != null && selectedKey == index) return;
-                    if (selectedKey != null && buttons.size() < selectedKey) {
-                        var list = Configs.clientConfig.ACTIONS.get();
-                        if (list.size() < selectedKey) buttons.get(selectedKey)
-                            .setMessage(Configs.clientConfig.ACTIONS.get().get(selectedKey).key().getDisplayName());
-                        else repositionElements();
-                    }
-                    selectedKey = index;
-                    selfButton.setMessage(Component.literal("> ").append(
-                            selfButton.getMessage().copy().withStyle(ChatFormatting.WHITE, ChatFormatting.UNDERLINE))
-                        .append(" <").withStyle(ChatFormatting.YELLOW));
-                }).build();
-            buttons.add(button);
-            boxLayout.addChild(new ConfigSection(Translation.GuiActionsKey.get(), button, width));
-            AbstractWidget widget;
-            var validValues = action.validValues();
-            if (validValues == null)
-                widget = Input.Builder.big().value(action.getValue()).responder(s -> setValue(index, s)).build();
-            else widget = new GuiDropdown<>(action.getValue(), action::formatValue, (ignored, v) -> setValue(index, v),
-                validValues);
-            widget.setWidth(Input.DEFAULT_WIDTH_BIG);
-            boxLayout.addChild(new ConfigSection(Translation.GuiActionsValue.get(), widget, width));
+            final int idx = i;
+
+            listLayout.addChild(new ActionListEntry(action, idx, buttons, this::updateType, (selfButton, index) -> {
+                if (index.equals(selectedKey)) return;
+                if (selectedKey != null && buttons.size() < selectedKey) {
+                    var list = Configs.clientConfig.ACTIONS.get();
+                    if (list.size() < selectedKey) buttons.get(selectedKey)
+                        .setMessage(Configs.clientConfig.ACTIONS.get().get(selectedKey).key().getDisplayName());
+                    else repositionElements();
+                }
+                selectedKey = index;
+                selfButton.setMessage(Component.literal("> ")
+                    .append(selfButton.getMessage().copy().withStyle(ChatFormatting.WHITE, ChatFormatting.UNDERLINE))
+                    .append(" <").withStyle(ChatFormatting.YELLOW));
+            }, this::removeEntry, this::setValue, listWidth));
+            listLayout.addChild(new Spacer(0, 10));
             ++i;
         }
-
-        boxLayout.addChild(new DummyAbstractWidget());
     }
 
     private void setValue(int index, String value) {

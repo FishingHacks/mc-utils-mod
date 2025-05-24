@@ -23,7 +23,7 @@ public class ForStatement extends Statement {
     }
 
     @Override
-    protected void run(EvalContext context) throws MathException, BreakoutException {
+    protected void run(EvalContext context) throws MacroException, BreakoutException {
         var literalValue = expression.eval(context);
         Stream<LiteralValue> stream;
         switch (literalValue.type()) {
@@ -35,7 +35,7 @@ public class ForStatement extends Statement {
                 stream = literalValue.asList().get().stream();
             }
             default ->
-                throw new MathException(Translation.CannotIndexType.with(literalValue.type().getTranslatedName()), loc);
+                throw new MacroException(Translation.CannotIndexType.with(literalValue.type().getTranslatedName()), loc);
         }
         var iterator = stream.iterator();
         while (iterator.hasNext()) {

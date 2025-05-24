@@ -23,7 +23,7 @@ import java.util.function.Function;
 public class Executor {
     public static final HashMap<String, LiteralValue> defaultGlobalScope = new HashMap<>();
 
-    private static void addFn(String key, MathFunction function) {
+    private static void addFn(String key, NativeFunction function) {
         defaultGlobalScope.put(key, new LiteralValue(BuiltinFunctionValue.withShouldExitCheck(key, function)));
     }
 
@@ -35,11 +35,11 @@ public class Executor {
         var thread = new Thread(() -> {
             try {
                 output.accept(parseAndExecute(contents + ";", file, customGlobalScope, shouldStop));
-            } catch (MathException e) {
+            } catch (MacroException e) {
                 e.location.print(getFileContents, file, contents, e.message, outputError);
                 Throwable cause = e;
                 while ((cause = cause.getCause()) != null) {
-                    if (cause instanceof MathException err)
+                    if (cause instanceof MacroException err)
                         err.location.print(getFileContents, file, contents, err.message, outputError);
                     else outputError.accept(
                         Component.literal("Error: " + cause.getMessage()).withStyle(ChatFormatting.RED));
@@ -49,12 +49,12 @@ public class Executor {
             }
         });
         thread.start();
-        return new RunningMacro(thread, shouldStop);
+        return new RunningMacro(thread, shouldStop, file);
     }
 
     public static LiteralValue parseAndExecute(String contents, String file,
                                                HashMap<String, LiteralValue> customGlobalScope,
-                                               AtomicBoolean shouldStop) throws MathException {
+                                               AtomicBoolean shouldStop) throws MacroException {
         var statements = new ArrayList<Statement>();
         var globalScope = new HashMap<String, LiteralValue>();
         globalScope.putAll(defaultGlobalScope);
@@ -62,8 +62,9 @@ public class Executor {
         var parser = new Parser(contents, file);
         while (!parser.atEnd()) {
             var statement = parser.parseStatement();
-            if (statement instanceof FunctionStatement fn) globalScope.put(fn.name, new LiteralValue(fn.value));
-            else statements.add(statement);
+            if (statement.isEmpty()) break;
+            if (statement.get() instanceof FunctionStatement fn) globalScope.put(fn.name, new LiteralValue(fn.value));
+            else statements.add(statement.get());
         }
         Expression finalExpr = null;
         if (statements.getLast() instanceof ExprStatement e) {
@@ -75,13 +76,13 @@ public class Executor {
             for (var statement : statements)
                 statement.execute(evalContext);
         } catch (BreakoutException e) {
-            throw new MathException(Translation.WasInterrupted.get(), Location.ZERO);
+            throw new MacroException(Translation.WasInterrupted.get(), Location.ZERO);
         }
         if (finalExpr == null) return LiteralValue.NULL;
         try {
             return finalExpr.eval(evalContext);
         } catch (BreakoutException e) {
-            throw new MathException(Translation.WasInterrupted.get(), Location.ZERO);
+            throw new MacroException(Translation.WasInterrupted.get(), Location.ZERO);
         }
     }
 
@@ -90,12 +91,12 @@ public class Executor {
     }
 
     public static void sleep(EvalContext ctx,
-                             Duration duration) throws MathException, BreakoutException.EvalShouldStop {
+                             Duration duration) throws MacroException, BreakoutException.EvalShouldStop {
         try {
             if (!duration.isZero() && !duration.isNegative()) Thread.sleep(duration);
         } catch (InterruptedException e) {
             if (ctx.shouldStop().get()) throw new BreakoutException.EvalShouldStop();
-            else throw new MathException(
+            else throw new MacroException(
                 Component.literal("INTERNAL ERROR : UNEXPECTED INTERRUPT EXCEPTION DURING " + "SLEEP"), Location.ZERO);
         }
         if (ctx.shouldStop().get()) throw new BreakoutException.EvalShouldStop();
@@ -105,7 +106,7 @@ public class Executor {
         var location = Location.builtin("function_" + key);
         addFn(key, (ignored, args) -> {
             if (args.size() != 1)
-                throw new MathException(Translation.MismatchingArguments.with(1, args.size()), location);
+                throw new MacroException(Translation.MismatchingArguments.with(1, args.size()), location);
             else return new LiteralValue(fn.apply(args.getFirst().asDouble()));
         });
     }
@@ -114,7 +115,7 @@ public class Executor {
         var location = Location.builtin("function_" + key);
         addFn(key, (ignored, args) -> {
             if (args.size() != 2)
-                throw new MathException(Translation.MismatchingArguments.with(2, args.size()), location);
+                throw new MacroException(Translation.MismatchingArguments.with(2, args.size()), location);
             else return new LiteralValue(fn.apply(args.getFirst().asDouble(), args.get(1).asDouble()));
         });
     }
@@ -186,5 +187,8 @@ public class Executor {
         addSingleDouble("from_shulker_box", v -> v * 1728.0);
         addSingleDouble("from_shulkerbox", v -> v * 1728.0);
         addSingleDouble("fromShulkerBox", v -> v * 1728.0);
+
+        addFn("notify", BuiltinFunctions::notify);
+        addFn("putInChat", BuiltinFunctions::putInChat);
     }
 }

@@ -40,7 +40,7 @@ public class ClientPacketHandlerImpl implements ClientPacketHandler {
         if (!ServerAddress.isValidAddress(addr)) return;
 
         GuiOverlayManager.addNotification(
-            (trusted ? Translation.Invite : Translation.InviteTrusted).with(invitingPlayer),
+            (trusted ? Translation.InviteNotification : Translation.InviteTrusted).with(invitingPlayer),
             new Notification.NotifyButton(Translation.InviteAccept.get(), ignored -> {
                 Minecraft minecraft = Minecraft.getInstance();
                 if (minecraft.level != null) {

@@ -2,16 +2,18 @@ package net.fishinghacks.utils.gui;
 
 import com.mojang.realmsclient.RealmsMainScreen;
 import net.fishinghacks.utils.E4MCStore;
-import net.fishinghacks.utils.config.Configs;
 import net.fishinghacks.utils.connection.ClientConnectionHandler;
 import net.fishinghacks.utils.gui.components.Button;
 import net.fishinghacks.utils.gui.components.IconButton;
+import net.fishinghacks.utils.gui.components.IconTextButton;
 import net.fishinghacks.utils.gui.configuration.ConfigSectionScreen;
 import net.fishinghacks.utils.gui.cosmetics.CosmeticsScreen;
 import net.fishinghacks.utils.gui.mcsettings.McSettingsScreen;
 import net.fishinghacks.utils.Translation;
 import net.fishinghacks.utils.connection.Connection;
 import net.fishinghacks.utils.connection.packets.InvitePacket;
+import net.fishinghacks.utils.gui.screenshots.ScreenshotsScreen;
+import net.fishinghacks.utils.modules.ClickUi;
 import net.fishinghacks.utils.platform.ClientServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.SharedConstants;
@@ -51,7 +53,6 @@ public class PauseMenuScreen extends Screen {
     private static final Component GAME = Component.translatable("menu.game");
     private static final Component PAUSED = Component.translatable("menu.paused");
     public static final Component SAVING_LEVEL = Component.translatable("menu.savingLevel");
-    public static final int BUTTONS_HEIGHT = 6 * Button.DEFAULT_HEIGHT + 5 * 4 + 10;
     public static final int BUTTONS_WIDTH = Button.SMALL_WIDTH * 2 + 4;
 
     private Button inviteButton;
@@ -70,7 +71,7 @@ public class PauseMenuScreen extends Screen {
 
         if (!showPauseMenu) return;
 
-        GridLayout gridLayout = new GridLayout((width - BUTTONS_WIDTH) / 2, height / 2 - BUTTONS_HEIGHT);
+        GridLayout gridLayout = new GridLayout((width - BUTTONS_WIDTH) / 2, height / 3);
         gridLayout.defaultCellSetting().padding(2);
         GridLayout.RowHelper row = gridLayout.createRowHelper(2);
         assert minecraft != null;
@@ -98,11 +99,10 @@ public class PauseMenuScreen extends Screen {
             row.addChild(openScreen(SERVER_LINKS, () -> new ServerLinksScreen(this, serverlinks)));
         }
 
-        Button lanButton;
-        Button optionsButton = row.addChild(openScreen(OPTIONS, () -> new McSettingsScreen(this, minecraft.options)));
+        row.addChild(openScreen(OPTIONS, () -> new McSettingsScreen(this, minecraft.options)));
         if (this.minecraft.hasSingleplayerServer() && this.minecraft.getSingleplayerServer() != null && !this.minecraft.getSingleplayerServer()
-            .isPublished()) lanButton = row.addChild(openScreen(SHARE_TO_LAN, () -> new ShareToLanScreen(this)));
-        else lanButton = row.addChild(openScreen(PLAYER_REPORTING, () -> new SocialInteractionsScreen(this)));
+            .isPublished()) row.addChild(openScreen(SHARE_TO_LAN, () -> new ShareToLanScreen(this)));
+        else row.addChild(openScreen(PLAYER_REPORTING, () -> new SocialInteractionsScreen(this)));
 
         if (ClientServices.PLATFORM.hasModlistScreen()) row.addChild(new Button.Builder(Translation.Mods.get()).onPress(
                 ignored -> ClientServices.PLATFORM.openModlistScreen(minecraft, this)).width((BUTTONS_WIDTH - 4) / 2)
@@ -116,23 +116,63 @@ public class PauseMenuScreen extends Screen {
         gridLayout.arrangeElements();
         gridLayout.visitWidgets(this::addRenderableWidget);
 
+        if (gridLayout.getX() + 300 + Button.DEFAULT_WIDTH + 5 < width) buildSidebarBig(gridLayout.getX());
+        else buildSidebarSmall();
+    }
+
+    private void buildSidebarSmall() {
+        assert minecraft != null;
+        int y = height / 3;
+        int x = width - 5 - Button.CUBE_WIDTH;
+
         inviteButton = addRenderableWidget(
-            new IconButton.Builder(Icons.INVITE).pos(lanButton.getRight() + 4, lanButton.getY())
+            new IconButton.Builder(Icons.INVITE).onPress(PauseMenuScreen::invitePlayer).pos(x, y).build());
+        y += inviteButton.getHeight() + 4;
+        y += addRenderableWidget(new IconButton.Builder(Icons.MACROS).onPress(ignored -> MacrosScreen.open()).pos(x, y)
+            .build()).getHeight() + 4;
+        y += addRenderableWidget(new IconButton.Builder(Icons.SCREENSHOTS).onPress(
+            ignored -> minecraft.setScreen(new ScreenshotsScreen(this))).pos(x, y).build()).getHeight() + 4;
+        cosmeticsButton = addRenderableWidget(new IconButton.Builder(Icons.COSMETICS).pos(x, y)
+            .onPress(ignored -> minecraft.setScreen(new CosmeticsScreen(this))).build());
+        y += cosmeticsButton.getHeight() + 4;
+        y += addRenderableWidget(new IconButton.Builder(Icons.SETTINGS).pos(x, y)
+            .onPress(ignored -> minecraft.setScreen(new ConfigSectionScreen(this))).build()).getHeight() + 4;
+        addRenderableWidget(
+            new IconButton.Builder(Icons.MODULES).pos(x, y).onPress(ignored -> minecraft.setScreen(new ClickUi(this)))
+                .build()).getHeight();
+    }
+
+    private void buildSidebarBig(int x) {
+        assert minecraft != null;
+        int y = height / 3;
+
+        inviteButton = addRenderableWidget(
+            new IconTextButton.Builder(Icons.INVITE, Translation.Invite.get()).x(x + 300).y(y)
                 .onPress(PauseMenuScreen::invitePlayer).build());
-        int x = optionsButton.getX() - 4 - IconButton.DEFAULT_HEIGHT;
+        y += inviteButton.getHeight() + 4;
+        y += addRenderableWidget(
+            new IconTextButton.Builder(Icons.MACROS, Translation.MainGuiButtonMacros.get()).x(x + 300).y(y)
+                .onPress(ignored -> MacrosScreen.open()).build()).getHeight() + 4;
+        y += addRenderableWidget(
+            new IconTextButton.Builder(Icons.SCREENSHOTS, Translation.ScreenshotGuiTitle.get()).onPress(
+                ignored -> minecraft.setScreen(new ScreenshotsScreen(this))).x(x + 300).y(y).build()).getHeight() + 4;
         cosmeticsButton = addRenderableWidget(
-            new IconButton.Builder(Icons.COSMETICS).pos(x, lanButton.getY() - 4 - IconButton.DEFAULT_HEIGHT)
-                .onPress(ignored -> minecraft.setScreen(new CosmeticsScreen(minecraft.screen))).build());
-        if (!ClientServices.PLATFORM.hasModlistScreen()) addRenderableWidget(
-            new IconButton.Builder(Icons.SETTINGS).pos(x, lanButton.getY())
-                .onPress(ignored -> ConfigSectionScreen.open(minecraft, Configs.clientConfig)).build());
+            new IconTextButton.Builder(Icons.COSMETICS, Translation.CosmeticGuiTitle.get()).x(x + 300).y(y)
+                .onPress(ignored -> minecraft.setScreen(new CosmeticsScreen(this))).build());
+        y += cosmeticsButton.getHeight() + 4;
+        y += addRenderableWidget(
+            new IconTextButton.Builder(Icons.SETTINGS, Translation.MainGuiButtonSettings.get()).x(x + 300).y(y)
+                .onPress(ignored -> minecraft.setScreen(new ConfigSectionScreen(this))).build()).getHeight() + 4;
+        addRenderableWidget(
+            new IconTextButton.Builder(Icons.MODULES, Translation.MainGuiButtonModules.get()).x(x + 300).y(y)
+                .onPress(ignored -> minecraft.setScreen(new ClickUi(this))).build()).getHeight();
     }
 
     @Override
     public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         inviteButton.active = inviteButton.visible = ClientConnectionHandler.getInstance()
             .isConnected() && E4MCStore.hasLink();
-        cosmeticsButton.active = cosmeticsButton.visible = ClientConnectionHandler.getInstance().isConnected();
+        cosmeticsButton.active = ClientConnectionHandler.getInstance().isConnected();
 
         super.render(guiGraphics, mouseX, mouseY, partialTick);
     }

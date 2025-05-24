@@ -2,13 +2,13 @@ package net.fishinghacks.utils.macros.exprs;
 
 import net.fishinghacks.utils.macros.BreakoutException;
 import net.fishinghacks.utils.macros.EvalContext;
-import net.fishinghacks.utils.macros.MathException;
+import net.fishinghacks.utils.macros.MacroException;
 import net.fishinghacks.utils.macros.Translation;
 import net.fishinghacks.utils.macros.parsing.Location;
 
 public record IndexExpr(Expression left, Expression right, Location location) implements Expression {
     @Override
-    public LiteralValue eval(EvalContext context) throws MathException, BreakoutException.EvalShouldStop {
+    public LiteralValue eval(EvalContext context) throws MacroException, BreakoutException.EvalShouldStop {
         var leftEval = left.eval(context);
         switch (leftEval.type()) {
             case List -> {
@@ -34,7 +34,7 @@ public record IndexExpr(Expression left, Expression right, Location location) im
             case Null -> {
                 return LiteralValue.NULL;
             }
-            default -> throw new MathException(Translation.CannotIndexType.with(leftEval.type().getTranslatedName()),
+            default -> throw new MacroException(Translation.CannotIndexType.with(leftEval.type().getTranslatedName()),
                 location);
         }
     }

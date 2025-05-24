@@ -2,11 +2,11 @@ package net.fishinghacks.utils.macros.exprs;
 
 import net.fishinghacks.utils.macros.BreakoutException.EvalShouldStop;
 import net.fishinghacks.utils.macros.EvalContext;
-import net.fishinghacks.utils.macros.MathException;
+import net.fishinghacks.utils.macros.MacroException;
 
 public record AdditionExpr(Expression left, Expression right) implements Expression {
     @Override
-    public LiteralValue eval(EvalContext context) throws MathException, EvalShouldStop {
+    public LiteralValue eval(EvalContext context) throws MacroException, EvalShouldStop {
         var leftEval = left.eval(context);
         if (leftEval.type() == LiteralValue.ValueType.String)
             return new LiteralValue(leftEval.asString() + right.eval(context).asString());

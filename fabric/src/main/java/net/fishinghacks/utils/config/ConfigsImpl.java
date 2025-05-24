@@ -11,6 +11,7 @@ import com.electronwill.nightconfig.toml.TomlWriter;
 import net.fishinghacks.utils.Constants;
 import net.fishinghacks.utils.config.spec.Config;
 import net.fishinghacks.utils.config.spec.ConfigType;
+import net.minecraft.FileUtil;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.IOException;
@@ -103,7 +104,7 @@ public class ConfigsImpl {
     }
 
     private static void setupConfig(Path path, ConfigImpl config) throws IOException {
-        Files.createDirectories(path.getParent());
+        FileUtil.createDirectoriesSafe(path.getParent());
         new TomlWriter().write(config.createDefaultConfig(), path, WritingMode.REPLACE_ATOMIC);
     }
 

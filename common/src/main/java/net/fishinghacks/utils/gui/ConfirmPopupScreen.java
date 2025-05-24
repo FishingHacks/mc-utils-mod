@@ -41,8 +41,8 @@ public class ConfirmPopupScreen extends OverlayScreen {
     }
 
     public void onConfirm() {
-        onConfirm.run();
         onClose();
+        onConfirm.run();
     }
 
     public static void open(Component message, Runnable onConfirm) {

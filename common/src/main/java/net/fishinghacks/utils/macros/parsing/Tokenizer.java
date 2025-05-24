@@ -1,6 +1,6 @@
 package net.fishinghacks.utils.macros.parsing;
 
-import net.fishinghacks.utils.macros.MathException;
+import net.fishinghacks.utils.macros.MacroException;
 import net.fishinghacks.utils.macros.Translation;
 
 import java.util.Optional;
@@ -28,6 +28,10 @@ public class Tokenizer {
 
     private char peek() {
         return pos < content.length() ? content.charAt(pos) : '\0';
+    }
+
+    private char peekpeek() {
+        return pos + 1 < content.length() ? content.charAt(pos + 1) : '\0';
     }
 
     private char next() {
@@ -75,13 +79,39 @@ public class Tokenizer {
             .orElseGet(() -> new Token(TokenType.Identifier, buildContents, loc));
     }
 
-    public Optional<Token> getNext() throws MathException {
+    public Token parseString() {
+        next();
+        var loc = loc();
+        StringBuilder accumulator = new StringBuilder();
+        boolean isEscape = false;
+        while (true) {
+            char c = next();
+            if (isEscape) {
+                switch (c) {
+                    case '0' -> accumulator.append('\0');
+                    case 'n' -> accumulator.append('\n');
+                    default -> accumulator.append(c);
+                }
+                isEscape = false;
+            } else if (c == '\\') isEscape = true;
+            else if (c == '"') break;
+            else accumulator.append(c);
+        }
+        return new Token(TokenType.String, accumulator.toString(), loc);
+    }
+
+    public Optional<Token> getNext() throws MacroException {
         if (pos >= content.length()) return Optional.empty();
         while (Character.isWhitespace(peek())) next();
+        if (peek() == '/' && peekpeek() == '/') while (true) {
+            var c = next();
+            if (c == '\n' || c == '\0') break;
+        }
+        if (peek() == '"') return Optional.of(parseString());
         var fromSingleChar = TokenType.fromSingleCharacter(peek());
         if (fromSingleChar.isPresent()) return Optional.of(new Token(fromSingleChar.get(), "" + next(), loc()));
         if (isNumberCharacter(peek()) || peek() == '.') return Optional.of(parseNumber());
         if (isIdentifierCharacter(peek())) return Optional.of(parseIdentifier());
-        throw new MathException(Translation.UnexpectedChar.with("" + next()), loc());
+        throw new MacroException(Translation.UnexpectedChar.with("" + next()), loc());
     }
 }

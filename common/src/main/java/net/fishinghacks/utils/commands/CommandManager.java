@@ -14,7 +14,7 @@ public class CommandManager {
 
     static {
         register(new SayCommand(), new HelpCommand(), new ReloadCosmeticsCommand(), new ConfigCommand(),
-            new CosmeticsCommand(), new InviteCommand(), new QuickCalcCommand(), new CalcCommand());
+            new CosmeticsCommand(), new InviteCommand(), new QuickCalcCommand(), new CalcCommand(), new MacroCommand());
     }
 
     public static void register(DotCommand... cmds) {
