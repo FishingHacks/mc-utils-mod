@@ -1,6 +1,5 @@
 package net.fishinghacks.utils.modules.ui;
 
-import net.fishinghacks.utils.Translation;
 import net.fishinghacks.utils.config.values.CachedValue;
 import net.fishinghacks.utils.config.spec.Config;
 import net.fishinghacks.utils.config.spec.ConfigBuilder;
@@ -21,7 +20,6 @@ public class Fps extends RenderableTextModule {
     @Override
     public void buildConfig(Config cfg, ConfigBuilder builder) {
         super.buildConfig(cfg, builder);
-        Translation.FpsConfigColored.config(builder);
         colored = CachedValue.wrap(cfg, builder, "colored", true);
     }
 

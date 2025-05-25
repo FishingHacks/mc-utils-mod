@@ -41,17 +41,19 @@ public class ChatListenerMixin {
             GuiMessageTag messageTag = trustLevel.createTag(chatMessage);
             var signature = chatMessage.signature();
             Component message;
-            if (chatMod.CUSTOM_PLAYER_FORMAT.get() || chatMessage.unsignedContent() == null) {
-                var time = chatMod.TIME_FORMAT.get().format(localTime);
-                var name = gameProfile.getName();
-                var prefix = chatMod.PREFIX_FORMAT.get().replaceAll("%t", time).replaceAll("%p", name) + " ";
-                message = Component.literal(prefix).append(Component.literal(chatMessage.signedContent()));
-            } else if (chatMod.TIME_FORMAT.get() == Chat.TimeFormat.Disabled) message = chatMessage.unsignedContent();
-            else {
-                var time = chatMod.TIME_FORMAT.get().format(localTime);
-                message = Component.literal(chatMod.PREFIX_FORMAT.get().replaceAll("%t", time)).append(" ")
-                    .append(chatMessage.unsignedContent());
-            }
+            if (chatMod.CUSTOM_PLAYER_FORMAT.get()) {
+                var prefixFormat = chatMod.PREFIX_FORMAT.get();
+                var prefix = prefixFormat.replaceAll("%t", chatMod.TIME_FORMAT.get().format(localTime));
+                var prefixes = prefix.split("%p");
+                var msg = Component.literal(prefixes[0]);
+                for (int i = 1; i < prefixes.length; ++i)
+                    msg.append(boundChatType.name()).append(Component.literal(prefixes[i]));
+                message = msg.append(" ").append(chatMessage.decoratedContent());
+            } else if (chatMod.TIME_FORMAT.get() == Chat.TimeFormat.Disabled)
+                message = boundChatType.decorate(chatMessage.decoratedContent());
+            else message = Component.literal(
+                        chatMod.PREFIX_FORMAT.get().replaceAll("%t", chatMod.TIME_FORMAT.get().format(localTime)))
+                    .append(" ").append(boundChatType.decorate(chatMessage.decoratedContent()));
 
             Minecraft.getInstance().gui.getChat().addMessage(message, signature, messageTag);
             ((ChatListenerInvoker) this).invokeNarrateChatMessage(boundChatType, chatMessage.decoratedContent());

@@ -19,7 +19,7 @@ public abstract class RenderableTextModule extends RenderableModule {
     public abstract List<Component> getPreviewText();
 
     public Integer getBackgroundColor() {
-        return Colors.DARK_GRAY.withAlpha(0x7f);
+        return Colors.BLACK.withAlpha(0x7f);
     }
 
     protected CachedValue<Boolean> textShadow;

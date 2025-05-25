@@ -95,7 +95,6 @@ public class DragUI extends Screen {
         public void render(@NotNull GuiGraphics guiGraphics, int i, int i1, float partialTick) {
             if (!module.enabled) return;
             clamp();
-            guiGraphics.fill(module.x, module.y, module.x + size.x, module.y + size.y, Colors.BLACK.withAlpha(0x7f));
             module.renderPreview(guiGraphics, partialTick);
         }
 

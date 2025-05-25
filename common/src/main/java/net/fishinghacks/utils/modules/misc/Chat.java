@@ -56,13 +56,14 @@ public class Chat extends IModule {
         TwelveHours; // hh:mm:ss <am/pm>
 
         private static final DateTimeFormatter MIN_SEC = new DateTimeFormatterBuilder().appendValue(
-            ChronoField.MINUTE_OF_HOUR).appendLiteral(':').appendValue(ChronoField.SECOND_OF_MINUTE).toFormatter();
+                ChronoField.MINUTE_OF_HOUR, 2).appendLiteral(':').appendValue(ChronoField.SECOND_OF_MINUTE, 2)
+            .toFormatter();
         private static final DateTimeFormatter TWENTY_FOUR_HOUR = new DateTimeFormatterBuilder().appendValue(
-                ChronoField.HOUR_OF_DAY).appendLiteral(':').appendValue(ChronoField.MINUTE_OF_HOUR).appendLiteral(':')
-            .appendValue(ChronoField.SECOND_OF_MINUTE).toFormatter();
+                ChronoField.HOUR_OF_DAY, 2).appendLiteral(':').appendValue(ChronoField.MINUTE_OF_HOUR, 2).appendLiteral(':')
+            .appendValue(ChronoField.SECOND_OF_MINUTE, 2).toFormatter();
         private static final DateTimeFormatter TWELVE_HOUR = new DateTimeFormatterBuilder().appendValue(
-                ChronoField.HOUR_OF_AMPM).appendLiteral(':').appendValue(ChronoField.MINUTE_OF_HOUR).appendLiteral(':')
-            .appendValue(ChronoField.SECOND_OF_MINUTE).appendLiteral(' ')
+                ChronoField.HOUR_OF_AMPM, 2).appendLiteral(':').appendValue(ChronoField.MINUTE_OF_HOUR, 2)
+            .appendLiteral(':').appendValue(ChronoField.SECOND_OF_MINUTE, 2).appendLiteral(' ')
             .appendText(ChronoField.AMPM_OF_DAY, TextStyle.SHORT).toFormatter();
 
         @Override
