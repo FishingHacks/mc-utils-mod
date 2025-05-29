@@ -6,12 +6,8 @@ import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.nio.file.*;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -19,11 +15,58 @@ public class ExecutionManager {
     private static final HashMap<Integer, RunningMacro> runningMacros = new HashMap<>();
     private static int currentIndex = 0;
     private static @Nullable Path macroDirectory;
+    private static List<String> macros = new ArrayList<>();
+    private static @Nullable WatchKey watcherKey = null;
+    private static final @Nullable WatchService watcher;
+
+    static {
+        try {
+            watcher = FileSystems.getDefault().newWatchService();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static List<String> getMacros() {
+        if (watcher == null) return macros;
+        if (watcherKey == null) startWatcher();
+
+        WatchKey res;
+        while ((res = watcher.poll()) != null) {
+            if (!res.pollEvents().isEmpty()) {
+                try (var files = Files.list(getMacroDirectory())) {
+                    macros = files.map(Path::getFileName).map(Path::toString)
+                        .filter(name -> name.length() > 6 && name.endsWith(".macro"))
+                        .map(name -> name.substring(0, name.length() - 6)).toList();
+                } catch (IOException ignored) {
+                }
+                break;
+            }
+        }
+        return macros;
+    }
+
+    public static void startWatcher() {
+        if (watcher == null) return;
+        if (watcherKey != null && watcherKey.isValid()) return;
+        if (macroDirectory == null) {
+            // starts a watcher
+            getMacroDirectory();
+            return;
+        }
+        try {
+            watcherKey = macroDirectory.register(watcher, StandardWatchEventKinds.ENTRY_CREATE,
+                StandardWatchEventKinds.ENTRY_DELETE);
+        } catch (IOException ignored) {
+        }
+    }
 
     public static Path getMacroDirectory() {
-        if (macroDirectory != null) return macroDirectory;
-        return macroDirectory = Minecraft.getInstance().gameDirectory.toPath().resolve(".utils_data").resolve("macros")
-            .toAbsolutePath();
+        if (macroDirectory == null)
+            macroDirectory = Minecraft.getInstance().gameDirectory.toPath().resolve(".utils_data").resolve("macros")
+                .toAbsolutePath();
+        startWatcher();
+        return macroDirectory;
     }
 
     public static Set<Map.Entry<Integer, RunningMacro>> getRunningMacros() {

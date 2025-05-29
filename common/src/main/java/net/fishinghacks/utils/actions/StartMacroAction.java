@@ -1,7 +1,7 @@
 package net.fishinghacks.utils.actions;
 
 import com.google.common.collect.Lists;
-import net.fishinghacks.utils.commands.MacroCommand;
+import net.fishinghacks.utils.commands.commands.MacroCommand;
 import net.fishinghacks.utils.macros.ExecutionManager;
 import org.jetbrains.annotations.Nullable;
 

@@ -3,6 +3,7 @@ package net.fishinghacks.utils.gui;
 import net.fishinghacks.utils.Colors;
 import net.fishinghacks.utils.CommonUtil;
 import net.fishinghacks.utils.gui.components.*;
+import net.fishinghacks.utils.macros.ExecutionManager;
 import net.fishinghacks.utils.macros.Highlighter;
 import net.minecraft.FileUtil;
 import net.minecraft.Util;
@@ -48,7 +49,7 @@ public class MacrosScreen extends BlackScreen {
     }
 
     public static void open() {
-        var directory = Minecraft.getInstance().gameDirectory.toPath().resolve(".utils_data").resolve("macros");
+        var directory = ExecutionManager.getMacroDirectory();
         List<Path> validValues = new ArrayList<>();
         validValues.add(Path.of(""));
         try {
@@ -77,10 +78,9 @@ public class MacrosScreen extends BlackScreen {
 
     private static void openCreateFilePopup() {
         var parent = Minecraft.getInstance().screen;
-        InputPopupScreen.open(Component.literal("File name"), name -> Minecraft.getInstance().setScreen(
-            new MacrosScreen(parent,
-                Minecraft.getInstance().gameDirectory.toPath().resolve(".utils_data").resolve("macros")
-                    .resolve(name + ".macro"))), s -> !CommonUtil.isInvalidFilename(s));
+        InputPopupScreen.open(Component.literal("File name"), name -> Minecraft.getInstance()
+                .setScreen(new MacrosScreen(parent, ExecutionManager.getMacroDirectory().resolve(name + ".macro"))),
+            s -> !CommonUtil.isInvalidFilename(s));
     }
 
     @Override

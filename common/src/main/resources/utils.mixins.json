@@ -12,6 +12,7 @@
     "client.ChatComponentMixin",
     "client.ChatListenerInvoker",
     "client.ChatListenerMixin",
+    "client.CommandSuggestionsMixin",
     "client.GameRendererInvoker",
     "client.GameRendererMixin",
     "client.GuiMixin",
