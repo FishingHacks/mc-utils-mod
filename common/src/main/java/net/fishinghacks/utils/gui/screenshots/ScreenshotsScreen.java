@@ -95,7 +95,7 @@ public class ScreenshotsScreen extends BlackScreen {
                     .openPath(Minecraft.getInstance().gameDirectory.toPath().resolve("screenshots"))).build());
 
         addPageSelector();
-        addCosmeticBoxes();
+        addBoxes();
     }
 
     private void addPageSelector() {
@@ -118,7 +118,7 @@ public class ScreenshotsScreen extends BlackScreen {
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
-    private void addCosmeticBoxes() {
+    private void addBoxes() {
         boxes.clear();
         previewWidth = (boxWidth - 40 /* list padding */ - 30 /* 3 * 10px padding */ - 12 /* 3 * 2 * 2px box
         border
@@ -187,9 +187,6 @@ public class ScreenshotsScreen extends BlackScreen {
             ScreenshotCopier.doCopyMacOS(path.toAbsolutePath().toString());
         } else ScreenshotCache.instance.getOrLoad(loadedScreenshots.get(id).name)
             .thenAccept(ScreenshotCopier::handleScreenshotAWT);
-    }
-
-    public void uploadScreenshot(int ignoredid) {
     }
 
     @Override

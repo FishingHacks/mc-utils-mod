@@ -2,6 +2,8 @@ package net.fishinghacks.utils.mixin.client;
 
 import net.fishinghacks.utils.mixin_misc.DisplayEntry;
 import net.fishinghacks.utils.modules.misc.Scoreboard;
+import net.fishinghacks.utils.modules.ui.PotionEffects;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -73,8 +75,8 @@ public class GuiMixin {
             int titleEntryHeight = titleTextShadow ? 10 : 9;
             guiGraphics.fill(scoreboardX - 2, scoreboardY - titleEntryHeight - 1, scoreboardRight, scoreboardY - 1,
                 scoreboardMod.TITLE_BACKGROUND.get().argb());
-            guiGraphics.drawString(font, title, scoreboardX + scoreboardWidth / 2 - titleWidth / 2, scoreboardY - titleEntryHeight,
-                scoreboardMod.TITLE_TEXT_COLOR.get().argb(), titleTextShadow);
+            guiGraphics.drawString(font, title, scoreboardX + scoreboardWidth / 2 - titleWidth / 2,
+                scoreboardY - titleEntryHeight, scoreboardMod.TITLE_TEXT_COLOR.get().argb(), titleTextShadow);
         }
 
         int textColor = scoreboardMod.TEXT_COLOR.get().argb();
@@ -86,5 +88,10 @@ public class GuiMixin {
                 guiGraphics.drawString(font, displayEntry.score(), scoreboardRight - displayEntry.scoreWidth(), entryY,
                     textColor, textShadow);
         }
+    }
+
+    @Inject(method = "renderEffects", at = @At("HEAD"), cancellable = true)
+    public void renderEffects(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+        if (PotionEffects.instance.enabled && !PotionEffects.instance.displayVanilla.get()) ci.cancel();
     }
 }

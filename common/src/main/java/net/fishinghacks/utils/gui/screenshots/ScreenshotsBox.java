@@ -15,8 +15,7 @@ public class ScreenshotsBox extends Box {
     public Button openButton;
     public Button copyButton;
     public Button deleteButton;
-    public Button uploadButton;
-    public static int BUTTON_WIDTH = 3 + 2 * 4 + IconButton.DEFAULT_WIDTH * 4;
+    public static int BUTTON_WIDTH = 3 + 2 * 3 + IconButton.DEFAULT_WIDTH * 3;
 
     public ScreenshotsBox(int x, int y, int width, int height, final ScreenshotsScreen screen, final int id) {
         super(new DummyAbstractWidget());
@@ -24,7 +23,6 @@ public class ScreenshotsBox extends Box {
         copyButton = new IconButton.Builder(Icons.COPY).onPress(ignored -> screen.copyScreenshot(id)).build();
         deleteButton = new IconButton.Builder(Icons.DELETE).onPress(ignored -> screen.deleteScreenshot(id))
             .color(Colors.RED.get()).build();
-        uploadButton = new IconButton.Builder(Icons.UPLOAD).onPress(ignored -> screen.uploadScreenshot(id)).build();
         this.setRectangle(width, height, x, y);
     }
 
@@ -32,7 +30,6 @@ public class ScreenshotsBox extends Box {
     public void setX(int x) {
         super.setX(x);
         x += width - 3 - IconButton.DEFAULT_WIDTH;
-        uploadButton.setX(x);
         x -= 2 + IconButton.DEFAULT_WIDTH;
         deleteButton.setX(x);
         x -= 2 + IconButton.DEFAULT_WIDTH;
@@ -48,7 +45,6 @@ public class ScreenshotsBox extends Box {
         openButton.setY(y);
         copyButton.setY(y);
         deleteButton.setY(y);
-        uploadButton.setY(y);
     }
 
     @Override
@@ -57,6 +53,5 @@ public class ScreenshotsBox extends Box {
         consumer.accept(openButton);
         consumer.accept(copyButton);
         consumer.accept(deleteButton);
-        consumer.accept(uploadButton);
     }
 }

@@ -18,7 +18,6 @@ public class Icons {
     public static final ResourceLocation DELETE = Constants.id("textures/menu/delete.png");
     public static final ResourceLocation OPEN = Constants.id("textures/menu/open.png");
     public static final ResourceLocation COPY = Constants.id("textures/menu/copy.png");
-    public static final ResourceLocation UPLOAD = Constants.id("textures/menu/upload.png");
     public static final ResourceLocation MODULES = Constants.id("textures/menu/modules.png");
     public static final ResourceLocation SAVE = Constants.id("textures/menu/save.png");
 }
