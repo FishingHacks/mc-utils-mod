@@ -7,7 +7,6 @@ import net.fishinghacks.utils.Translation;
 import net.fishinghacks.utils.commands.Command;
 import net.fishinghacks.utils.connection.ClientConnectionHandler;
 import net.fishinghacks.utils.connection.Connection;
-import net.fishinghacks.utils.connection.packets.InvitePacket;
 import net.fishinghacks.utils.gui.PauseMenuScreen;
 import net.fishinghacks.utils.platform.Services;
 import net.minecraft.ChatFormatting;
@@ -34,7 +33,7 @@ public class InviteCommand extends Command {
                 String link = E4MCStore.getLink();
                 Connection conn = ClientConnectionHandler.getInstance().getConnection();
                 if (link == null || conn == null) return SINGLE_SUCCESS;
-                conn.send(new InvitePacket(link, player));
+                PauseMenuScreen.sendInvite(conn, link, player);
             }
         }
         return SINGLE_SUCCESS;

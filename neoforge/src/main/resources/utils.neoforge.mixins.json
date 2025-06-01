@@ -6,7 +6,8 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [],
   "client": [
-    "E4MCQuiclimeSessionMixin"
+    "E4MCQuiclimeSessionMixin",
+    "NeoforgeScreenshotMixin"
   ],
   "server": [],
   "injectors": {

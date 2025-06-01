@@ -15,6 +15,7 @@
     "client.CommandSuggestionsMixin",
     "client.GameRendererInvoker",
     "client.GameRendererMixin",
+    "client.GuiGraphicsMixin",
     "client.GuiMixin",
     "client.IngredientAccessor",
     "client.KeymappingMixin",
@@ -31,7 +32,8 @@
     "client.StringUtilMixin",
     "client.SystemToastMixin",
     "client.TabOverlayMixin",
-    "client.TitleScreenMixin"
+    "client.TitleScreenMixin",
+    "client.ItemStackMixin"
   ],
   "server": [
     "server.ServerConnectionListenerMixin"

@@ -27,12 +27,16 @@ public class ClientModEvents {
             if (Minecraft.getInstance().screen instanceof DragUI) return;
             ModuleManager.enabledModules.forEach(mod -> {
                 if (ModuleManager.modules.get(mod) instanceof RenderableModule module)
-                    module.render(guiGraphics, partialTick);
+                    if (module.shouldRender()) module.render(guiGraphics, partialTick);
             });
         });
         event.registerAboveAll(Constants.id("notifications"), (guiGraphics, deltaTracker) -> {
-            if (Minecraft.getInstance().screen == null) GuiOverlayManager.renderNotifications(guiGraphics, -1, -1,
-                deltaTracker.getGameTimeDeltaPartialTick(true));
+            if (Minecraft.getInstance().screen == null) {
+                GuiOverlayManager.repositionNotifications(Minecraft.getInstance().getWindow().getGuiScaledWidth(),
+                    Minecraft.getInstance().getWindow().getGuiScaledHeight());
+                GuiOverlayManager.renderNotifications(guiGraphics, -1, -1,
+                    deltaTracker.getGameTimeDeltaPartialTick(true));
+            }
         });
     }
 }

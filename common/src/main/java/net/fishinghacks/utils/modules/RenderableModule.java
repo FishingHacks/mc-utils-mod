@@ -30,6 +30,14 @@ public abstract class RenderableModule extends IModule {
 
     public abstract void render(GuiGraphics guiGraphics, float partialTick);
 
+    public boolean shouldRender() {
+        var dbg = Minecraft.getInstance().gui.getDebugOverlay();
+        boolean hideHalf = dbg.showDebugScreen();
+        if (hideHalf && (dbg.showFpsCharts() || dbg.showNetworkCharts() || dbg.showProfilerChart())) return false;
+        int height = Minecraft.getInstance().getWindow().getGuiScaledHeight();
+        return !hideHalf || posY.get() > height / 2;
+    }
+
     public abstract void renderPreview(GuiGraphics guiGraphics, float partialTick);
 
     public abstract Vector2i previewSize();

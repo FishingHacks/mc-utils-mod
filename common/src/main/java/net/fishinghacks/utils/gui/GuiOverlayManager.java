@@ -83,7 +83,7 @@ public class GuiOverlayManager {
             firstRender = false;
             ClientConstants.onFirstGuiRender();
         }
-        if (repositionNotifications) repositionNotifications(screen.width, screen.height);
+        repositionNotifications(screen.width, screen.height);
         boolean mouseOverlaps = isInOverlay(mouseX, mouseY);
         overlay = null;
 
@@ -176,7 +176,9 @@ public class GuiOverlayManager {
         return false;
     }
 
-    private static void repositionNotifications(int width, int height) {
+    public static void repositionNotifications(int width, int height) {
+        if(!repositionNotifications) return;
+        repositionNotifications = false;
         width -= 2;
         height -= 2;
         for (Notification notification : notifications) {

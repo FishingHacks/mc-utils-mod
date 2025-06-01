@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudLayerRegistrationCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.IdentifiedLayer;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fishinghacks.utils.caching.DownloadTextureCache;
+import net.fishinghacks.utils.commands.CommandManager;
 import net.fishinghacks.utils.config.spec.ConfigType;
 import net.fishinghacks.utils.config.ConfigsImpl;
 import net.fishinghacks.utils.connection.ClientConnectionHandler;
@@ -34,6 +35,7 @@ public class UtilsClientMod implements ClientModInitializer {
         ClientLifecycleEvents.CLIENT_STARTED.register(mc -> {
             ConfigsImpl.registerConfigs(mc.gameDirectory.toPath().resolve("config"), ConfigType::isClient);
             DownloadTextureCache.loadCaches();
+            CommandManager.init();
         });
         HudLayerRegistrationCallback.EVENT.register(wrapper -> {
             wrapper.addLayer(IdentifiedLayer.of(Constants.id("gui_overlay"), (guiGraphics, delta) -> {
@@ -41,13 +43,19 @@ public class UtilsClientMod implements ClientModInitializer {
                 if (Minecraft.getInstance().screen instanceof DragUI) return;
                 ModuleManager.enabledModules.forEach(mod -> {
                     if (ModuleManager.modules.get(mod) instanceof RenderableModule module)
-                        module.render(guiGraphics, partialTick);
+                        if (module.shouldRender()) module.render(guiGraphics, partialTick);
                 });
             }));
             wrapper.addLayer(IdentifiedLayer.of(Constants.id("notifications"), (guiGraphics, deltaTracker) -> {
-                if (Minecraft.getInstance().screen == null) GuiOverlayManager.renderNotifications(guiGraphics, -1, -1,
-                    deltaTracker.getGameTimeDeltaPartialTick(true));
+                if (Minecraft.getInstance().screen == null) {
+                    GuiOverlayManager.repositionNotifications(Minecraft.getInstance().getWindow().getGuiScaledWidth(),
+                        Minecraft.getInstance().getWindow().getGuiScaledHeight());
+                    GuiOverlayManager.renderNotifications(guiGraphics, -1, -1,
+                        deltaTracker.getGameTimeDeltaPartialTick(true));
+                }
             }));
         });
+        ServerPlayConnectionEvents.JOIN.register(
+            (handler, sender, server) -> Whitelist.onPlayerJoin(handler.getPlayer()));
     }
 }

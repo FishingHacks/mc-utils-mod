@@ -25,9 +25,9 @@ public class Clock extends RenderableTextModule {
 
     private DateTimeFormatter buildFormatter() {
         DateTimeFormatterBuilder builder = new DateTimeFormatterBuilder();
-        if (showDate.get()) builder.appendValue(ChronoField.DAY_OF_MONTH, 2).appendLiteral('-')
-            .appendValue(ChronoField.MONTH_OF_YEAR, 2).appendLiteral('-').appendValue(ChronoField.YEAR, 4)
-            .appendLiteral(" ");
+        if (showDate.get())
+            builder.appendValue(ChronoField.YEAR, 4).appendLiteral('-').appendValue(ChronoField.MONTH_OF_YEAR, 2)
+                .appendLiteral('-').appendValue(ChronoField.DAY_OF_MONTH, 2).appendLiteral(" ");
         if (twentyFourHours.get()) builder.appendValue(ChronoField.HOUR_OF_DAY, 2);
         else builder.appendValue(ChronoField.HOUR_OF_AMPM, 2);
         builder.appendLiteral(':').appendValue(ChronoField.MINUTE_OF_HOUR, 2);

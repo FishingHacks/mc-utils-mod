@@ -21,6 +21,10 @@ public class CommandManager {
     private static CommandDispatcher<SharedSuggestionProvider> DISPATCHER = null;
     private static List<Command> COMMANDS = null;
 
+    public static void init() {
+        getDispatcher();
+    }
+
     public static CommandDispatcher<SharedSuggestionProvider> getDispatcher() {
         if (DISPATCHER == null) onLoad();
         return DISPATCHER;
@@ -43,6 +47,7 @@ public class CommandManager {
         register(new MacroCommand(), context);
         register(new QuickCalcCommand(), context);
         register(new ReloadCosmeticsCommand(), context);
+        register(new WhitelistCommand(), context);
     }
 
     public static void register(Command command, CommandBuildContext buildContext) {

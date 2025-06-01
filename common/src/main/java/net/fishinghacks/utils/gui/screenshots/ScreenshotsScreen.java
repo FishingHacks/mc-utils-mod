@@ -9,6 +9,7 @@ import net.fishinghacks.utils.caching.FutureState;
 import net.fishinghacks.utils.caching.ScreenshotCache;
 import net.fishinghacks.utils.gui.BlackScreen;
 import net.fishinghacks.utils.gui.ConfirmPopupScreen;
+import net.fishinghacks.utils.gui.Icons;
 import net.fishinghacks.utils.gui.components.*;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -88,6 +89,11 @@ public class ScreenshotsScreen extends BlackScreen {
             Button.Builder.cube("<").pos(boxX - 4 - Button.CUBE_WIDTH, headerY).onPress(ignored -> onClose()).build());
         focusedImageCloseButton = Button.Builder.cube('×').pos(width - Button.CUBE_WIDTH - 4, 4).build();
 
+        addRenderableWidget(
+            new IconButton.Builder(Icons.FOLDER).pos(boxX - 4 - Button.CUBE_WIDTH, headerY + Button.CUBE_WIDTH + 4)
+                .onPress(ignored -> Util.getPlatform()
+                    .openPath(Minecraft.getInstance().gameDirectory.toPath().resolve("screenshots"))).build());
+
         addPageSelector();
         addCosmeticBoxes();
     }
@@ -152,7 +158,7 @@ public class ScreenshotsScreen extends BlackScreen {
             screenshots.clear();
             files.forEach(file -> {
                 var filename = file.getFileName().toString();
-                if (filename.length() < 5) return;
+                if (filename.length() < 5 || !filename.endsWith(".png")) return;
                 screenshots.add(filename.substring(0, filename.length() - 4));
             });
         } catch (IOException ignored) {

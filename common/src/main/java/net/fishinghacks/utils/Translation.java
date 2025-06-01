@@ -27,7 +27,7 @@ public enum Translation implements Supplier<Component> {
         "module_category.ui"), ModuleCategoryMisc("module_category.misc"), ClickUIOpenKey("key.clickui.open"), Invite(
         "invite"), InviteFailed("invite.failed"), InviteNotification("invite.notification"), InviteTrusted(
         "invite.trusted"), InviteGuiTitle("invite.gui_title"), InvitePlayerName("invite.player_name"), InviteAccept(
-        "invite.accept"), ServerDisconnected("server.disconnected"), ServerUnconnected(
+        "invite.accept"), InviteNotOnWhitelist("invite.not_on_whitelist"), ServerDisconnected("server.disconnected"), ServerUnconnected(
         "server.unconnected"), ServerConnecting("server.connecting"), ServerConnected(
         "server.connected"), ServerConnection("server.connection"), ServerConnect("server.connect"), ServerDisconnect(
         "server.disconnect"), CosmeticGuiTitle("gui.cosmetics.title"), CosmeticGuiCape(
@@ -68,7 +68,9 @@ public enum Translation implements Supplier<Component> {
         "cmd.macros.failed_to_start"), CmdMacrosHelp("cmd.macros.help"), DurabilityDisplayTypeBar(
         "durability_display_type.bar"), DurabilityDisplayTypeText(
         "durability_display_type.text"), DurabilityDisplayTypeBoth(
-        "durability_display_type.both"), DurabilityDisplayTypeNone("durability_display_type.none"),
+        "durability_display_type.both"), DurabilityDisplayTypeNone("durability_display_type.none"), CmdWhitelistAdded(
+        "cmd.whitelist.added"), CmdWhitelistRemoved("cmd.whitelist.removed"), CmdWhitelistEnabled(
+        "cmd.whitelist.enabled"), CmdWhitelistDisabled("cmd.whitelist.disabled"),
     ;
 
     private final String key;

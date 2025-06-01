@@ -2,6 +2,7 @@ package net.fishinghacks.utils.gui;
 
 import com.mojang.realmsclient.RealmsMainScreen;
 import net.fishinghacks.utils.E4MCStore;
+import net.fishinghacks.utils.Whitelist;
 import net.fishinghacks.utils.connection.ClientConnectionHandler;
 import net.fishinghacks.utils.gui.components.Button;
 import net.fishinghacks.utils.gui.components.IconButton;
@@ -219,7 +220,15 @@ public class PauseMenuScreen extends Screen {
                 if (link == null) return;
                 Connection conn = ClientConnectionHandler.getInstance().getConnection();
                 if (conn == null) return;
-                conn.send(new InvitePacket(link, playerName));
+                sendInvite(conn, link, playerName);
             });
+    }
+
+    public static void sendInvite(Connection conn, String link, String playerName) {
+        if (Whitelist.isWhitelisted(playerName)) conn.send(new InvitePacket(link, playerName));
+        else ConfirmPopupScreen.open(Translation.InviteNotOnWhitelist.with(playerName), () -> {
+            Whitelist.add(playerName);
+            conn.send(new InvitePacket(link, playerName));
+        });
     }
 }

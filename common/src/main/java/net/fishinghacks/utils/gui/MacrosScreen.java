@@ -117,6 +117,7 @@ public class MacrosScreen extends BlackScreen {
         input.setValueListener(this::parse);
         input.setValue(content);
         parse(content);
+        didChange = false;
     }
 
     private void parse(String value) {

@@ -9,6 +9,7 @@
     "ClientPacketListenerMixin",
     "CommandsMixin",
     "E4MCQuiclimeSessionMixin",
+    "FabricScreenshotMixin",
     "GameRendererMixin",
     "MouseHandlerMixin",
     "ToastManagerMixin"

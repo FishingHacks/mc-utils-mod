@@ -3,6 +3,7 @@ package net.fishinghacks.utils.events;
 import net.fishinghacks.utils.Constants;
 import net.fishinghacks.utils.E4MCStore;
 import net.fishinghacks.utils.Telemetry;
+import net.fishinghacks.utils.Whitelist;
 import net.fishinghacks.utils.caching.DownloadTextureCache;
 import net.fishinghacks.utils.commands.CommandManager;
 import net.fishinghacks.utils.connection.ClientConnectionHandler;
@@ -11,6 +12,7 @@ import net.fishinghacks.utils.modules.ClickUi;
 import net.fishinghacks.utils.modules.ModuleManager;
 import net.fishinghacks.utils.modules.misc.Zoom;
 import net.minecraft.client.Minecraft;
+import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -18,6 +20,7 @@ import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.event.lifecycle.ClientStartedEvent;
 import net.neoforged.neoforge.client.event.lifecycle.ClientStoppingEvent;
 import net.neoforged.neoforge.event.CommandEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
 @EventBusSubscriber(modid = Constants.MOD_ID, value = Dist.CLIENT)
 public class ClientEvents {
@@ -84,6 +87,7 @@ public class ClientEvents {
     public static void onStarted(ClientStartedEvent ignored) {
         Telemetry.start("Overlay Manager");
         DownloadTextureCache.loadCaches();
+        CommandManager.init();
     }
 
     @SubscribeEvent
@@ -95,5 +99,10 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onToast(ToastAddEvent event) {
         event.setCanceled(GuiOverlayManager.onToast(event.getToast()));
+    }
+
+    @SubscribeEvent
+    public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent ev) {
+        if (ev.getEntity() instanceof ServerPlayer p) Whitelist.onPlayerJoin(p);
     }
 }

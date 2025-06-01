@@ -62,6 +62,7 @@ public abstract class RenderableTextModule extends RenderableModule {
         int width = text.stream().map(font::width).reduce(0, Math::max) + 4;
         int height = font.lineHeight * text.size() + 2;
         Vector2i pos = getPosition(width, height);
+        if (background.get()) guiGraphics.fill(pos.x, pos.y, pos.x + width, pos.y + height, getBackgroundColor());
         boolean rightAlign = isRightAligned();
         for (int i = 0; i < text.size(); ++i) {
             int x = pos.x + 2;

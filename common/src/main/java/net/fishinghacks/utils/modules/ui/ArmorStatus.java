@@ -59,10 +59,10 @@ public class ArmorStatus extends RenderableModule {
             graphics.fill(pos.x + 4, pos.y + 15, pos.x + 4 + width, pos.y + 16, 200, ARGB.opaque(item.getBarColor()));
         }
 
-        if (text && item.isBarVisible()) {
+        if (text && item.isDamageableItem()) {
             String percentageDurability =
                 (int) (100f - ((float) item.getDamageValue() / item.getMaxDamage()) * 100f) + "%";
-            int x = pos.x + 2;
+            int x = pos.x + (bar ? 5 : 2);
             int y = pos.y + (bar ? 11 : 13);
             graphics.pose().pushPose();
             graphics.pose().scale(.5f, .5f, 1f);

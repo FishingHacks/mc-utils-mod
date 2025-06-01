@@ -1,6 +1,7 @@
 package net.fishinghacks.utils.macros;
 
 import net.fishinghacks.utils.CommonUtil;
+import net.fishinghacks.utils.Constants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
@@ -20,16 +21,29 @@ public class ExecutionManager {
     private static final @Nullable WatchService watcher;
 
     static {
+        @Nullable WatchService watcher1;
         try {
-            watcher = FileSystems.getDefault().newWatchService();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            watcher1 = FileSystems.getDefault().newWatchService();
+        } catch (IOException ignored) {
+            Constants.LOG.info("Failed to create watch service.");
+            watcher1 = null;
         }
+        watcher = watcher1;
     }
 
     public static List<String> getMacros() {
         if (watcher == null) return macros;
-        if (watcherKey == null) startWatcher();
+        if (watcherKey == null || !watcherKey.isValid()) {
+            startWatcher();
+            macros = List.of();
+            try (var files = Files.list(getMacroDirectory())) {
+                macros = files.map(Path::getFileName).map(Path::toString)
+                    .filter(name -> name.length() > 6 && name.endsWith(".macro"))
+                    .map(name -> name.substring(0, name.length() - 6)).toList();
+            } catch (IOException ignored) {
+            }
+            return macros;
+        }
 
         WatchKey res;
         while ((res = watcher.poll()) != null) {
