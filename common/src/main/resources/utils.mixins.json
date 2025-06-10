@@ -12,12 +12,14 @@
     "client.ChatComponentMixin",
     "client.ChatListenerInvoker",
     "client.ChatListenerMixin",
+    "client.ClientLevelMixin",
     "client.CommandSuggestionsMixin",
     "client.GameRendererInvoker",
     "client.GameRendererMixin",
     "client.GuiGraphicsMixin",
     "client.GuiMixin",
     "client.IngredientAccessor",
+    "client.ItemStackMixin",
     "client.KeymappingMixin",
     "client.LightTextureMixin",
     "client.MinecraftMixin",
@@ -32,8 +34,7 @@
     "client.StringUtilMixin",
     "client.SystemToastMixin",
     "client.TabOverlayMixin",
-    "client.TitleScreenMixin",
-    "client.ItemStackMixin"
+    "client.TitleScreenMixin"
   ],
   "server": [
     "server.ServerConnectionListenerMixin"

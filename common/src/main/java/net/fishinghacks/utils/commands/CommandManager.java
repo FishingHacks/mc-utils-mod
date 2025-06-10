@@ -48,6 +48,7 @@ public class CommandManager {
         register(new QuickCalcCommand(), context);
         register(new ReloadCosmeticsCommand(), context);
         register(new WhitelistCommand(), context);
+        register(new MufflerCommand(), context);
     }
 
     public static void register(Command command, CommandBuildContext buildContext) {

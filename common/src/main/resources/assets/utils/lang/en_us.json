@@ -44,6 +44,12 @@
   "utils.cmd.macros.stopped": "Stopped macro #%s",
   "utils.cmd.macros.stop.usage": "Usage: §e.macros §dstop §a<id>",
   "utils.cmd.macros.start.usage": "Usage: §e.macros §dstart §e<macro>",
+  "utils.cmd.muffler.help": "§e.muffler §dset-volume §b<sound> §e<volume>§r - Sets the volume of a sound\n§e.muffler §dget-volume §b<sound>§r - Gets the volume of a sound\n§e.muffler §dmute §b<sound>§r - mutes a sound\n§e.muffler §dunmute §b<sound>§r - unmutes a sound",
+  "utils.cmd.muffler.set_volume": "Set the volume of %s to %s!",
+  "utils.cmd.muffler.get_volume": "Volume of %s: %s",
+  "utils.cmd.muffler.get_volume.muted": "Volume of %s: %s §b(muted)",
+  "utils.cmd.muffler.muted": "Muted %s",
+  "utils.cmd.muffler.unmuted": "Unmuted %s",
   "utils.gui.actions.title": "Actions",
   "utils.gui.actions.remove": "Remove",
   "utils.gui.actions.type": "Type",
@@ -111,6 +117,9 @@
   "utils.configuration.armor_status": "Armor Status",
   "utils.configuration.item_render": "Item Render",
   "utils.configuration.potion_effects": "Potion Effects",
+  "utils.configuration.muffler": "Muffler",
+  "utils.configuration.muffler_state": "Muffler State",
+  "utils.configuration.muffler_state.tooltip": "Change the volume of single playing sounds",
   "utils.configuration.potion_effects.show_icon": "Show Icon",
   "utils.configuration.potion_effects.show_icon.tooltip": "Displays the Effect's Icon left of the name",
   "utils.configuration.potion_effects.duration_newline": "Duration Newline",
@@ -274,5 +283,7 @@
   "utils.cmd.whitelist.added": "Added %s to the whitelist!",
   "utils.cmd.whitelist.removed": "Removed %s from the whitelist!",
   "utils.cmd.whitelist.enabled": "Enabled the whitelist",
-  "utils.cmd.whitelist.disabled": "Disabled the whitelist"
+  "utils.cmd.whitelist.disabled": "Disabled the whitelist",
+  "utils.common.search": "Search",
+  "utils.common.no_results": "No elements match the term '%s'"
 }

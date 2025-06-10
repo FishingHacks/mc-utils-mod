@@ -1,6 +1,7 @@
 package net.fishinghacks.utils.gui.mcsettings;
 
 import net.fishinghacks.utils.TranslatableEnum;
+import net.fishinghacks.utils.Translation;
 import net.fishinghacks.utils.gui.Icons;
 import net.fishinghacks.utils.gui.ListScreen;
 import net.fishinghacks.utils.gui.components.*;
@@ -78,7 +79,7 @@ public class McSettingsScreen extends ListScreen {
         if (current == OptionType.Keybinds) {
             final int searchWidth = Button.BIG_WIDTH - 12 - Button.CUBE_WIDTH * 2;
             keybindSearch = this.addRenderableWidget(
-                Input.Builder.small(fovX, y).size(searchWidth, Button.DEFAULT_HEIGHT).hint(Component.literal("Search"))
+                Input.Builder.small(fovX, y).size(searchWidth, Button.DEFAULT_HEIGHT).hint(Translation.Search.get())
                     .responder(ignored -> {
                         if (current == OptionType.Keybinds) rebuildList();
                     }).build());

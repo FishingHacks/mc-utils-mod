@@ -3,6 +3,7 @@ package net.fishinghacks.utils.config;
 import net.fishinghacks.utils.config.spec.*;
 import net.fishinghacks.utils.config.values.ActionListCachedValue;
 import net.fishinghacks.utils.config.values.CachedValue;
+import net.fishinghacks.utils.config.values.MufflerState;
 import net.fishinghacks.utils.modules.ModuleManager;
 import net.fishinghacks.utils.platform.services.IConfig;
 
@@ -21,6 +22,7 @@ public class ClientConfig extends Config {
     public final CachedValue<List<? extends String>> SERVICE_SERVER_HISTORY;
     public final CachedValue<Boolean> AUTOCONNECT;
     public final ActionListCachedValue ACTIONS;
+    public final MufflerState MUFFLER_STATE;
 
     ClientConfig() {
         var builder = new ConfigBuilder();
@@ -49,6 +51,7 @@ public class ClientConfig extends Config {
             v -> v instanceof String);
         AUTOCONNECT = CachedValue.wrap(this, builder, "autoconnect", false);
         ACTIONS = ActionListCachedValue.wrap(this, builder, "_actions");
+        MUFFLER_STATE = MufflerState.wrap(this, builder, "muffler_state");
 
         for (var entry : ModuleManager.modules.values()) {
             builder.enterSection(entry.name());

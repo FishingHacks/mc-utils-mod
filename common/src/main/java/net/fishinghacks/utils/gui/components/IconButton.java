@@ -14,7 +14,7 @@ import java.util.function.Consumer;
 public class IconButton extends Button {
     public static final int DEFAULT_WIDTH = Button.CUBE_WIDTH;
 
-    private final ResourceLocation icon;
+    private ResourceLocation icon;
     private int iconWidth;
     private int iconHeight;
     public int color = Colors.WHITE.get();
@@ -31,6 +31,11 @@ public class IconButton extends Button {
         var mipLevels = texture.getMipLevels();
         iconWidth = texture.getWidth(mipLevels);
         iconHeight = texture.getHeight(mipLevels);
+    }
+
+    public void setIcon(ResourceLocation icon) {
+        this.icon = icon;
+        recomputeSize();
     }
 
     @Override

@@ -27,12 +27,13 @@ public enum Translation implements Supplier<Component> {
         "module_category.ui"), ModuleCategoryMisc("module_category.misc"), ClickUIOpenKey("key.clickui.open"), Invite(
         "invite"), InviteFailed("invite.failed"), InviteNotification("invite.notification"), InviteTrusted(
         "invite.trusted"), InviteGuiTitle("invite.gui_title"), InvitePlayerName("invite.player_name"), InviteAccept(
-        "invite.accept"), InviteNotOnWhitelist("invite.not_on_whitelist"), ServerDisconnected("server.disconnected"), ServerUnconnected(
-        "server.unconnected"), ServerConnecting("server.connecting"), ServerConnected(
-        "server.connected"), ServerConnection("server.connection"), ServerConnect("server.connect"), ServerDisconnect(
-        "server.disconnect"), CosmeticGuiTitle("gui.cosmetics.title"), CosmeticGuiCape(
-        "gui.cosmetics.cape"), CosmeticGuiElytra("gui.cosmetics.elytra"), CosmeticGuiClear(
-        "gui.cosmetics.clear"), CosmeticGuiTypeMCCapes("gui.cosmetics.type.mccapes"), CosmeticGuiTypeServerCapes(
+        "invite.accept"), InviteNotOnWhitelist("invite.not_on_whitelist"), ServerDisconnected(
+        "server.disconnected"), ServerUnconnected("server.unconnected"), ServerConnecting(
+        "server.connecting"), ServerConnected("server.connected"), ServerConnection("server.connection"), ServerConnect(
+        "server.connect"), ServerDisconnect("server.disconnect"), CosmeticGuiTitle(
+        "gui.cosmetics.title"), CosmeticGuiCape("gui.cosmetics.cape"), CosmeticGuiElytra(
+        "gui.cosmetics.elytra"), CosmeticGuiClear("gui.cosmetics.clear"), CosmeticGuiTypeMCCapes(
+        "gui.cosmetics.type.mccapes"), CosmeticGuiTypeServerCapes(
         "gui.cosmetics.type.server_capes"), CosmeticGuiTypeServerModels(
         "gui.cosmetics.type.server_models"), CosmeticGuiLoading("gui.cosmetics.loading"), CosmeticGuiErrored(
         "gui.cosmetics.errored"), Lmb("common.lmb"), Rmb("common.rmb"), Facing("common.facing"), North(
@@ -49,7 +50,8 @@ public enum Translation implements Supplier<Component> {
         "gui.config.restart.world.title"), GuiConfigRestartWorldDescription(
         "gui.config.restart.world.text"), GuiConfigRestartIgnore(
         "gui.config.restart.return"), GuiConfigRestartIgnoreTooltip(
-        "gui.config.restart.return.tooltip"), GuiConfigTitle("gui.config.title"), ConfigChatTimeformatDisabled(
+        "gui.config.restart.return.tooltip"), GuiConfigTitle("gui.config.title"), ModuleMufflerTitle(
+        "configuration.muffler"), ConfigChatTimeformatDisabled(
         "configuration.chat.time_format.disabled"), ConfigChatTimeformatMinuteSecond(
         "configuration.chat.time_format.minute_second"), ConfigChatTimeformatTwentyFourHours(
         "configuration.chat.time_format.24_hours"), ConfigChatTimeformatTwelveHours(
@@ -70,7 +72,10 @@ public enum Translation implements Supplier<Component> {
         "durability_display_type.text"), DurabilityDisplayTypeBoth(
         "durability_display_type.both"), DurabilityDisplayTypeNone("durability_display_type.none"), CmdWhitelistAdded(
         "cmd.whitelist.added"), CmdWhitelistRemoved("cmd.whitelist.removed"), CmdWhitelistEnabled(
-        "cmd.whitelist.enabled"), CmdWhitelistDisabled("cmd.whitelist.disabled"),
+        "cmd.whitelist.enabled"), CmdWhitelistDisabled("cmd.whitelist.disabled"), CmdMufflerSetVolume(
+        "cmd.muffler.set_volume"), CmdMufflerGetVolume("cmd.muffler.get_volume"), CmdMufflerGetVolumeMuted(
+        "cmd.muffler.get_volume.muted"), CmdMufflerMuted("cmd.muffler.muted"), CmdMufflerUnmuted(
+        "cmd.muffler.unmuted"), Search("common.search"), NoResults("common.no_results"),
     ;
 
     private final String key;

@@ -28,6 +28,10 @@ public abstract class IModule {
 
     public boolean enabled = false;
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
     public final void setEnabled(boolean enabled) {
         this.enabled = enabled;
         if (enabled) this.onEnable();

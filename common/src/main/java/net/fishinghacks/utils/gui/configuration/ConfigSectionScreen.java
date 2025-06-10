@@ -9,9 +9,7 @@ import net.fishinghacks.utils.config.Configs;
 import net.fishinghacks.utils.config.spec.Config;
 import net.fishinghacks.utils.config.spec.ConfigSpec;
 import net.fishinghacks.utils.config.spec.RestartType;
-import net.fishinghacks.utils.config.values.AbstractCachedValue;
-import net.fishinghacks.utils.config.values.CachedColorValue;
-import net.fishinghacks.utils.config.values.CosmeticMapConfigValue;
+import net.fishinghacks.utils.config.values.*;
 import net.fishinghacks.utils.gui.Icons;
 import net.fishinghacks.utils.gui.ListScreen;
 import net.fishinghacks.utils.gui.PauseMenuScreen;
@@ -179,6 +177,8 @@ public class ConfigSectionScreen extends ListScreen {
             AbstractCachedValue value = entry.getValue().asCachedValue();
             switch (value) {
                 case CachedColorValue colorValue -> elements.add(createColorValue(key, colorValue));
+                case MufflerState val -> elements.add(createMufflerState(val));
+                case MufflerStateProxy val -> elements.add(createMufflerState(val));
                 /// Note: this will never be handled as it is server side. connect to the service server and use the
                 /// cosmetics menu or edit the config yourself.
                 case CosmeticMapConfigValue ignored -> elements.add(null);
@@ -225,6 +225,18 @@ public class ConfigSectionScreen extends ListScreen {
         });
 
         return new Element(name, value.getTooltipTranslation(), box);
+    }
+
+    private Element createMufflerState(AbstractCachedValue<?> value) {
+        var name = value.getNameTranslation();
+
+        return new Element(name, value.getTooltipTranslation(),
+            Button.Builder.normal(Translation.GuiConfigSectionButton.get())
+                .onPress(ignored -> {
+                    var screen = new MufflerScreen(this);
+                    screen.asPopup = this.asPopup;
+                    Minecraft.getInstance().setScreen(screen);
+                }).build());
     }
 
     private Element createStringValue(final String key, AbstractCachedValue<String> value) {

@@ -34,9 +34,12 @@ public abstract class ListScreen extends BlackScreen {
     protected int getListStartX() {
         return (this.width - listWidth) / 2;
     }
+    protected int getListStartY() {
+        return 30;
+    }
 
     public int getListVisibleHeight() {
-        return listVisibleHeight;
+        return height - getListStartY();
     }
 
     protected @Nullable AbstractWidget addTitle() {
@@ -54,8 +57,8 @@ public abstract class ListScreen extends BlackScreen {
     protected final void init() {
         super.init();
         titleWidget = addTitle();
-        listVisibleHeight = height - 30;
-        listStartY = 30;
+        listStartY = getListStartY();
+        listVisibleHeight = getListVisibleHeight();
         listWidth = getListWidth();
         listStartX = getListStartX();
         if (titleWidget != null) {
@@ -96,8 +99,14 @@ public abstract class ListScreen extends BlackScreen {
     @Override
     public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
-        guiGraphics.enableScissor(0, listStartY, width, listStartY + listVisibleHeight);
-        listLayout.visitWidgets(w -> w.render(guiGraphics, mouseX, mouseY, partialTick));
+        int endY = listStartY + listVisibleHeight;
+        int endX = listStartX + listWidth;
+        guiGraphics.enableScissor(listStartX, listStartY, endX, endY);
+        listLayout.visitWidgets(w -> {
+            if (w.getBottom() < listStartY || w.getY() > listStartY + listVisibleHeight || w.getRight() < listStartX || w.getX() > endX)
+                return;
+            w.render(guiGraphics, mouseX, mouseY, partialTick);
+        });
         guiGraphics.disableScissor();
     }
 }
