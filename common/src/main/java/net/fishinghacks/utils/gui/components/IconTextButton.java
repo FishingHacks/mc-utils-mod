@@ -69,8 +69,8 @@ public class IconTextButton extends Button {
         protected int x = 0;
         protected int y = 0;
         protected boolean active = true;
-        protected ResourceLocation icon;
-        protected Component message;
+        protected final ResourceLocation icon;
+        protected final Component message;
         protected @Nullable Consumer<Button> onPress = null;
         protected int width = IconTextButton.DEFAULT_WIDTH;
 

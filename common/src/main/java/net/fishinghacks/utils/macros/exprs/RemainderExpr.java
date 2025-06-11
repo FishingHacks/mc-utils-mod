@@ -3,6 +3,7 @@ package net.fishinghacks.utils.macros.exprs;
 import net.fishinghacks.utils.macros.BreakoutException;
 import net.fishinghacks.utils.macros.EvalContext;
 import net.fishinghacks.utils.macros.MacroException;
+import org.jetbrains.annotations.NotNull;
 
 public record RemainderExpr(Expression left, Expression right) implements Expression {
     @Override
@@ -11,7 +12,7 @@ public record RemainderExpr(Expression left, Expression right) implements Expres
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return left.toString() + " % " + right.toString();
     }
 }

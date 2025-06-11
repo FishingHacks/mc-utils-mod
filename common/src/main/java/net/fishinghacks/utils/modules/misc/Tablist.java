@@ -33,8 +33,4 @@ public class Tablist extends IModule {
         showFooterVal = CachedValue.wrap(cfg, builder, "show_footer", true);
         showFooterVal.onInvalidate(() -> showFooter = showFooterVal.get());
     }
-    @Override
-    public void onToggle() {
-        super.onToggle();
-    }
 }

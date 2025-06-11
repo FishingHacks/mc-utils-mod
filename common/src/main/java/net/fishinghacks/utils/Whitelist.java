@@ -13,7 +13,7 @@ public class Whitelist {
     public static final Component NOT_WHITELISTED = Component.translatable("multiplayer.disconnect.not_whitelisted");
 
     public static void kickUnlistedPlayers() {
-        if (!isEnabled()) return;
+        if (isDisabled()) return;
         var singleplayerServer = Minecraft.getInstance().getSingleplayerServer();
         if (!Minecraft.getInstance().isLocalServer() || singleplayerServer == null)
             throw new IllegalStateException("Only allowed in LAN worlds");
@@ -22,7 +22,7 @@ public class Whitelist {
     }
 
     public static void onPlayerJoin(ServerPlayer player) {
-        if (!isEnabled()) return;
+        if (isDisabled()) return;
         if (isWhitelisted(player.getGameProfile())) return;
         player.connection.disconnect(NOT_WHITELISTED);
     }
@@ -60,7 +60,7 @@ public class Whitelist {
         Configs.whitelist.ENABLED.set(enabled);
     }
 
-    public static boolean isEnabled() {
-        return Configs.whitelist.ENABLED.get();
+    public static boolean isDisabled() {
+        return !Configs.whitelist.ENABLED.get();
     }
 }

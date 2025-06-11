@@ -8,6 +8,7 @@ import java.util.List;
 public abstract class AbstractConfig {
     private final List<Runnable> cachedConfigValues = new ArrayList<>();
 
+    @SuppressWarnings("EmptyMethod")
     public void onLoad() {
     }
 

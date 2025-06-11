@@ -11,6 +11,7 @@ import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+@SuppressWarnings("SameReturnValue")
 public class BuiltinFunctions {
     private static final Location rootLoc = Location.builtin("root");
 

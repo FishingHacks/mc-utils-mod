@@ -5,7 +5,7 @@ import net.minecraft.network.chat.Component;
 
 public class MacroException extends Throwable {
     public final Component message;
-    public Location location;
+    public final Location location;
 
     public MacroException(Component message, Location location) {
         super();

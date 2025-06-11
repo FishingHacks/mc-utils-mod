@@ -140,7 +140,7 @@ public class PauseMenuScreen extends Screen {
             .onPress(ignored -> minecraft.setScreen(new ConfigSectionScreen(this))).build()).getHeight() + 4;
         addRenderableWidget(
             new IconButton.Builder(Icons.MODULES).pos(x, y).onPress(ignored -> minecraft.setScreen(new ClickUi(this)))
-                .build()).getHeight();
+                .build());
     }
 
     private void buildSidebarBig(int x) {
@@ -166,7 +166,7 @@ public class PauseMenuScreen extends Screen {
                 .onPress(ignored -> minecraft.setScreen(new ConfigSectionScreen(this))).build()).getHeight() + 4;
         addRenderableWidget(
             new IconTextButton.Builder(Icons.MODULES, Translation.MainGuiButtonModules.get()).x(x + 300).y(y)
-                .onPress(ignored -> minecraft.setScreen(new ClickUi(this))).build()).getHeight();
+                .onPress(ignored -> minecraft.setScreen(new ClickUi(this))).build());
     }
 
     @Override

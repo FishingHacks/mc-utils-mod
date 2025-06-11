@@ -5,6 +5,7 @@ import net.fishinghacks.utils.macros.EvalContext;
 import net.fishinghacks.utils.macros.MacroException;
 import net.fishinghacks.utils.macros.Translation;
 import net.fishinghacks.utils.macros.parsing.Location;
+import org.jetbrains.annotations.NotNull;
 
 public record IndexExpr(Expression left, Expression right, Location location) implements Expression {
     @Override
@@ -40,7 +41,7 @@ public record IndexExpr(Expression left, Expression right, Location location) im
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return left.toString() + "[" + right.toString() + "]";
     }
 }

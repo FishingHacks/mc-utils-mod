@@ -22,10 +22,10 @@ public class ActionListCachedValue extends CachedMappedValue<List<Action>, List<
         super(config, internalValue, encode, decode, builder);
     }
 
-    protected static List<Action> fromConfig(List<? extends Config> cfgs) {
+    protected static List<Action> fromConfig(List<? extends Config> value) {
         var list = new ArrayList<Action>();
         int id = 0;
-        for (var config : cfgs) {
+        for (var config : value) {
             var cfgType = config.getRaw("type");
             var cfgKey = config.getRaw("key");
             var cfgValue = config.getRaw("value");

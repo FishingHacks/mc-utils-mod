@@ -281,11 +281,6 @@ public class ScreenshotsScreen extends BlackScreen {
         guiGraphics.disableScissor();
     }
 
-    @Override
-    public void removed() {
-        super.removed();
-    }
-
     private static class ScreenshotEntry {
         @Nullable ResourceLocation location = null;
         final String name;

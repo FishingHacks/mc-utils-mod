@@ -11,7 +11,7 @@ import java.util.List;
 
 public class DisableModuleAction extends Action {
     protected String module = "";
-    public static Supplier<List<String>> MODULES = Suppliers.memoize(() -> {
+    public static final Supplier<List<String>> MODULES = Suppliers.memoize(() -> {
         List<String> modules = new ArrayList<>();
         modules.add("");
         modules.addAll(ModuleManager.modules.keySet());

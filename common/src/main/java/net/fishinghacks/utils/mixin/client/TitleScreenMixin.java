@@ -60,7 +60,7 @@ public class TitleScreenMixin extends Screen {
         y += addRenderableWidget(new VanillaIconButton(x, y, Icons.SETTINGS,
             ignored -> minecraft.setScreen(new ConfigSectionScreen(this)))).getHeight() + 4;
         addRenderableWidget(
-            new VanillaIconButton(x, y, Icons.MODULES, ignored -> minecraft.setScreen(new ClickUi(this)))).getHeight();
+            new VanillaIconButton(x, y, Icons.MODULES, ignored -> minecraft.setScreen(new ClickUi(this))));
     }
 
     @Unique
@@ -80,6 +80,6 @@ public class TitleScreenMixin extends Screen {
             new VanillaIconTextButton(x, y, Icons.SETTINGS, Translation.MainGuiButtonSettings.get(),
                 ignored -> minecraft.setScreen(new ConfigSectionScreen(this)))).getHeight() + 4;
         addRenderableWidget(new VanillaIconTextButton(x, y, Icons.MODULES, Translation.MainGuiButtonModules.get(),
-            ignored -> minecraft.setScreen(new ClickUi(this)))).getHeight();
+            ignored -> minecraft.setScreen(new ClickUi(this))));
     }
 }

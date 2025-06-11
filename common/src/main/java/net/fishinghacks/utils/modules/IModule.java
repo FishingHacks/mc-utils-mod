@@ -13,12 +13,15 @@ public abstract class IModule {
         return this.getClass().getAnnotation(Module.class).category();
     }
 
+    @SuppressWarnings("EmptyMethod")
     public void onEnable() {
     }
 
+    @SuppressWarnings("EmptyMethod")
     public void onDisable() {
     }
 
+    @SuppressWarnings("EmptyMethod")
     public void onToggle() {
     }
 

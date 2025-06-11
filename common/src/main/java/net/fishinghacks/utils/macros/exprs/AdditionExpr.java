@@ -3,6 +3,7 @@ package net.fishinghacks.utils.macros.exprs;
 import net.fishinghacks.utils.macros.BreakoutException.EvalShouldStop;
 import net.fishinghacks.utils.macros.EvalContext;
 import net.fishinghacks.utils.macros.MacroException;
+import org.jetbrains.annotations.NotNull;
 
 public record AdditionExpr(Expression left, Expression right) implements Expression {
     @Override
@@ -14,7 +15,7 @@ public record AdditionExpr(Expression left, Expression right) implements Express
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return left.toString() + " + " + right.toString();
     }
 }

@@ -51,7 +51,7 @@ public class GuiDropdown<T> extends AbstractWidget {
     // focus for the new element, without checking if they're the same or not.
     private long lastFocusUnExpand;
 
-    public GuiDropdown(int x, int y, int width, int height, Component message, T value,
+    public GuiDropdown(int x, int y, int width, int height, Component message, @NotNull T value,
                        Function<T, Component> valueStringifier, @Nullable OnValueChange<T> onValueChange,
                        List<T> validValues) {
         super(x, y, width, height, message);

@@ -7,6 +7,7 @@ import net.fishinghacks.utils.macros.MacroException;
 import net.fishinghacks.utils.macros.Translation;
 import net.fishinghacks.utils.macros.parsing.Location;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +52,7 @@ public record CallExpr(Expression function, List<Expression> arguments, Location
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append(function.toString()).append("(");
         boolean notFirst = false;

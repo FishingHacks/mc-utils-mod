@@ -3,6 +3,7 @@ package net.fishinghacks.utils.macros.exprs;
 import net.fishinghacks.utils.macros.BreakoutException;
 import net.fishinghacks.utils.macros.EvalContext;
 import net.fishinghacks.utils.macros.MacroException;
+import org.jetbrains.annotations.NotNull;
 
 public record LessThanEqExpr(Expression left, Expression right) implements Expression {
     @Override
@@ -11,7 +12,7 @@ public record LessThanEqExpr(Expression left, Expression right) implements Expre
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return left.toString() + " <= " + right.toString();
     }
 }

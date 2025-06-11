@@ -12,10 +12,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Consumer;
 
 public class ScreenshotsBox extends Box {
-    public Button openButton;
-    public Button copyButton;
-    public Button deleteButton;
-    public static int BUTTON_WIDTH = 3 + 2 * 3 + IconButton.DEFAULT_WIDTH * 3;
+    public final Button openButton;
+    public final Button copyButton;
+    public final Button deleteButton;
+    public static final int BUTTON_WIDTH = 3 + 2 * 3 + IconButton.DEFAULT_WIDTH * 3;
 
     public ScreenshotsBox(int x, int y, int width, int height, final ScreenshotsScreen screen, final int id) {
         super(new DummyAbstractWidget());

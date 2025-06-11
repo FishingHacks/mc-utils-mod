@@ -32,6 +32,7 @@ import net.minecraft.util.FormattedCharSequence;
 import org.jetbrains.annotations.NotNull;
 
 import org.jetbrains.annotations.Nullable;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.*;
@@ -73,7 +74,8 @@ public class ResourcePacks implements OptionSubscreen {
 
                 String packId = pack.getId();
                 String sanitizedId = Util.sanitizeName(packId, ResourceLocation::validPathChar);
-                ResourceLocation resourcelocation = ResourceLocation.withDefaultNamespace(
+                @SuppressWarnings("deprecation") ResourceLocation resourcelocation =
+                    ResourceLocation.withDefaultNamespace(
                     "pack/" + sanitizedId + "/" + Hashing.sha1().hashUnencodedChars(packId) + "/icon");
 
                 try (InputStream inputstream = iconSupplier.get()) {
@@ -247,8 +249,7 @@ public class ResourcePacks implements OptionSubscreen {
             this.incompatibleDescriptionDisplayCache = cacheDescription(minecraft,
                 pack.getCompatibility().getDescription());
             moveUp = Button.Builder.cube(MOVE_UP).onPress(this::moveUp).active(pack.canMoveUp()).build();
-            moveDown = Button.Builder.cube(MOVE_DOWN).onPress(this::moveDown).active(pack.canMoveDown())
-                .build();
+            moveDown = Button.Builder.cube(MOVE_DOWN).onPress(this::moveDown).active(pack.canMoveDown()).build();
             selectUnselect = Button.Builder.cube(pack.isSelected() ? MOVE_LEFT : MOVE_RIGHT).onPress(btn -> {
                 if (pack.isSelected()) pack.unselect();
                 else pack.select();
@@ -257,19 +258,19 @@ public class ResourcePacks implements OptionSubscreen {
         }
 
         private void moveUp(Button ignored) {
-            if(pack.canMoveUp()) pack.moveUp();
+            if (pack.canMoveUp()) pack.moveUp();
             ResourcePacks.this.reload = true;
         }
 
         private void moveDown(Button ignored) {
-            if(pack.canMoveDown()) pack.moveDown();
+            if (pack.canMoveDown()) pack.moveDown();
             ResourcePacks.this.reload = true;
         }
 
         @Override
         public void setX(int x) {
             super.setX(x);
-            if(pack.isSelected()) {
+            if (pack.isSelected()) {
                 selectUnselect.setX(x);
                 x += Button.CUBE_WIDTH;
             } else selectUnselect.setX(x + width - selectUnselect.getWidth());
@@ -305,12 +306,12 @@ public class ResourcePacks implements OptionSubscreen {
         protected void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float v) {
             int offsetY = getY() + PADDING;
             int offsetX = getX() + Button.CUBE_WIDTH;
-            if(pack.isSelected()) offsetX += Button.CUBE_WIDTH;
+            if (pack.isSelected()) offsetX += Button.CUBE_WIDTH;
             guiGraphics.blit(RenderType::guiTextured, pack.getIconTexture(), offsetX, offsetY, 0f, 0f, 32, 32, 32, 32);
             offsetX += 36;
             var name = nameDisplayCache;
             var description = descriptionDisplayCache;
-            if(getRectangle().containsPoint(mouseX, mouseY) && !pack.getCompatibility().isCompatible()) {
+            if (getRectangle().containsPoint(mouseX, mouseY) && !pack.getCompatibility().isCompatible()) {
                 name = incompatibleNameDisplayCache;
                 description = incompatibleDescriptionDisplayCache;
             }

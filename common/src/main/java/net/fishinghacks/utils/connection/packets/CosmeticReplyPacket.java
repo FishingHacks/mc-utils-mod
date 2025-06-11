@@ -1,6 +1,7 @@
 package net.fishinghacks.utils.connection.packets;
 
 import net.fishinghacks.utils.connection.Connection;
+import org.jetbrains.annotations.NotNull;
 
 public record CosmeticReplyPacket(CosmeticType cosmeticType, String name,
                                   String b64Data) implements Packet<ClientPacketHandler> {
@@ -14,7 +15,7 @@ public record CosmeticReplyPacket(CosmeticType cosmeticType, String name,
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return "CosmeticReplyPacket{" + "cosmeticType=" + cosmeticType + ", name='" + name + '\'' + ", b64Data='... " +
             "(" + b64Data.length() + " characters)'" + '}';
     }

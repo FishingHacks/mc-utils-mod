@@ -58,7 +58,7 @@ public class IconButton extends Button {
         protected int y = 0;
         protected int color = Colors.WHITE.get();
         protected boolean active = true;
-        protected ResourceLocation icon;
+        protected final ResourceLocation icon;
         protected @Nullable Consumer<Button> onPress = null;
 
         public Builder(ResourceLocation icon) {

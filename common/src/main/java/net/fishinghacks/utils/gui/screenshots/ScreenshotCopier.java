@@ -71,7 +71,8 @@ public class ScreenshotCopier {
 
         //noinspection ConstantConditions
         long imagePointer = ((NativeImageAccessor) (Object) img).getPointer();
-        ByteBuffer buf = MemoryUtil.memByteBufferSafe(imagePointer, img.getWidth() * img.getHeight() * 4);
+        int bufSize = img.getWidth() * img.getHeight() * 4;
+        ByteBuffer buf = MemoryUtil.memByteBufferSafe(imagePointer, bufSize);
         if (buf == null) {
             throw new RuntimeException("Invalid image");
         }
@@ -81,7 +82,7 @@ public class ScreenshotCopier {
             array = buf.array();
         } else {
             // can't use .array() as the buffer is not array-backed
-            array = new byte[img.getWidth() * img.getHeight() * 4];
+            array = new byte[bufSize];
             buf.get(array);
         }
 

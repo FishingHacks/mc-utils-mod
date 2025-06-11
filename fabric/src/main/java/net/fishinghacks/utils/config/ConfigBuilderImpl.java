@@ -22,7 +22,7 @@ public class ConfigBuilderImpl implements IConfigBuilder {
     private final Config spec = Config.of(LinkedHashMap::new, InMemoryFormat.withUniversalSupport());
     private BuilderContext context = new BuilderContext();
     private final List<String> currentPath = new ArrayList<>();
-    List<ConfigValueImpl<?>> values = new ArrayList<>();
+    final List<ConfigValueImpl<?>> values = new ArrayList<>();
 
     @Override
     public IConfigBuilder translation(String key) {

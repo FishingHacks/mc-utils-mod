@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+@SuppressWarnings({"UnresolvedMixinReference", "MixinAnnotationTarget"})
 @Mixin(Screen.class)
 public class ScreenMixin {
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
