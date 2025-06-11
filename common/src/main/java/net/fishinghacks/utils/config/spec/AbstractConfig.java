@@ -5,7 +5,7 @@ import net.fishinghacks.utils.platform.services.IConfig;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Config {
+public abstract class AbstractConfig {
     private final List<Runnable> cachedConfigValues = new ArrayList<>();
 
     public void onLoad() {

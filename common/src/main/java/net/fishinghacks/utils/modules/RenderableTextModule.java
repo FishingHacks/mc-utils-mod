@@ -2,7 +2,7 @@ package net.fishinghacks.utils.modules;
 
 import net.fishinghacks.utils.Colors;
 import net.fishinghacks.utils.config.values.CachedValue;
-import net.fishinghacks.utils.config.spec.Config;
+import net.fishinghacks.utils.config.spec.AbstractConfig;
 import net.fishinghacks.utils.config.spec.ConfigBuilder;
 import net.fishinghacks.utils.config.values.CachedColorValue;
 import net.minecraft.client.Minecraft;
@@ -27,7 +27,7 @@ public abstract class RenderableTextModule extends RenderableModule {
     protected CachedColorValue fgCol;
 
     @Override
-    public void buildConfig(Config cfg, ConfigBuilder builder) {
+    public void buildConfig(AbstractConfig cfg, ConfigBuilder builder) {
         super.buildConfig(cfg, builder);
         textShadow = CachedValue.wrap(cfg, builder, "text_shadow", true);
         background = CachedValue.wrap(cfg, builder, "background", true);

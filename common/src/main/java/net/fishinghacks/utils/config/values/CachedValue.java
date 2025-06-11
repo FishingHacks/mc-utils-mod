@@ -1,6 +1,6 @@
 package net.fishinghacks.utils.config.values;
 
-import net.fishinghacks.utils.config.spec.Config;
+import net.fishinghacks.utils.config.spec.AbstractConfig;
 import net.fishinghacks.utils.config.spec.ConfigBuilder;
 import net.fishinghacks.utils.platform.services.ConfigValue;
 
@@ -9,10 +9,10 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class CachedValue<T> extends AbstractCachedValue<T> {
-    private final Config config;
+    private final AbstractConfig config;
     private final ConfigValue<T> internalValue;
 
-    private CachedValue(Config config, ConfigValue<T> internalValue, ConfigBuilder builder) {
+    private CachedValue(AbstractConfig config, ConfigValue<T> internalValue, ConfigBuilder builder) {
         super(config, builder);
         this.config = config;
         this.internalValue = internalValue;
@@ -65,28 +65,28 @@ public class CachedValue<T> extends AbstractCachedValue<T> {
         return internalValue.getKey();
     }
 
-    public static <T> CachedValue<T> wrap(Config cfg, ConfigBuilder builder, String key, T defaultValue,
+    public static <T> CachedValue<T> wrap(AbstractConfig cfg, ConfigBuilder builder, String key, T defaultValue,
                                           Predicate<Object> validator) {
         return new CachedValue<>(cfg, builder.inner().define(key, defaultValue, validator), builder);
     }
 
-    public static <T> CachedValue<T> wrap(Config cfg, ConfigBuilder builder, String key, T defaultValue) {
+    public static <T> CachedValue<T> wrap(AbstractConfig cfg, ConfigBuilder builder, String key, T defaultValue) {
         return new CachedValue<>(cfg, builder.inner().define(key, defaultValue), builder);
     }
 
-    public static <T extends Enum<T>> CachedValue<T> wrapEnum(Config cfg, ConfigBuilder builder, String key,
+    public static <T extends Enum<T>> CachedValue<T> wrapEnum(AbstractConfig cfg, ConfigBuilder builder, String key,
                                                               T defaultValue) {
         return new CachedValue<>(cfg, builder.inner().defineEnum(key, defaultValue), builder);
     }
 
-    public static <T> CachedValue<List<? extends T>> wrapListEmpty(Config cfg, ConfigBuilder builder, String key,
+    public static <T> CachedValue<List<? extends T>> wrapListEmpty(AbstractConfig cfg, ConfigBuilder builder, String key,
                                                                    List<T> defaultValue, Supplier<T> defaultElement,
                                                                    Predicate<Object> itemValidator) {
         return new CachedValue<>(cfg,
             builder.inner().defineListAllowEmpty(key, defaultValue, defaultElement, itemValidator), builder);
     }
 
-    public static <T> CachedValue<List<? extends T>> wrapListEmpty(Config cfg, ConfigBuilder builder, String key,
+    public static <T> CachedValue<List<? extends T>> wrapListEmpty(AbstractConfig cfg, ConfigBuilder builder, String key,
                                                                    Supplier<T> defaultElement,
                                                                    Predicate<Object> itemValidator) {
         return wrapListEmpty(cfg, builder, key, List.of(), defaultElement, itemValidator);

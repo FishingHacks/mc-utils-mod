@@ -9,7 +9,7 @@ import net.fishinghacks.utils.platform.services.IConfig;
 
 import java.util.List;
 
-public class ClientConfig extends Config {
+public class ClientConfig extends AbstractConfig {
     private final IConfig config;
     private final ConfigSpec spec;
 

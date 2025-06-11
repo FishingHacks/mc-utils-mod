@@ -5,6 +5,7 @@ import com.electronwill.nightconfig.core.InMemoryFormat;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.fishinghacks.utils.actions.Action;
 import net.fishinghacks.utils.actions.ActionType;
+import net.fishinghacks.utils.config.spec.AbstractConfig;
 import net.fishinghacks.utils.config.spec.ConfigBuilder;
 import net.fishinghacks.utils.platform.services.ConfigValue;
 
@@ -14,7 +15,7 @@ import java.util.function.Function;
 
 public class ActionListCachedValue extends CachedMappedValue<List<Action>, List<? extends Config>> {
 
-    protected ActionListCachedValue(net.fishinghacks.utils.config.spec.Config config,
+    protected ActionListCachedValue(AbstractConfig config,
                                     ConfigValue<List<? extends Config>> internalValue,
                                     Function<List<Action>, List<? extends Config>> encode,
                                     Function<List<? extends Config>, List<Action>> decode, ConfigBuilder builder) {
@@ -64,7 +65,7 @@ public class ActionListCachedValue extends CachedMappedValue<List<Action>, List<
         return list;
     }
 
-    public static ActionListCachedValue wrap(net.fishinghacks.utils.config.spec.Config config, ConfigBuilder builder,
+    public static ActionListCachedValue wrap(AbstractConfig config, ConfigBuilder builder,
                                              String key) {
         return new ActionListCachedValue(config,
             builder.inner().defineListAllowEmpty(key, List.of(), () -> null, v -> v instanceof Config),

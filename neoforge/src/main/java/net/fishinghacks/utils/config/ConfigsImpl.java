@@ -1,7 +1,7 @@
 package net.fishinghacks.utils.config;
 
 import net.fishinghacks.utils.Constants;
-import net.fishinghacks.utils.config.spec.Config;
+import net.fishinghacks.utils.config.spec.AbstractConfig;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
@@ -16,13 +16,13 @@ import java.util.Map;
 
 @EventBusSubscriber(modid = Constants.MOD_ID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
 public class ConfigsImpl {
-    private static final Map<IConfigSpec, Config> KNOWN_CONFIGS = new HashMap<>();
+    private static final Map<IConfigSpec, AbstractConfig> KNOWN_CONFIGS = new HashMap<>();
 
     public static void register(ModContainer modContainer) {
         Configs.register(modContainer, ConfigsImpl::register);
     }
 
-    public static void register(ModContainer modContainer, Config config) {
+    public static void register(ModContainer modContainer, AbstractConfig config) {
         String filename = config.getFilename();
         if(filename == null) filename = Constants.MOD_ID + "-" + config.type().extension() + ".toml";
         ModConfigSpec spec = ((ConfigImpl) config.getConfig()).inner();
@@ -39,7 +39,7 @@ public class ConfigsImpl {
         if (event instanceof ModConfigEvent.Unloading) return;
         ModConfig eventConfig = event.getConfig();
         if (!eventConfig.getModId().equals(Constants.MOD_ID)) return;
-        Config config = KNOWN_CONFIGS.get(eventConfig.getSpec());
+        AbstractConfig config = KNOWN_CONFIGS.get(eventConfig.getSpec());
         if (config != null) config.clearCache();
     }
 }

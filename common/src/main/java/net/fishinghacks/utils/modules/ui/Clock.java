@@ -1,7 +1,7 @@
 package net.fishinghacks.utils.modules.ui;
 
 import net.fishinghacks.utils.config.values.CachedValue;
-import net.fishinghacks.utils.config.spec.Config;
+import net.fishinghacks.utils.config.spec.AbstractConfig;
 import net.fishinghacks.utils.config.spec.ConfigBuilder;
 import net.fishinghacks.utils.modules.Module;
 import net.fishinghacks.utils.modules.ModuleCategory;
@@ -37,7 +37,7 @@ public class Clock extends RenderableTextModule {
     }
 
     @Override
-    public void buildConfig(Config cfg, ConfigBuilder builder) {
+    public void buildConfig(AbstractConfig cfg, ConfigBuilder builder) {
         super.buildConfig(cfg, builder);
         twentyFourHours = CachedValue.wrap(cfg, builder, "24_hour_format", true);
         showSeconds = CachedValue.wrap(cfg, builder, "show_seconds", false);

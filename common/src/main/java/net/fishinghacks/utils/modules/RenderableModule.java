@@ -1,7 +1,7 @@
 package net.fishinghacks.utils.modules;
 
 import net.fishinghacks.utils.config.values.CachedValue;
-import net.fishinghacks.utils.config.spec.Config;
+import net.fishinghacks.utils.config.spec.AbstractConfig;
 import net.fishinghacks.utils.config.spec.ConfigBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -20,7 +20,7 @@ public abstract class RenderableModule extends IModule {
     }
 
     @Override
-    public void buildConfig(Config cfg, ConfigBuilder builder) {
+    public void buildConfig(AbstractConfig cfg, ConfigBuilder builder) {
         super.buildConfig(cfg, builder);
         posX = CachedValue.wrap(cfg, builder, "x", 0);
         posY = CachedValue.wrap(cfg, builder, "y", 0);

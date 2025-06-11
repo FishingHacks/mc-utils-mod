@@ -1,7 +1,7 @@
 package net.fishinghacks.utils.modules.misc;
 
 import net.fishinghacks.utils.config.values.CachedValue;
-import net.fishinghacks.utils.config.spec.Config;
+import net.fishinghacks.utils.config.spec.AbstractConfig;
 import net.fishinghacks.utils.config.spec.ConfigBuilder;
 import net.fishinghacks.utils.modules.IModule;
 import net.fishinghacks.utils.modules.Module;
@@ -19,7 +19,7 @@ public class Tablist extends IModule {
     private CachedValue<Boolean> showFooterVal;
 
     @Override
-    public void buildConfig(Config cfg, ConfigBuilder builder) {
+    public void buildConfig(AbstractConfig cfg, ConfigBuilder builder) {
         super.buildConfig(cfg, builder);
 
         showSuffixVal = CachedValue.wrap(cfg, builder, "nametag_suffixes", false);

@@ -3,7 +3,7 @@ package net.fishinghacks.utils.modules.ui;
 import net.fishinghacks.utils.Colors;
 import net.fishinghacks.utils.TranslatableEnum;
 import net.fishinghacks.utils.Translation;
-import net.fishinghacks.utils.config.spec.Config;
+import net.fishinghacks.utils.config.spec.AbstractConfig;
 import net.fishinghacks.utils.config.spec.ConfigBuilder;
 import net.fishinghacks.utils.config.values.CachedValue;
 import net.fishinghacks.utils.modules.Module;
@@ -35,7 +35,7 @@ public class ArmorStatus extends RenderableModule {
     private CachedValue<DurabilityDisplay> durabilityDisplay;
 
     @Override
-    public void buildConfig(Config cfg, ConfigBuilder builder) {
+    public void buildConfig(AbstractConfig cfg, ConfigBuilder builder) {
         super.buildConfig(cfg, builder);
 
         vertical = CachedValue.wrap(cfg, builder, "vertical", false);

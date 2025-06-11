@@ -1,6 +1,6 @@
 package net.fishinghacks.utils.config.values;
 
-import net.fishinghacks.utils.config.spec.Config;
+import net.fishinghacks.utils.config.spec.AbstractConfig;
 import net.fishinghacks.utils.config.spec.ConfigBuilder;
 import org.jetbrains.annotations.Nullable;
 
@@ -9,7 +9,7 @@ import java.util.List;
 public class MufflerStateProxy extends AbstractCachedValue<Void> {
     private final String key;
 
-    public MufflerStateProxy(Config config, ConfigBuilder builder, String key) {
+    public MufflerStateProxy(AbstractConfig config, ConfigBuilder builder, String key) {
         super(config, builder);
         this.key = key;
         finish(builder);

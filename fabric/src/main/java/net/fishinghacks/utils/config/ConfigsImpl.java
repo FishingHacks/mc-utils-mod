@@ -9,7 +9,7 @@ import com.electronwill.nightconfig.toml.TomlFormat;
 import com.electronwill.nightconfig.toml.TomlParser;
 import com.electronwill.nightconfig.toml.TomlWriter;
 import net.fishinghacks.utils.Constants;
-import net.fishinghacks.utils.config.spec.Config;
+import net.fishinghacks.utils.config.spec.AbstractConfig;
 import net.fishinghacks.utils.config.spec.ConfigType;
 import net.minecraft.FileUtil;
 import org.apache.commons.io.FilenameUtils;
@@ -30,7 +30,7 @@ public class ConfigsImpl {
         Configs.register(null, (ignored, config) -> registerConfig(configDir, config, shouldLoad));
     }
 
-    public static void registerConfig(Path configDir, Config config, Predicate<ConfigType> shouldLoad) {
+    public static void registerConfig(Path configDir, AbstractConfig config, Predicate<ConfigType> shouldLoad) {
         String filename = config.getFilename();
         if (filename == null) filename = Constants.MOD_ID + "-" + config.type().extension() + ".toml";
         Path file = configDir.resolve(filename);
@@ -118,6 +118,6 @@ public class ConfigsImpl {
         }
     }
 
-    public record ConfigHolder(Config config, ConfigImpl impl) {
+    public record ConfigHolder(AbstractConfig config, ConfigImpl impl) {
     }
 }

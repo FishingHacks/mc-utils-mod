@@ -1,6 +1,6 @@
 package net.fishinghacks.utils.config.values;
 
-import net.fishinghacks.utils.config.spec.Config;
+import net.fishinghacks.utils.config.spec.AbstractConfig;
 import net.fishinghacks.utils.config.spec.ConfigBuilder;
 import net.fishinghacks.utils.platform.services.ConfigValue;
 
@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.function.Function;
 
 public class CachedMappedValue<T, U> extends AbstractCachedValue<T> {
-    private final Config config;
+    private final AbstractConfig config;
     private final ConfigValue<U> internalValue;
     private final Function<T, U> encode;
     private final Function<U, T> decode;
 
-    protected CachedMappedValue(Config config, ConfigValue<U> internalValue, Function<T, U> encode,
+    protected CachedMappedValue(AbstractConfig config, ConfigValue<U> internalValue, Function<T, U> encode,
                                 Function<U, T> decode, ConfigBuilder builder) {
         super(config, builder);
         this.config = config;

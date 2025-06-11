@@ -3,7 +3,7 @@ package net.fishinghacks.utils.modules.misc;
 import net.fishinghacks.utils.Colors;
 import net.fishinghacks.utils.TranslatableEnum;
 import net.fishinghacks.utils.Translation;
-import net.fishinghacks.utils.config.spec.Config;
+import net.fishinghacks.utils.config.spec.AbstractConfig;
 import net.fishinghacks.utils.config.spec.ConfigBuilder;
 import net.fishinghacks.utils.config.values.CachedColorValue;
 import net.fishinghacks.utils.config.values.CachedValue;
@@ -36,7 +36,7 @@ public class Chat extends IModule {
     }
 
     @Override
-    public void buildConfig(Config cfg, ConfigBuilder builder) {
+    public void buildConfig(AbstractConfig cfg, ConfigBuilder builder) {
         super.buildConfig(cfg, builder);
 
         TIME_FORMAT = CachedValue.wrapEnum(cfg, builder, "time_format", TimeFormat.Disabled);

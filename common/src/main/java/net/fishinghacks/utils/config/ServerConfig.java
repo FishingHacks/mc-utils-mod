@@ -1,6 +1,6 @@
 package net.fishinghacks.utils.config;
 
-import net.fishinghacks.utils.config.spec.Config;
+import net.fishinghacks.utils.config.spec.AbstractConfig;
 import net.fishinghacks.utils.config.spec.ConfigBuilder;
 import net.fishinghacks.utils.config.spec.ConfigSpec;
 import net.fishinghacks.utils.config.spec.ConfigType;
@@ -9,7 +9,7 @@ import net.fishinghacks.utils.config.values.CosmeticMapConfigValue;
 import net.fishinghacks.utils.platform.services.IConfig;
 import org.jetbrains.annotations.Nullable;
 
-public class ServerConfig extends Config {
+public class ServerConfig extends AbstractConfig {
     private final IConfig config;
     private final ConfigSpec spec;
 
@@ -37,7 +37,7 @@ public class ServerConfig extends Config {
         builder.worldRestart();
         serverInviteUrl = CachedValue.wrap(this, builder, "server_invite_url", "");
         builder.worldRestart();
-        cosmeticMap = CosmeticMapConfigValue.wrap(this, builder, "cosmetic_map", "{}");
+        cosmeticMap = CosmeticMapConfigValue.wrap(this, builder, "cosmetic_map");
 
         spec = builder.getSpec();
         config = builder.build();

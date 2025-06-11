@@ -1,6 +1,6 @@
 package net.fishinghacks.utils.config.values;
 
-import net.fishinghacks.utils.config.spec.Config;
+import net.fishinghacks.utils.config.spec.AbstractConfig;
 import net.fishinghacks.utils.config.spec.ConfigBuilder;
 import net.fishinghacks.utils.modules.ModuleManagerLike;
 import org.jetbrains.annotations.Nullable;
@@ -24,7 +24,7 @@ public class ModuleToggle extends AbstractCachedValue<Boolean> {
     };
     private final String key;
 
-    public ModuleToggle(Config config, ConfigBuilder builder, String key) {
+    public ModuleToggle(AbstractConfig config, ConfigBuilder builder, String key) {
         super(config, builder);
         toggles.put(key, this);
         this.key = key;

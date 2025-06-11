@@ -6,7 +6,7 @@ import net.fishinghacks.utils.Colors;
 import net.fishinghacks.utils.TranslatableEnum;
 import net.fishinghacks.utils.Translation;
 import net.fishinghacks.utils.config.Configs;
-import net.fishinghacks.utils.config.spec.Config;
+import net.fishinghacks.utils.config.spec.AbstractConfig;
 import net.fishinghacks.utils.config.spec.ConfigSpec;
 import net.fishinghacks.utils.config.spec.RestartType;
 import net.fishinghacks.utils.config.values.*;
@@ -50,11 +50,11 @@ public class ConfigSectionScreen extends ListScreen {
     protected final UndoManager undoManager = new UndoManager();
     public boolean asPopup = false;
 
-    public static void open(Minecraft mc, Config config) {
+    public static void open(Minecraft mc, AbstractConfig config) {
         mc.setScreen(new ConfigSectionScreen(config, mc.screen));
     }
 
-    public static ConfigSectionScreen openWithPath(Minecraft mc, Config config, List<String> path) {
+    public static ConfigSectionScreen openWithPath(Minecraft mc, AbstractConfig config, List<String> path) {
         var parent = mc.screen;
         var spec = config.spec();
         MutableComponent title = Translation.GuiConfigTitle.with();
@@ -74,7 +74,7 @@ public class ConfigSectionScreen extends ListScreen {
         this(Configs.clientConfig, parent);
     }
 
-    public ConfigSectionScreen(Config config, Screen parent) {
+    public ConfigSectionScreen(AbstractConfig config, Screen parent) {
         this(new ConfigContext(parent, config.spec(), config), Translation.GuiConfigTitle.get());
     }
 

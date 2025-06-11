@@ -1,6 +1,6 @@
 package net.fishinghacks.utils.modules.misc;
 
-import net.fishinghacks.utils.config.spec.Config;
+import net.fishinghacks.utils.config.spec.AbstractConfig;
 import net.fishinghacks.utils.config.spec.ConfigBuilder;
 import net.fishinghacks.utils.config.values.CachedValue;
 import net.fishinghacks.utils.modules.IModule;
@@ -22,7 +22,7 @@ public class ItemRender extends IModule {
     }
 
     @Override
-    public void buildConfig(Config cfg, ConfigBuilder builder) {
+    public void buildConfig(AbstractConfig cfg, ConfigBuilder builder) {
         super.buildConfig(cfg, builder);
 
         showAmount = CachedValue.wrap(cfg, builder, "show_amount", true);

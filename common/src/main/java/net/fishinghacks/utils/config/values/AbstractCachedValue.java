@@ -1,7 +1,7 @@
 package net.fishinghacks.utils.config.values;
 
 import net.fishinghacks.utils.Constants;
-import net.fishinghacks.utils.config.spec.Config;
+import net.fishinghacks.utils.config.spec.AbstractConfig;
 import net.fishinghacks.utils.config.spec.ConfigBuilder;
 import net.fishinghacks.utils.config.spec.RestartType;
 import net.fishinghacks.utils.gui.configuration.TranslationChecker;
@@ -23,7 +23,7 @@ public abstract class AbstractCachedValue<T> {
 
     /// EXTENDERS: you have to call `finish` at the end of your constructor. if you are also abstract, let your
     /// extenders know this too.
-    protected AbstractCachedValue(Config config, ConfigBuilder builder) {
+    protected AbstractCachedValue(AbstractConfig config, ConfigBuilder builder) {
         this.needsRestart = builder.type;
         config.addCachedValue(this::clearCache);
     }

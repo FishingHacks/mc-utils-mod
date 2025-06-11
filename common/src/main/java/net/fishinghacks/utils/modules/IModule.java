@@ -1,6 +1,6 @@
 package net.fishinghacks.utils.modules;
 
-import net.fishinghacks.utils.config.spec.Config;
+import net.fishinghacks.utils.config.spec.AbstractConfig;
 import net.fishinghacks.utils.config.spec.ConfigBuilder;
 import net.fishinghacks.utils.config.values.ModuleToggle;
 
@@ -22,7 +22,7 @@ public abstract class IModule {
     public void onToggle() {
     }
 
-    public void buildConfig(Config cfg, ConfigBuilder builder) {
+    public void buildConfig(AbstractConfig cfg, ConfigBuilder builder) {
         new ModuleToggle(cfg, builder, name());
     }
 
