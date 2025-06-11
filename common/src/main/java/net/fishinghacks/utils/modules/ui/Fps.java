@@ -25,7 +25,6 @@ public class Fps extends RenderableTextModule {
 
     @Override
     public List<Component> getText() {
-        assert Minecraft.getInstance().player != null;
         int fps = Minecraft.getInstance().getFps();
         MutableComponent comp = Component.literal("" + fps);
         if (colored.get()) {

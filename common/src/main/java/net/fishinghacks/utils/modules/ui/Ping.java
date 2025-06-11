@@ -21,7 +21,6 @@ public class Ping extends RenderableTextModule {
 
     @Override
     public List<Component> getText() {
-        assert Minecraft.getInstance().player != null;
         long ping = ping();
         MutableComponent comp = Component.literal(ping + "ms").withStyle(ChatFormatting.GREEN);
         if (ping > 700) comp = comp.withStyle(ChatFormatting.RED);

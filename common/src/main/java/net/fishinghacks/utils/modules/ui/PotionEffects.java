@@ -48,7 +48,6 @@ public class PotionEffects extends RenderableModule {
 
     private void render(GuiGraphics guiGraphics, int x, int y, MobEffectInstance effect,
                         MobEffectTextureManager textureManager) {
-        assert Minecraft.getInstance().level != null;
         guiGraphics.fill(x, y, x + WIDTH, y + SINGLE_LINE_HEIGHT, Colors.BLACK.withAlpha(0x7f));
         int textX = x + 3;
         if (showIcon.get()) {
@@ -57,7 +56,7 @@ public class PotionEffects extends RenderableModule {
             textX += 22;
         }
         Component duration = MobEffectUtil.formatDuration(effect, 1.0F,
-            Minecraft.getInstance().level.tickRateManager().tickrate());
+            Minecraft.getInstance().level == null ? 20 : Minecraft.getInstance().level.tickRateManager().tickrate());
         if (durationNewLine.get() && displayDuration.get()) {
             int textY = y + (SINGLE_LINE_HEIGHT - 9 * 2) / 2;
             guiGraphics.drawString(Minecraft.getInstance().font, getEffectName(effect), textX, textY,

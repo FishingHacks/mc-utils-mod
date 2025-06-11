@@ -1,7 +1,6 @@
 package net.fishinghacks.utils.gui.configuration;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.fishinghacks.utils.Colors;
 import net.fishinghacks.utils.Translation;
 import net.fishinghacks.utils.config.Configs;
 import net.fishinghacks.utils.gui.Icons;
@@ -40,7 +39,10 @@ public class MufflerScreen extends ListScreen {
 
     @Override
     protected void onInit() {
-        int y = listStartY - 20;
+        titleWidget.visible = false;
+        removeWidget(titleWidget);
+
+        int y = listStartY - 25;
         int x = listStartX - Button.CUBE_WIDTH - 6;
 
         doneButton = this.addRenderableWidget(
@@ -121,10 +123,11 @@ public class MufflerScreen extends ListScreen {
 
     @Override
     public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        int y = listStartY - 25;
         if (!asPopup || parent == null) {
             super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
-            guiGraphics.fill(listStartX, listStartY - 6, listStartX + listWidth, listStartY, Box.DEFAULT_BORDER_COLOR);
-            guiGraphics.fill(listStartX + 2, listStartY - 4, listStartX + listWidth - 2, listStartY,
+            guiGraphics.fill(listStartX, y, listStartX + listWidth, getListStartY(), Box.DEFAULT_BORDER_COLOR);
+            guiGraphics.fill(listStartX + 2, y + 2, listStartX + listWidth - 2, listStartY,
                 Box.DEFAULT_BACKGROUND_COLOR);
             return;
         }
@@ -135,7 +138,6 @@ public class MufflerScreen extends ListScreen {
             .clearDepthTexture(Objects.requireNonNull(this.minecraft.getMainRenderTarget().getDepthTexture()), 1.0);
         renderTransparentBackground(guiGraphics);
 
-        int y = listStartY - 25;
         guiGraphics.fill(listStartX, y, listStartX + listWidth, getListStartY(), Box.DEFAULT_BORDER_COLOR);
         guiGraphics.fill(listStartX + 2, y + 2, listStartX + listWidth - 2, listStartY, Box.DEFAULT_BACKGROUND_COLOR);
     }
@@ -146,20 +148,11 @@ public class MufflerScreen extends ListScreen {
 
         if (undoButton != null) undoButton.active = undoManager.canUndo();
         if (redoButton != null) redoButton.active = undoManager.canRedo();
-        if (asPopup) titleWidget.setY(y - titleWidget.getHeight());
         else titleWidget.setY((y - titleWidget.getHeight()) / 2);
 
         searchInput.setX(listStartX + listWidth / 8);
-        searchInput.setY(asPopup ? y + 4 : y - 2);
+        searchInput.setY(y + 4);
 
         super.render(guiGraphics, mouseX, mouseY, partialTick);
-
-        // title box
-        if (asPopup) {
-            guiGraphics.fill(titleWidget.getX() - 6, titleWidget.getY() - 6, titleWidget.getRight() + 6, y,
-                Colors.DARK.get());
-            guiGraphics.fill(titleWidget.getX() - 4, titleWidget.getY() - 4, titleWidget.getRight() + 4, y + 2,
-                Colors.BG_DARK.get());
-        }
     }
 }

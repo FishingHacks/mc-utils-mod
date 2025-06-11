@@ -32,6 +32,8 @@ public class ClickUi extends Screen {
         () -> new KeyMapping(Translation.ClickUIOpenKey.key(), InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_RIGHT_SHIFT,
             "key.categories.misc"));
     private static final HashMap<ModuleCategory, ClickUiCategoryButton> openCategories = new HashMap<>();
+    private static final int buttonWidth = 50;
+    private static final int buttonPadding = 4;
 
     @Nullable
     private final Screen lastScreen;
@@ -72,14 +74,19 @@ public class ClickUi extends Screen {
             }
         }
         openCategories.values().forEach(this::addRenderableWidget);
-        int middle = width / 2;
-        addRenderableWidget(
-            Button.builder(Translation.DragUITitle.get(), button -> Minecraft.getInstance().setScreen(dragUi))
-                .pos(middle - 52, 0).size(50, 20).build());
+        int x = (width - 3 * buttonWidth + 2 * buttonPadding) / 2;
         addRenderableWidget(Button.builder(Translation.GuiActionsTitle.get(),
-                button -> Minecraft.getInstance().setScreen(new ActionsListScreen(this))).pos(middle + 2, 0).size(50,
+                button -> Minecraft.getInstance().setScreen(new ActionsListScreen(this))).pos(x, 0).size(buttonWidth,
                 20)
             .build());
+        x += buttonWidth + buttonPadding;
+        addRenderableWidget(
+            Button.builder(Translation.DragUITitle.get(), button -> Minecraft.getInstance().setScreen(dragUi)).pos(x, 0)
+                .size(buttonWidth, 20).build());
+        x += buttonWidth + buttonPadding;
+        addRenderableWidget(Button.builder(Translation.MainGuiButtonSettings.get(),
+                button -> ConfigSectionScreen.open(Minecraft.getInstance(), Configs.clientConfig).asPopup = true).pos(x, 0)
+            .size(buttonWidth, 20).build());
     }
 
     @Override

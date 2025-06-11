@@ -2,7 +2,6 @@ package net.fishinghacks.utils.gui.configuration;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
-import net.fishinghacks.utils.Colors;
 import net.fishinghacks.utils.TranslatableEnum;
 import net.fishinghacks.utils.Translation;
 import net.fishinghacks.utils.config.Configs;
@@ -50,8 +49,10 @@ public class ConfigSectionScreen extends ListScreen {
     protected final UndoManager undoManager = new UndoManager();
     public boolean asPopup = false;
 
-    public static void open(Minecraft mc, AbstractConfig config) {
-        mc.setScreen(new ConfigSectionScreen(config, mc.screen));
+    public static ConfigSectionScreen open(Minecraft mc, AbstractConfig config) {
+        var screen = new ConfigSectionScreen(config, mc.screen);
+        mc.setScreen(screen);
+        return screen;
     }
 
     public static ConfigSectionScreen openWithPath(Minecraft mc, AbstractConfig config, List<String> path) {
@@ -99,12 +100,18 @@ public class ConfigSectionScreen extends ListScreen {
 
         super.render(guiGraphics, mouseX, mouseY, partialTick);
 
+        assert minecraft != null;
+        guiGraphics.flush();
+        RenderSystem.getDevice().createCommandEncoder()
+            .clearDepthTexture(Objects.requireNonNull(this.minecraft.getMainRenderTarget().getDepthTexture()), 1.0);
+        guiGraphics.fill(listStartX, listStartY, listStartX + listWidth, listStartY + 2, Box.DEFAULT_BORDER_COLOR);
         // title box
         if (asPopup) {
+            titleWidget.render(guiGraphics, mouseX, mouseY, partialTick);
             guiGraphics.fill(titleWidget.getX() - 6, titleWidget.getY() - 6, titleWidget.getRight() + 6, listStartY,
-                Colors.DARK.get());
+                Box.DEFAULT_BORDER_COLOR);
             guiGraphics.fill(titleWidget.getX() - 4, titleWidget.getY() - 4, titleWidget.getRight() + 4, listStartY + 2,
-                Colors.BG_DARK.get());
+                Box.DEFAULT_BACKGROUND_COLOR);
         }
     }
 
@@ -231,12 +238,11 @@ public class ConfigSectionScreen extends ListScreen {
         var name = value.getNameTranslation();
 
         return new Element(name, value.getTooltipTranslation(),
-            Button.Builder.normal(Translation.GuiConfigSectionButton.get())
-                .onPress(ignored -> {
-                    var screen = new MufflerScreen(this);
-                    screen.asPopup = this.asPopup;
-                    Minecraft.getInstance().setScreen(screen);
-                }).build());
+            Button.Builder.normal(Translation.GuiConfigSectionButton.get()).onPress(ignored -> {
+                var screen = new MufflerScreen(this);
+                screen.asPopup = this.asPopup;
+                Minecraft.getInstance().setScreen(screen);
+            }).build());
     }
 
     private Element createStringValue(final String key, AbstractCachedValue<String> value) {
@@ -294,10 +300,12 @@ public class ConfigSectionScreen extends ListScreen {
                     Translation.GuiConfigSectionButton.key())))
             .onPress(ignored -> {
                 if (minecraft == null) return;
-                minecraft.setScreen(sectionCache.computeIfAbsent(key,
+                var screen = sectionCache.computeIfAbsent(key,
                     k -> new ConfigSectionScreen(new ConfigContext(this, subsection, context.config()),
                         Translation.GuiConfigCrumbElement.with(getTitle(), CRUMB_SEPARATOR,
-                            Component.translatable(translationKey)))));
+                            Component.translatable(translationKey))));
+                Minecraft.getInstance().setScreen(screen);
+                screen.asPopup = asPopup;
             }).build();
 
         return new Element(Component.translatable(translationKey).append("..."),
@@ -422,7 +430,7 @@ public class ConfigSectionScreen extends ListScreen {
         guiGraphics.flush();
         RenderSystem.getDevice().createCommandEncoder()
             .clearDepthTexture(Objects.requireNonNull(this.minecraft.getMainRenderTarget().getDepthTexture()), 1.0);
-        renderTransparentBackground(guiGraphics);
+        if (Minecraft.getInstance().screen == this) renderTransparentBackground(guiGraphics);
     }
 
     private static final class TooltipConfirmScreen extends ConfirmScreen {

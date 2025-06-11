@@ -15,7 +15,6 @@ import java.util.List;
 public class ServerDisplay extends RenderableTextModule {
     @Override
     public List<Component> getText() {
-        assert Minecraft.getInstance().player != null;
         var serverIp = Minecraft.getInstance().getCurrentServer() != null ? Component.literal(
                 Minecraft.getInstance().getCurrentServer().ip)
             .withStyle(ChatFormatting.AQUA) : MainScreen.SINGLEPLAYER.copy().withStyle(ChatFormatting.LIGHT_PURPLE);

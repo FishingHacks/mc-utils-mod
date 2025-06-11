@@ -177,7 +177,7 @@ public class GuiOverlayManager {
     }
 
     public static void repositionNotifications(int width, int height) {
-        if(!repositionNotifications) return;
+        if (!repositionNotifications) return;
         repositionNotifications = false;
         width -= 2;
         height -= 2;
@@ -192,8 +192,8 @@ public class GuiOverlayManager {
         return (screen instanceof MainScreen) || (screen instanceof TitleScreen) || (screen instanceof OptionsScreen) || (screen instanceof McSettingsScreen) || (screen instanceof PauseScreen) || (screen instanceof PauseMenuScreen);
     }
 
-    private static void renderConnectedServerOverlay(GuiGraphics graphics, int mouseX, int mouseY, float ignoredPartialTick,
-                                                     int screenWidth) {
+    private static void renderConnectedServerOverlay(GuiGraphics graphics, int mouseX, int mouseY,
+                                                     float ignoredPartialTick, int screenWidth) {
         serviceServerSettings.setX(screenWidth - 2 - serviceServerSettings.getWidth());
         serviceServerSettings.render(RenderType.guiOverlay(), graphics, mouseX, mouseY);
         Component message = ClientConnectionHandler.getInstance().getFormattedStatus();
