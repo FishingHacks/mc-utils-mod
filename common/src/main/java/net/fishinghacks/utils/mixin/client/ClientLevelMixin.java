@@ -15,7 +15,7 @@ public class ClientLevelMixin {
         "/SimpleSoundInstance;<init>(Lnet/minecraft/sounds/SoundEvent;Lnet/minecraft/sounds/SoundSource;FFLnet" +
         "/minecraft/util/RandomSource;DDD)V"), index = 2)
     float a(float volume, @Local(argsOnly = true) SoundEvent soundEvent) {
-        if (!MufflerModule.isEnabled) return volume;
+        if (!MufflerModule.instance.isEnabled()) return volume;
         Integer mufflerVolume = Configs.clientConfig.MUFFLER_STATE.get().get(soundEvent.location());
         if (mufflerVolume == null) return volume;
         if (mufflerVolume < 1) return 0f;

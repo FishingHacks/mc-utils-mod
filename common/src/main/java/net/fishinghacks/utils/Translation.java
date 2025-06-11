@@ -75,7 +75,8 @@ public enum Translation implements Supplier<Component> {
         "cmd.whitelist.enabled"), CmdWhitelistDisabled("cmd.whitelist.disabled"), CmdMufflerSetVolume(
         "cmd.muffler.set_volume"), CmdMufflerGetVolume("cmd.muffler.get_volume"), CmdMufflerGetVolumeMuted(
         "cmd.muffler.get_volume.muted"), CmdMufflerMuted("cmd.muffler.muted"), CmdMufflerUnmuted(
-        "cmd.muffler.unmuted"), Search("common.search"), NoResults("common.no_results"),
+        "cmd.muffler.unmuted"), Search("common.search"), NoResults("common.no_results"), ServerWarning(
+        "common.server_warning"), Enable("common.enable"), CmdEnableModEnabled("cmd.enable_mod.enabled"),
     ;
 
     private final String key;

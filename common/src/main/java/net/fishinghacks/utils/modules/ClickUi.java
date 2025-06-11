@@ -142,7 +142,7 @@ public class ClickUi extends Screen {
 
             for (int i = 0; i < modules.size(); ++i) {
                 int color = Colors.WHITE.get();
-                if (modules.get(i).enabled) color = Colors.CYAN.get();
+                if (modules.get(i).isEnabled()) color = Colors.CYAN.get();
                 guiGraphics.drawString(font, Component.translatable("utils.configuration." + modules.get(i).name()),
                     x + 5, y + 2 + lineHeight * i, color);
             }

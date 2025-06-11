@@ -1,6 +1,7 @@
 package net.fishinghacks.utils.actions;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import net.fishinghacks.utils.ModDisabler;
 import net.fishinghacks.utils.config.Configs;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
@@ -44,6 +45,7 @@ public abstract class Action {
     }
 
     public final void setEnabled(boolean enabled) {
+        if(ModDisabler.isModDisabled()) return;
         if (isEnabled() == enabled) return;
         if (enabled) enabledModules.add(id);
         else enabledModules.remove(id);
@@ -56,6 +58,7 @@ public abstract class Action {
     }
 
     public static boolean onPress(InputConstants.Key key, boolean pressed) {
+        if(ModDisabler.isModDisabled()) return false;
         var list = Configs.clientConfig.ACTIONS.get();
         for (int i = 0; i < list.size(); ++i) {
             var action = list.get(i);

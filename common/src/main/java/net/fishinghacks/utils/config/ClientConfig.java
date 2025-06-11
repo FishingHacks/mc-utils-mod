@@ -42,8 +42,7 @@ public class ClientConfig extends AbstractConfig {
                 if (v instanceof String s) {
                     var mod = ModuleManager.modules.get(s);
                     if (mod == null) continue;
-                    ModuleManager.enabledModules.add(s);
-                    mod.setEnabled(true);
+                    ModuleManager.configLoadEnable(s);
                 }
 
         });

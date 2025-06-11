@@ -17,7 +17,7 @@ public class ActionListEntry extends Box {
     public ActionListEntry(Action action, int index, List<Button> keybindButtons, BiConsumer<Integer, ActionType> updateType,
                            BiConsumer<Button, Integer> onKeybindPress, Consumer<Integer> removeEntry,
                            BiConsumer<Integer, String> setValue, int width) {
-        super(new Spacer(width, 0));
+        super(new Spacer(width - 2 * DEFAULT_BORDER_SIZE, 0));
         var minecraft = Minecraft.getInstance();
         var typeText = new Text(Translation.GuiActionsType.get(), minecraft.font, 1f);
         var typeDropdown = GuiDropdown.fromTranslatableEnum(action.type(), ActionType.values());

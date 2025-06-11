@@ -11,6 +11,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class StringUtilMixin {
     @Inject(method = "isAllowedChatCharacter", at = @At("HEAD"), cancellable = true)
     private static void allowIllegalChars(CallbackInfoReturnable<Boolean> ci) {
-        if(AllowBlockedKeys.allowKeys) ci.setReturnValue(true);
+        if(AllowBlockedKeys.instance.isEnabled()) ci.setReturnValue(true);
     }
 }

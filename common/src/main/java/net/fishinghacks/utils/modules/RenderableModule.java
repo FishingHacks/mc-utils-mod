@@ -31,6 +31,7 @@ public abstract class RenderableModule extends IModule {
     public abstract void render(GuiGraphics guiGraphics, float partialTick);
 
     public boolean shouldRender() {
+        if(!isEnabled()) return false;
         var dbg = Minecraft.getInstance().gui.getDebugOverlay();
         boolean hideHalf = dbg.showDebugScreen();
         if (hideHalf && (dbg.showFpsCharts() || dbg.showNetworkCharts() || dbg.showProfilerChart())) return false;

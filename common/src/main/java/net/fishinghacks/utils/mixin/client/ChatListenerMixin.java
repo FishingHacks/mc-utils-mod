@@ -27,7 +27,7 @@ public class ChatListenerMixin {
         try {
 
             var chatMod = Chat.instance;
-            if (!chatMod.enabled || !boundChatType.chatType().is(ChatType.CHAT)) return;
+            if (!chatMod.isEnabled() || !boundChatType.chatType().is(ChatType.CHAT)) return;
             var trustLevel = ((ChatListenerInvoker) this).invokeEvaluateTrustLevel(chatMessage, decoratedServerContent,
                 timestamp);
             if ((onlyShowSecureChat && trustLevel.isNotSecure()) || Minecraft.getInstance()

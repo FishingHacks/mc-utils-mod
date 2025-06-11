@@ -93,7 +93,7 @@ public class DragUI extends Screen {
 
         @Override
         public void render(@NotNull GuiGraphics guiGraphics, int i, int i1, float partialTick) {
-            if (!module.enabled) return;
+            if (!module.isEnabled()) return;
             clamp();
             module.renderPreview(guiGraphics, partialTick);
         }

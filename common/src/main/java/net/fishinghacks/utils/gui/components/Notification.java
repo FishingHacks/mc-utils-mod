@@ -14,6 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class Notification extends UnfocusableWidget {
@@ -45,7 +46,7 @@ public class Notification extends UnfocusableWidget {
         this.startMillis = Util.getMillis();
         this.durationMillis = durationMillis;
         this.buttons = buttons.stream()
-            .map(btn -> Button.Builder.normal(btn.name).height(Button.DEFAULT_HEIGHT - 2).onPress(btn.onClick).build())
+            .map(btn -> Button.Builder.normal(btn.name).height(Button.DEFAULT_HEIGHT - 2).onPress(button -> btn.onClick.accept(button, this)).build())
             .toList();
         repositionWidgets();
     }
@@ -179,6 +180,6 @@ public class Notification extends UnfocusableWidget {
         return false;
     }
 
-    public record NotifyButton(Component name, Consumer<Button> onClick) {
+    public record NotifyButton(Component name, BiConsumer<Button, Notification> onClick) {
     }
 }

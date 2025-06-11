@@ -9,7 +9,7 @@ import net.fishinghacks.utils.modules.ModuleCategory;
 
 @Module(name = "tablist", category = ModuleCategory.MISC)
 public class Tablist extends IModule {
-    public static boolean isEnabled = false;
+    public static Tablist instance;
     public static boolean showSuffix = false;
     public static boolean showHeader = true;
     public static boolean showFooter = true;
@@ -17,6 +17,10 @@ public class Tablist extends IModule {
     private CachedValue<Boolean> showSuffixVal;
     private CachedValue<Boolean> showHeaderVal;
     private CachedValue<Boolean> showFooterVal;
+
+    public Tablist() {
+        instance = this;
+    }
 
     @Override
     public void buildConfig(AbstractConfig cfg, ConfigBuilder builder) {
@@ -32,6 +36,5 @@ public class Tablist extends IModule {
     @Override
     public void onToggle() {
         super.onToggle();
-        isEnabled = enabled;
     }
 }

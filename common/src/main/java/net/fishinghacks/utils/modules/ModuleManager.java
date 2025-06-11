@@ -1,6 +1,7 @@
 package net.fishinghacks.utils.modules;
 
 import net.fishinghacks.utils.Constants;
+import net.fishinghacks.utils.ModDisabler;
 import net.fishinghacks.utils.config.Configs;
 import net.fishinghacks.utils.config.values.AbstractCachedValue;
 import net.fishinghacks.utils.config.values.ModuleToggle;
@@ -15,6 +16,15 @@ public class ModuleManager implements ModuleManagerLike {
 
     public static final ModuleManager instance = new ModuleManager();
 
+    public static boolean isEnabled() {
+        return !ModDisabler.isModDisabled();
+    }
+
+    public static void onServerLeave() {
+        ModuleManager.disableModule("freezecam");
+        ModuleManager.disableModule("freecam");
+        ModuleManager.disableModule("zoom");
+    }
 
     static {
         Services.PLATFORM.scanForAnnotation(Module.class).forEach(clazz -> {
@@ -32,8 +42,7 @@ public class ModuleManager implements ModuleManagerLike {
     public static void addModule(IModule... modules) {
         for (var module : modules) {
             ModuleManager.modules.put(module.name(), module);
-            module.enabled = false;
-            module.onDisable();
+            module.setEnabled(false);
         }
     }
 
@@ -42,8 +51,15 @@ public class ModuleManager implements ModuleManagerLike {
         ModuleToggle.toggles.values().forEach(AbstractCachedValue::clearCache);
     }
 
+    public static void configLoadEnable(String name) {
+        if (!modules.containsKey(name)) return;
+        if (enabledModules.contains(name)) return;
+        enabledModules.add(name);
+        modules.get(name).setEnabled(true);
+    }
+
     public static void enableModule(String name) {
-        if(!modules.containsKey(name)) return;
+        if (!modules.containsKey(name)) return;
         if (enabledModules.contains(name)) return;
         enabledModules.add(name);
         modules.get(name).setEnabled(true);

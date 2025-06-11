@@ -39,7 +39,7 @@ public class ScreenshotMixin {
                 t.getArgs()[0] = comp;
                 if (file != null) {
                     GuiOverlayManager.addNotification(component, new Notification.NotifyButton(Translation.Open.get(),
-                        ignored -> Util.getPlatform().openFile(file)));
+                        (ignored0, ignored1) -> Util.getPlatform().openFile(file)));
                     return;
                 }
             }

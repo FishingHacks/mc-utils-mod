@@ -1,9 +1,6 @@
 package net.fishinghacks.utils.events;
 
-import net.fishinghacks.utils.Constants;
-import net.fishinghacks.utils.E4MCStore;
-import net.fishinghacks.utils.Telemetry;
-import net.fishinghacks.utils.Whitelist;
+import net.fishinghacks.utils.*;
 import net.fishinghacks.utils.caching.DownloadTextureCache;
 import net.fishinghacks.utils.commands.CommandManager;
 import net.fishinghacks.utils.connection.ClientConnectionHandler;
@@ -27,14 +24,14 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onDisconnect(ClientPlayerNetworkEvent.LoggingOut ignored) {
         E4MCStore.onDisconnect();
-        ModuleManager.disableModule("freezecam");
-        ModuleManager.disableModule("freecam");
-        ModuleManager.disableModule("zoom");
+        ModuleManager.onServerLeave();
+        ModDisabler.onServerLeave();
     }
 
     @SubscribeEvent
-    public static void onConnect(ClientPlayerNetworkEvent.LoggingIn ignored) {
+    public static void onConnect(ClientPlayerNetworkEvent.LoggingIn ev) {
         E4MCStore.onConnect();
+        if (!ev.getConnection().isMemoryConnection()) ModDisabler.onServerJoin();
     }
 
     @SubscribeEvent

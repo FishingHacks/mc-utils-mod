@@ -30,7 +30,7 @@ public class GuiMixin {
     @Inject(method = "displayScoreboardSidebar", cancellable = true, at = @At("HEAD"))
     public void displayScoreboardSidebar(GuiGraphics guiGraphics, Objective objective, CallbackInfo ci) {
         var scoreboardMod = Scoreboard.instance;
-        if (!scoreboardMod.enabled) return;
+        if (!scoreboardMod.isEnabled()) return;
         ci.cancel();
         var font = ((Gui) (Object) this).getFont();
 
@@ -92,6 +92,6 @@ public class GuiMixin {
 
     @Inject(method = "renderEffects", at = @At("HEAD"), cancellable = true)
     public void renderEffects(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        if (PotionEffects.instance.enabled && !PotionEffects.instance.displayVanilla.get()) ci.cancel();
+        if (PotionEffects.instance.isEnabled() && !PotionEffects.instance.displayVanilla.get()) ci.cancel();
     }
 }

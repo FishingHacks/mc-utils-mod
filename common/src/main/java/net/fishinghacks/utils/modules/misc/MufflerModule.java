@@ -9,11 +9,10 @@ import net.fishinghacks.utils.modules.ModuleCategory;
 
 @Module(name = "muffler", category = ModuleCategory.MISC)
 public class MufflerModule extends IModule {
-    public static boolean isEnabled;
+    public static MufflerModule instance;
 
-    @Override
-    public void onToggle() {
-        MufflerModule.isEnabled = enabled;
+    public MufflerModule() {
+        instance = this;
     }
 
     @Override

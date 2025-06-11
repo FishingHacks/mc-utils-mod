@@ -26,17 +26,23 @@ public abstract class IModule {
         new ModuleToggle(cfg, builder, name());
     }
 
-    public boolean enabled = false;
+    private boolean enabled = false;
 
     public boolean isEnabled() {
-        return enabled;
+        return enabled && ModuleManager.isEnabled();
     }
 
     public final void setEnabled(boolean enabled) {
+        boolean enabledPreviously = isEnabled();
         this.enabled = enabled;
-        if (enabled) this.onEnable();
+        if(isEnabled() == enabledPreviously) return;
+        if (isEnabled()) this.onEnable();
         else this.onDisable();
         this.onToggle();
+    }
+
+    public final void updateEnabled() {
+        setEnabled(enabled);
     }
 
     public final void toggle() {

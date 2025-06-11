@@ -34,7 +34,7 @@ public class CameraMixin {
     @Inject(method = "setup", cancellable = true, at = @At("HEAD"))
     public void setup(BlockGetter level, Entity entity, boolean detached, boolean thirdPersonReverse, float partialTick,
                       CallbackInfo ci) {
-        if (!Freezecam.isEnabled && !Freecam.isEnabled) return;
+        if (!Freezecam.instance.isEnabled() && !Freecam.instance.isEnabled()) return;
         if (!detached) {
             ModuleManager.disableModule("freecam");
             ModuleManager.disableModule("freezecam");
@@ -47,7 +47,7 @@ public class CameraMixin {
         this.partialTickTime = partialTick;
         ci.cancel();
 
-        if (Freecam.isEnabled) {
+        if (Freecam.instance.isEnabled()) {
             ((CameraInvoker) this).invokeSetPosition(Mth.lerp(partialTick, entity.xo, entity.getX()),
                 Mth.lerp(partialTick, entity.yo, entity.getY()) + Mth.lerp(partialTick, this.eyeHeightOld,
                     this.eyeHeight), Mth.lerp(partialTick, entity.zo, entity.getZ()));

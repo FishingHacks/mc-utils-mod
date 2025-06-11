@@ -6,10 +6,9 @@ import net.fishinghacks.utils.modules.ModuleCategory;
 
 @Module(name = "fullbright", category = ModuleCategory.MISC)
 public class Fullbright extends IModule {
-    public static boolean isEnabled;
+    public static Fullbright instance;
 
-    @Override
-    public void onToggle() {
-        Fullbright.isEnabled = super.enabled;
+    public Fullbright() {
+        instance = this;
     }
 }

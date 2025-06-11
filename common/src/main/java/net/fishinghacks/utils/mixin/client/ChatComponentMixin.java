@@ -41,9 +41,9 @@ public class ChatComponentMixin {
     public void render(GuiGraphics guiGraphics, int tickCount, int mouseX, int mouseY, boolean focused,
                        CallbackInfo ci) {
         var chatMod = Chat.instance;
-        MAX_CHAT_HISTORY = chatMod.enabled ? chatMod.INFINITE_HISTORY.get() ? Integer.MAX_VALUE :
+        MAX_CHAT_HISTORY = chatMod.isEnabled() ? chatMod.INFINITE_HISTORY.get() ? Integer.MAX_VALUE :
             chatMod.HISTORY_LENGTH.get() : 100;
-        if (!chatMod.enabled) return;
+        if (!chatMod.isEnabled()) return;
         ci.cancel();
         var self = ((ChatComponentAccessor) this);
         if (self.invokeIsChatHidden()) return;
@@ -139,7 +139,7 @@ public class ChatComponentMixin {
     @Inject(method = "addMessageToQueue", at = @At("HEAD"), cancellable = true)
     private void addMessageToQueue(GuiMessage message, CallbackInfo ci) {
         var chatMod = Chat.instance;
-        if (!chatMod.enabled) return;
+        if (!chatMod.isEnabled()) return;
         ci.cancel();
         var allMessages = ((ChatComponentAccessor) this).getMessages();
         allMessages.add(message);
@@ -151,7 +151,7 @@ public class ChatComponentMixin {
     @Inject(method = "addMessageToDisplayQueue", at = @At("HEAD"), cancellable = true)
     private void addMessageToDisplayQueue(GuiMessage message, CallbackInfo ci) {
         var chatMod = Chat.instance;
-        if (!chatMod.enabled) return;
+        if (!chatMod.isEnabled()) return;
         ci.cancel();
         var self = ((ChatComponentAccessor) this);
 

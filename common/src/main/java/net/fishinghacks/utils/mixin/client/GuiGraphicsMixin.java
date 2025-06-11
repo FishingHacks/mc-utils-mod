@@ -27,7 +27,7 @@ public abstract class GuiGraphicsMixin {
     @Inject(method = "renderItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;" +
         "IILjava/lang/String;)V", at = @At("HEAD"), cancellable = true)
     public void renderItemDecorations(Font font, ItemStack stack, int x, int y, String text, CallbackInfo ci) {
-        if (!ItemRender.instance.enabled) return;
+        if (!ItemRender.instance.isEnabled()) return;
         ci.cancel();
         if (stack.isEmpty()) return;
         GuiGraphics self = (GuiGraphics) (Object) this;

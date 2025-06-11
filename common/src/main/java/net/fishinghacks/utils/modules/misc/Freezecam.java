@@ -9,11 +9,10 @@ import net.minecraft.client.Minecraft;
 
 @Module(name = "freezecam", category = ModuleCategory.MISC)
 public class Freezecam extends IModule {
-    public static boolean isEnabled;
+    public static Freezecam instance;
 
-    @Override
-    public void onToggle() {
-        Freezecam.isEnabled = super.enabled;
+    public Freezecam() {
+        instance = this;
     }
 
     @Override

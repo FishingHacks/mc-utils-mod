@@ -14,11 +14,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class GameRendererMixin {
     @Inject(method = "getFov", cancellable = true, at = @At("HEAD"))
     public void getFov(Camera camera, float partialTick, boolean useFovSetting, CallbackInfoReturnable<Float> ci) {
-        if (Zoom.isEnabled) {
+        if (Zoom.instance.isEnabled()) {
             ci.setReturnValue(Zoom.fov);
             return;
         }
-        if (!Freezecam.isEnabled) return;
+        if (!Freezecam.instance.isEnabled()) return;
         ci.setReturnValue((float) Minecraft.getInstance().options.fov().get());
     }
 }

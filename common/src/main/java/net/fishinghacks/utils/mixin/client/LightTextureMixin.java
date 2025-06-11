@@ -16,14 +16,14 @@ public class LightTextureMixin {
     @Redirect(method = "updateLightTexture", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player" +
         "/LocalPlayer;hasEffect(Lnet/minecraft/core/Holder;)Z"))
     public boolean hasEffect(LocalPlayer self, Holder<MobEffect> effectHolder) {
-        if (effectHolder.equals(MobEffects.NIGHT_VISION) && Fullbright.isEnabled) return true;
+        if (effectHolder.equals(MobEffects.NIGHT_VISION) && Fullbright.instance.isEnabled()) return true;
         return self.hasEffect(effectHolder);
     }
 
     @Redirect(method = "updateLightTexture", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer" +
         "/GameRenderer;getNightVisionScale(Lnet/minecraft/world/entity/LivingEntity;F)F"))
     public float getNightVisionScale(LivingEntity entity, float partialTick) {
-        if (Fullbright.isEnabled) return 1f;
+        if (Fullbright.instance.isEnabled()) return 1f;
         return GameRendererInvoker.doGetNightVisionScale(entity, partialTick);
     }
 }

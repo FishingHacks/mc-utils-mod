@@ -6,11 +6,15 @@ import net.fishinghacks.utils.modules.ModuleCategory;
 
 @Module(name = "zoom", category = ModuleCategory.MISC)
 public class Zoom extends IModule {
-    public static boolean isEnabled;
-    public static float fov;
+    public static Zoom instance;
+    public static float fov = 30f;
+
+    public Zoom() {
+        instance = this;
+    }
 
     public static boolean onScroll(float scrollDeltaY) {
-        if(!isEnabled) return false;
+        if(!instance.isEnabled()) return false;
         fov -= scrollDeltaY;
         fov = Math.clamp(fov, 0.1f, 110f);
         return true;
@@ -18,7 +22,6 @@ public class Zoom extends IModule {
 
     @Override
     public void onToggle() {
-        Zoom.isEnabled = super.enabled;
         fov = 30f;
     }
 }

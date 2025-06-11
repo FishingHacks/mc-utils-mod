@@ -6,10 +6,9 @@ import net.fishinghacks.utils.modules.ModuleCategory;
 
 @Module(name = "no_key_block", category = ModuleCategory.MISC)
 public class AllowBlockedKeys extends IModule {
-    public static boolean allowKeys;
+    public static AllowBlockedKeys instance;
 
-    @Override
-    public void onToggle() {
-        allowKeys = enabled;
+    public AllowBlockedKeys() {
+        instance = this;
     }
 }

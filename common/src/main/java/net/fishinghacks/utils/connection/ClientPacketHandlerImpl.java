@@ -41,7 +41,7 @@ public class ClientPacketHandlerImpl implements ClientPacketHandler {
 
         GuiOverlayManager.addNotification(
             (trusted ? Translation.InviteNotification : Translation.InviteTrusted).with(invitingPlayer),
-            new Notification.NotifyButton(Translation.InviteAccept.get(), ignored -> {
+            new Notification.NotifyButton(Translation.InviteAccept.get(), (ignored0, ignored1) -> {
                 Minecraft minecraft = Minecraft.getInstance();
                 if (minecraft.level != null) {
                     boolean flag = minecraft.isLocalServer();

@@ -30,8 +30,7 @@ public class ActionsListScreen extends ListScreen {
 
         y += this.addRenderableWidget(Button.Builder.cube("<").onPress((button) -> this.onClose()).pos(x, y).build())
             .getHeight() + 6;
-        this.addRenderableWidget(Button.Builder.cube("+").onPress((button) -> this.addEntry()).pos(x, y).build())
-            .getHeight();
+        this.addRenderableWidget(Button.Builder.cube("+").onPress((button) -> this.addEntry()).pos(x, y).build());
     }
 
     @Override

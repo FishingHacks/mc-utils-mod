@@ -50,6 +50,11 @@
   "utils.cmd.muffler.get_volume.muted": "Volume of %s: %s §b(muted)",
   "utils.cmd.muffler.muted": "Muted %s",
   "utils.cmd.muffler.unmuted": "Unmuted %s",
+  "utils.cmd.whitelist.added": "Added %s to the whitelist!",
+  "utils.cmd.whitelist.removed": "Removed %s from the whitelist!",
+  "utils.cmd.whitelist.enabled": "Enabled the whitelist",
+  "utils.cmd.whitelist.disabled": "Disabled the whitelist",
+  "utils.cmd.enable_mod.enabled": "Enabled the mod",
   "utils.gui.actions.title": "Actions",
   "utils.gui.actions.remove": "Remove",
   "utils.gui.actions.type": "Type",
@@ -280,10 +285,8 @@
   "utils.durability_display_type.text": "Percentage Text",
   "utils.durability_display_type.both": "Bar & Text",
   "utils.durability_display_type.none": "Hidden",
-  "utils.cmd.whitelist.added": "Added %s to the whitelist!",
-  "utils.cmd.whitelist.removed": "Removed %s from the whitelist!",
-  "utils.cmd.whitelist.enabled": "Enabled the whitelist",
-  "utils.cmd.whitelist.disabled": "Disabled the whitelist",
   "utils.common.search": "Search",
-  "utils.common.no_results": "No elements match the term '%s'"
+  "utils.common.no_results": "No elements match the term '%s'",
+  "utils.common.server_warning": "You have joined a public server. Please note that not all servers may allow the usage of this mod, so we have disableds certain features of the mod. Please contact the server administrators to get permission to use it or use it at your own risk. You can choose to enable the mod until you leave using §e.enable_mod§r or by pressing the button below.",
+  "utils.common.enable": "Enable"
 }

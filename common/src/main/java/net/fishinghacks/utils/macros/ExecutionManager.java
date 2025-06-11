@@ -2,6 +2,7 @@ package net.fishinghacks.utils.macros;
 
 import net.fishinghacks.utils.CommonUtil;
 import net.fishinghacks.utils.Constants;
+import net.fishinghacks.utils.ModDisabler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
@@ -87,6 +88,11 @@ public class ExecutionManager {
         return runningMacros.entrySet();
     }
 
+    public static void stopAllMacros() {
+        runningMacros.values().forEach(RunningMacro::stop);
+        runningMacros.clear();
+    }
+
     public static void stopMacro(int index) {
         var macro = runningMacros.remove(index);
         macro.stop();
@@ -104,6 +110,7 @@ public class ExecutionManager {
     public static Optional<Integer> startMacro(String path, Consumer<Component> outputError,
                                                Consumer<Integer> onBeforeRun,
                                                BiConsumer<Integer, RunningMacro> onExit) {
+        if(ModDisabler.isModDisabled()) return Optional.empty();
         var content = getFileContents(path);
         if (content.isEmpty()) return Optional.empty();
         int index = currentIndex++;
