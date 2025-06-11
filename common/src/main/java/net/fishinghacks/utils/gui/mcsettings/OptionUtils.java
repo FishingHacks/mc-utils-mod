@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class OptionUtils {
+class OptionUtils {
     private static Component caption(OptionInstance<?> instance) {
         return ((OptionInstanceAccessor) (Object) instance).getCaption();
     }

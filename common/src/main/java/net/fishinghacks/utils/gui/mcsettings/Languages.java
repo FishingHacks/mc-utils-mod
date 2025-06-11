@@ -12,7 +12,7 @@ import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class Languages implements OptionSubscreen {
+class Languages implements OptionSubscreen {
     private static final int ITEM_HEIGHT = 30;
 
     private String language = "";

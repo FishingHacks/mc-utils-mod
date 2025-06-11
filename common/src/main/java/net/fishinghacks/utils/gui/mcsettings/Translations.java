@@ -2,7 +2,7 @@ package net.fishinghacks.utils.gui.mcsettings;
 
 import net.minecraft.network.chat.Component;
 
-public class Translations {
+class Translations {
     public static final Component SKIN_CUSTOMIZATION = Component.translatable("options.skinCustomisation");
     public static final Component SOUNDS = Component.translatable("options.sounds");
     public static final Component VIDEO = Component.translatable("options.video");

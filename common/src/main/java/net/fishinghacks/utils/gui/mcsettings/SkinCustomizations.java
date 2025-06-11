@@ -9,7 +9,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.PlayerModelPart;
 
-public class SkinCustomizations implements OptionSubscreen {
+class SkinCustomizations implements OptionSubscreen {
     @Override
     public void addElements(LinearLayout layout, Options options, int configWidth, McSettingsScreen parent) {
         for (PlayerModelPart part : PlayerModelPart.values()) {

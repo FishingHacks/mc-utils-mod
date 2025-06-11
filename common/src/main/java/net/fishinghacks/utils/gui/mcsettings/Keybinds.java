@@ -28,7 +28,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-public class Keybinds implements OptionSubscreen {
+class Keybinds implements OptionSubscreen {
     private static final int VERT_PADDING = 3;
     private static final int HORZ_PADDING = 7;
     private static final int ITEM_HEIGHT = Button.DEFAULT_HEIGHT + VERT_PADDING * 2;

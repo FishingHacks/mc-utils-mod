@@ -7,7 +7,7 @@ import net.minecraft.client.gui.layouts.LinearLayout;
 
 import java.util.List;
 
-public class Chat implements OptionSubscreen {
+class Chat implements OptionSubscreen {
     private static List<OptionInstance<?>> options(Options options) {
         return List.of(options.chatVisibility(), options.chatColors(), options.chatLinks(), options.chatLinksPrompt(),
             options.chatOpacity(), options.textBackgroundOpacity(), options.chatScale(), options.chatLineSpacing(),

@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class VideoSettings implements OptionSubscreen {
+class VideoSettings implements OptionSubscreen {
     int oldMipmaps;
     private static final Component RESOLUTION_UNAVAILABLE = Component.translatable("options.fullscreen.unavailable");
     private static final Component RESOLUTION_CURRENT = Component.translatable("options.fullscreen.current");

@@ -10,7 +10,7 @@ import net.minecraft.world.flag.FeatureFlags;
 
 import java.util.List;
 
-public class Accessibility implements OptionSubscreen {
+class Accessibility implements OptionSubscreen {
     private static List<OptionInstance<?>> options(Options options) {
         return List.of(options.narrator(), options.showSubtitles(), options.highContrast(), options.autoJump(),
             options.menuBackgroundBlurriness(), options.textBackgroundOpacity(), options.backgroundForChatOnly(),

@@ -40,7 +40,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public class ResourcePacks implements OptionSubscreen {
+class ResourcePacks implements OptionSubscreen {
     public static final ResourceLocation DEFAULT_ICON = ResourceLocation.withDefaultNamespace(
         "textures/misc/unknown_pack.png");
     private static final int DIVIDER_WIDTH = 20;

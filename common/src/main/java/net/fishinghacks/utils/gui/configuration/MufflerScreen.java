@@ -97,7 +97,7 @@ public class MufflerScreen extends ListScreen {
             else component = instance.getSubtitle().copy().append(" (").append(keyStr).append(")");
 
             boxLayout.addChild(
-                new MufflerEntry(component, () -> getVolume(key), volume -> setVolume(key, volume), width));
+                new MufflerEntry(component, () -> getVolume(key), volume -> setVolume(key, volume), key, width));
         });
         if (!hasChild[0]) {
             var layout = LinearLayout.horizontal();

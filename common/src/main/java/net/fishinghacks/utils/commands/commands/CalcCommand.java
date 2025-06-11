@@ -136,30 +136,27 @@ public class CalcCommand extends Command {
         Map<Item, Integer> items = new HashMap<>();
         List<List<Holder<Item>>> extras = new ArrayList<>();
 
-        for (Ingredient ingredient : requirements) {
-            final var values = ((IngredientAccessor) (Object) ingredient).getValues();
-            if (values.size() == 1) items.compute(values.get(0).value(), (i1, count) -> count == null ? 1 : count + 1);
+        for (Object ingredient : requirements) {
+            final var values = ((IngredientAccessor) ingredient).getValues();
+            if (values.size() == 1) items.merge(values.get(0).value(), 1, Integer::sum);
             else values.unwrap().map(key -> tags.compute(key,
                     (i1, count) -> count == null ? new Pair<>(1, values) : new Pair<>(count.getA() + 1, count.getB())),
                 extras::add);
         }
+
         listener.handleSystemMessage(
             Translation.CmdCalcCraftResult.with(result.getItemName().copy().withStyle(ChatFormatting.AQUA),
                 number(amount)), false);
 
-        //todo: figure out what's broken here? items, tags and extras are clearly changed on the lines above (for loop)
-        //noinspection RedundantOperationOnEmptyContainer
         items.forEach((item, count) -> listener.handleSystemMessage(
             craftEntry(item.getName().copy().withStyle(ChatFormatting.AQUA), count * numCrafts), false));
 
-        //noinspection RedundantOperationOnEmptyContainer
         tags.forEach((tag, count) -> listener.handleSystemMessage(craftEntry(
                 addList(count.getB().stream().map(Holder::value).toList(),
                     Component.literal("#" + tag.location()).withStyle(ChatFormatting.DARK_AQUA)),
                 numCrafts * count.getA()),
             false));
 
-        //noinspection RedundantOperationOnEmptyContainer
         extras.forEach(v -> listener.handleSystemMessage(craftEntry(addList(v.stream().map(Holder::value).toList(),
             Translation.CmdCalcCraftMultiple.with().withStyle(ChatFormatting.DARK_AQUA)), numCrafts), false));
     }

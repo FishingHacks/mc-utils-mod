@@ -7,7 +7,7 @@ import net.minecraft.client.gui.layouts.LinearLayout;
 
 import java.util.List;
 
-public class Controls implements OptionSubscreen {
+class Controls implements OptionSubscreen {
     public static List<OptionInstance<?>> options(Options options) {
         return List.of(options.toggleCrouch(), options.toggleSprint(), options.autoJump(), options.operatorItemsTab(), options.sensitivity(), options.invertYMouse(), options.mouseWheelSensitivity(), options.discreteMouseScroll(), options.touchscreen());
     }
